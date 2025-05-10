@@ -1,7 +1,4 @@
-GO_TOOLS := go run -modfile ./tools/go.mod
-GOLANCI_LINT = $(GO_TOOLS) github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2
-GOFUMPT := $(GO_TOOLS) mvdan.cc/gofumpt
-GO_TEST = $(GO_TOOLS) gotest.tools/gotestsum --format pkgname
+GO_TEST = go run -modfile ./tools/go.mod gotest.tools/gotestsum --format pkgname
 
 #   🔨 TOOLS       #
 ##@ Tools
@@ -19,8 +16,41 @@ prep/tools:
 		go install github.com/hashicorp/copywrite@latest; \
 	fi
 
-#   ⛹🏽‍ License   #
+	@if ! command -v gofumpt >/dev/null 2>&1; then \
+		echo "gofumpt is not installed. Installing gofumpt..."; \
+		go install mvdan.cc/gofumpt@latest; \
+	fi
 
+	@if ! command -v lefthook >/dev/null 2>&1; then \
+		echo "lefthook is not installed. Installing lefthook..."; \
+		curl -1sLf https://gobinaries.com/evilmartians/lefthook/install | sh; \
+	fi
+
+	@if [ ! -f .lefthook.yml ]; then \
+		echo "Installing lefthook configuration..."; \
+		lefthook install; \
+	fi
+
+#   🧹 Formatting   #
+##@ Formatting
+
+fmt: license/headers/check
+	gofumpt -w .
+
+fmt/check: license/headers/check
+	gofumpt -d .
+
+#   🔍 Linting     #
+##@ Linting
+
+lint: license/headers/check
+	golangci-lint run ./...
+
+lint/fix: license/headers/check
+	golangci-lint run --fix ./...
+
+#   ⛹🏽‍ License   #
+##@ License
 
 license: license/headers/check
 
@@ -30,8 +60,41 @@ license/headers/check:
 license/headers/apply:
 	copywrite headers
 
+#   🧪 Testing     #
+##@ Testing
+
 test/ci: test/unit
 
-test/unit:
+test/unit: license/headers/check
 	mkdir -p build/reports
 	$(GO_TEST) --junitfile build/reports/test-unit.xml -- -race ./... -count=1 -short -cover -coverprofile build/reports/unit-test-coverage.out
+
+test/coverage: test/unit
+	go tool cover -func=build/reports/unit-test-coverage.out
+
+test/coverage/html: test/unit
+	go tool cover -html=build/reports/unit-test-coverage.out -o build/reports/coverage.html
+
+#   🏗️ Building    #
+##@ Building
+
+build: license/headers/check
+	go build ./...
+
+clean:
+	rm -rf build/
+	go clean
+
+#   🚀 All-in-One  #
+##@ All
+
+all: fmt lint test/unit
+
+#   🔄 Git Hooks   #
+##@ Git Hooks
+
+hooks/install:
+	lefthook install
+
+hooks/uninstall:
+	lefthook uninstall
