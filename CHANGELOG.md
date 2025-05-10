@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/kopexa-grc/common/compare/common-v1.0.0...common-v1.1.0) (2025-05-10)
+
+
+### Features
+
+* totp implementation ([#13](https://github.com/kopexa-grc/common/issues/13)) ([768a62a](https://github.com/kopexa-grc/common/commit/768a62a86f452a990de98a74acb3fe43a19d15fc))
+
 ## 1.0.0 (2025-05-10)
 
 
