@@ -5,12 +5,14 @@ go 1.24.0
 require (
 	github.com/nats-io/nats-server/v2 v2.11.3
 	github.com/nats-io/nats.go v1.42.0
+	github.com/pquerna/otp v1.4.0
 	github.com/rs/zerolog v1.34.0
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/crypto v0.38.0
 )
 
 require (
+	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/google/go-tpm v0.9.3 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
