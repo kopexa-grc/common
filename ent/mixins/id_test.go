@@ -24,6 +24,7 @@ func TestDisplayIDGeneration(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			displayID := generateShortCharID(tc.input, tc.length)
 			assert.Len(t, displayID, tc.length)
+
 			for _, c := range displayID {
 				assert.True(t, (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
 			}
@@ -33,13 +34,17 @@ func TestDisplayIDGeneration(t *testing.T) {
 
 func TestCollisionResistance(t *testing.T) {
 	const iterations = 10000
+
 	seen := make(map[string]bool)
+
 	for i := 0; i < iterations; i++ {
 		id := "test-id-" + string(rune(i))
+
 		displayID := generateShortCharID(id, 6)
 		if seen[displayID] {
 			t.Errorf("Collision detected for display ID: %s", displayID)
 		}
+
 		seen[displayID] = true
 	}
 }

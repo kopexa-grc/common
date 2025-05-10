@@ -133,6 +133,7 @@ func generateShortCharID(ulid string, length int) string {
 	hash := sha256.Sum256([]byte(ulid))
 	encoded := base32.StdEncoding.EncodeToString(hash[:])
 	encoded = strings.ToUpper(strings.TrimRight(encoded, "="))
+
 	return encoded[:length]
 }
 

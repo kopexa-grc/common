@@ -22,6 +22,7 @@ func TestStore(t *testing.T) {
 		Port:      -1, // Random port
 		JetStream: true,
 	}
+
 	s := test.RunServer(opts)
 	defer s.Shutdown()
 

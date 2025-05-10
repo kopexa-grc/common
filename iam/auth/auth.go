@@ -50,6 +50,7 @@ func ActorFromContext(ctx context.Context) *Actor {
 	if actor, ok := ctx.Value(ActorContextKey).(*Actor); ok {
 		return actor
 	}
+
 	return &Actor{
 		ID:   SystemActorID,
 		Type: ActorTypeSystem,

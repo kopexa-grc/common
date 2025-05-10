@@ -67,22 +67,26 @@ func AuditHook(next ent.Mutator) ent.Mutator {
 	return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 		ml, ok := m.(AuditLogger)
 		if !ok {
-			return nil, fmt.Errorf("unexpected audit-log call from mutation type %T", m)
+			return nil, fmt.Errorf("%w: %T", ErrUnexpectedMutationType, m)
 		}
+
 		actor := auth.ActorFromContext(ctx)
 
 		switch op := m.Op(); {
 		case op.Is(ent.OpCreate):
 			ml.SetCreatedAt(time.Now())
+
 			if _, exists := ml.CreatedBy(); !exists {
 				ml.SetCreatedBy(actor.ID)
 			}
 		case op.Is(ent.OpUpdateOne | ent.OpUpdate):
 			ml.SetUpdatedAt(time.Now())
+
 			if _, exists := ml.UpdatedBy(); !exists {
 				ml.SetUpdatedBy(actor.ID)
 			}
 		}
+
 		return next.Mutate(ctx, m)
 	})
 }
