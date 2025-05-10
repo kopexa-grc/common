@@ -1,3 +1,6 @@
+// Copyright 2023 Kopexa GRC. All rights reserved.
+// Use of this source code is governed by a MIT license that can be found in the LICENSE file.
+
 // Package to provides utility functions for pointer management.
 // It helps convert between pointers and values of various types.
 package to
