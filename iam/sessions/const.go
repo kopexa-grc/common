@@ -40,4 +40,7 @@ const (
 
 	// MaxKeyLength is the maximum allowed key length
 	MaxKeyLength = 64
+
+	// SessionIDLength is the length of the session ID in bytes (256 bits)
+	SessionIDLength = 32
 )

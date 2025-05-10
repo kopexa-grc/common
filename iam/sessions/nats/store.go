@@ -69,14 +69,17 @@ func WithServerURL(url string) Option {
 // Validate checks the configuration
 func (c *Config) Validate() error {
 	if c.BucketName == "" {
-		return errors.New("bucket name is required")
+		return sessions.ErrBucketNameRequired
 	}
+
 	if c.MaxAge <= 0 {
-		return errors.New("max age must be positive")
+		return sessions.ErrMaxAgeMustBePositive
 	}
+
 	if c.ServerURL == "" {
-		return errors.New("server URL is required")
+		return sessions.ErrServerURLRequired
 	}
+
 	return nil
 }
 
@@ -118,6 +121,7 @@ func NewStore[T any](opts ...Option) (*Store[T], error) {
 		if !errors.Is(err, jetstream.ErrBucketExists) {
 			return nil, err
 		}
+
 		kv, err = js.KeyValue(context.Background(), config.BucketName)
 		if err != nil {
 			return nil, err
@@ -138,6 +142,7 @@ func (s *Store[T]) Save(w http.ResponseWriter, session *sessions.Session[T]) err
 	if ip == "" {
 		ip = w.Header().Get("X-Forwarded-For")
 	}
+
 	userAgent := w.Header().Get("User-Agent")
 
 	// Create session data with metadata
@@ -179,9 +184,10 @@ func (s *Store[T]) Load(r *http.Request, name string) (*sessions.Session[T], err
 	// Get session ID from cookie
 	cookie, err := r.Cookie(name)
 	if err != nil {
-		if err == http.ErrNoCookie {
+		if errors.Is(err, http.ErrNoCookie) {
 			return nil, sessions.ErrInvalidSession
 		}
+
 		return nil, err
 	}
 
@@ -191,6 +197,7 @@ func (s *Store[T]) Load(r *http.Request, name string) (*sessions.Session[T], err
 		if errors.Is(err, jetstream.ErrKeyNotFound) {
 			return nil, sessions.ErrInvalidSession
 		}
+
 		return nil, err
 	}
 
@@ -207,6 +214,7 @@ func (s *Store[T]) Load(r *http.Request, name string) (*sessions.Session[T], err
 
 	// Update last seen timestamp
 	data.LastSeen = time.Now()
+
 	bytes, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
@@ -249,6 +257,7 @@ func (s *Store[T]) GetActiveSessions() ([]SessionData[T], error) {
 	}
 
 	var sessions []SessionData[T]
+
 	for _, key := range keys {
 		entry, err := s.kv.Get(context.Background(), key)
 		if err != nil {

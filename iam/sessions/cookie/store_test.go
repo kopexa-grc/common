@@ -74,12 +74,14 @@ func TestStore_Destroy(t *testing.T) {
 	// Verify at least one cookie is deleted (MaxAge == -1)
 	cookies := w.Result().Cookies()
 	found := false
+
 	for _, c := range cookies {
 		if c.MaxAge == -1 {
 			found = true
 			break
 		}
 	}
+
 	assert.True(t, found, "no deleted cookie (MaxAge == -1) found")
 }
 
@@ -274,7 +276,7 @@ func TestStore_DevMode(t *testing.T) {
 }
 
 func TestStore_DevModeValidation(t *testing.T) {
-	// Test: Dev-Modus erlaubt unsichere Konfiguration
+	// Test: Dev-Modus erlaubt unsichere Configuration
 	_, err := NewStore[string](
 		WithSigningKey("12345678901234567890123456789012"),
 		WithEncryptionKey("12345678901234567890123456789012"),
@@ -283,9 +285,9 @@ func TestStore_DevModeValidation(t *testing.T) {
 		WithHTTPOnly(false),
 		WithDomain("localhost"),
 	)
-	require.NoError(t, err, "Dev-Modus sollte unsichere Konfiguration erlauben")
+	require.NoError(t, err, "Dev-Modus sollte unsichere Configuration erlauben")
 
-	// Test: Ohne Dev-Modus wird unsichere Konfiguration abgelehnt
+	// Test: Ohne Dev-Modus wird unsichere Configuration abgelehnt
 	_, err = NewStore[string](
 		WithSigningKey("12345678901234567890123456789012"),
 		WithEncryptionKey("12345678901234567890123456789012"),
@@ -293,5 +295,5 @@ func TestStore_DevModeValidation(t *testing.T) {
 		WithHTTPOnly(false),
 		WithDomain("localhost"),
 	)
-	assert.Error(t, err, "Produktionsmodus sollte unsichere Konfiguration ablehnen")
+	assert.Error(t, err, "Produktionsmodus sollte unsichere Configuration ablehnen")
 }

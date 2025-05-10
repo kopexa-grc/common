@@ -4,11 +4,10 @@
 package cookie
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 	"time"
-
-	"errors"
 
 	"github.com/kopexa-grc/common/iam/sessions"
 )
@@ -113,36 +112,36 @@ func WithDevMode(devMode bool) Option {
 	}
 }
 
-// Validate prüft die Sicherheit und Gültigkeit der Konfiguration
+// Validate prüft die Sicherheit und Gültigkeit der Configuration
 func (c *Config) Validate() error {
-	if len(c.SigningKey) < 32 {
-		return errors.New("signing key must be at least 32 bytes")
-	}
-	if len(c.EncryptionKey) < 32 {
-		return errors.New("encryption key must be at least 32 bytes")
-	}
-	if c.MaxAge <= 0 {
-		return errors.New("max age must be positive")
-	}
-	switch c.SameSite {
-	case sessions.CookieSameSiteLax, sessions.CookieSameSiteStrict, sessions.CookieSameSiteNone:
-		// ok
-	default:
-		return errors.New("invalid SameSite value")
+	if len(c.SigningKey) < sessions.DefaultKeyLength {
+		return sessions.ErrSigningKeyTooShort
 	}
 
-	// Im Entwicklungsmodus sind Secure und HTTPOnly optional
+	if len(c.EncryptionKey) < sessions.DefaultKeyLength {
+		return sessions.ErrEncryptionKeyTooShort
+	}
+
+	if c.MaxAge <= 0 {
+		return sessions.ErrMaxAgeMustBePositive
+	}
+
+	if c.SameSite != sessions.CookieSameSiteLax && c.SameSite != sessions.CookieSameSiteStrict && c.SameSite != sessions.CookieSameSiteNone {
+		return sessions.ErrInvalidSameSite
+	}
+
 	if !c.DevMode {
 		if !c.Secure {
-			return errors.New("secure must be true for production")
+			return sessions.ErrSecureRequired
 		}
+
 		if !c.HTTPOnly {
-			return errors.New("httpOnly must be true for security")
+			return sessions.ErrHTTPOnlyRequired
 		}
+
 		if c.SameSite == sessions.CookieSameSiteNone && !c.Secure {
-			return errors.New("SameSite=None requires Secure=true")
+			return sessions.ErrSameSiteNoneRequiresSecure
 		}
-		// Für Subdomains muss die Domain gesetzt sein, aber der Punkt wird automatisch ergänzt
 	}
 
 	return nil
@@ -192,6 +191,7 @@ func (s *Store[T]) Save(w http.ResponseWriter, session *sessions.Session[T]) err
 	}
 
 	http.SetCookie(w, cookie)
+
 	return nil
 }
 
@@ -199,9 +199,10 @@ func (s *Store[T]) Save(w http.ResponseWriter, session *sessions.Session[T]) err
 func (s *Store[T]) Load(r *http.Request, name string) (*sessions.Session[T], error) {
 	cookie, err := r.Cookie(name)
 	if err != nil {
-		if err == http.ErrNoCookie {
+		if errors.Is(err, http.ErrNoCookie) {
 			return nil, sessions.ErrInvalidSession
 		}
+
 		return nil, err
 	}
 
@@ -218,7 +219,7 @@ func (s *Store[T]) Load(r *http.Request, name string) (*sessions.Session[T], err
 }
 
 // Destroy removes the session by setting an expired cookie
-func (s *Store[T]) Destroy(w http.ResponseWriter, r *http.Request, name string) {
+func (s *Store[T]) Destroy(w http.ResponseWriter, _ *http.Request, name string) {
 	cookie := &http.Cookie{
 		Name:     name,
 		Value:    "",

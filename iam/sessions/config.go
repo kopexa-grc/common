@@ -60,6 +60,7 @@ func WithMaxAge[T any](maxAge int) Option[T] {
 		if c.CookieConfig == nil {
 			c.CookieConfig = &CookieConfig{}
 		}
+
 		c.CookieConfig.MaxAge = maxAge
 	}
 }
@@ -70,6 +71,7 @@ func WithSecure[T any](secure bool) Option[T] {
 		if c.CookieConfig == nil {
 			c.CookieConfig = &CookieConfig{}
 		}
+
 		c.CookieConfig.Secure = secure
 	}
 }
@@ -80,6 +82,7 @@ func WithHTTPOnly[T any](httpOnly bool) Option[T] {
 		if c.CookieConfig == nil {
 			c.CookieConfig = &CookieConfig{}
 		}
+
 		c.CookieConfig.HTTPOnly = httpOnly
 	}
 }
@@ -90,6 +93,7 @@ func WithSameSite[T any](sameSite http.SameSite) Option[T] {
 		if c.CookieConfig == nil {
 			c.CookieConfig = &CookieConfig{}
 		}
+
 		c.CookieConfig.SameSite = sameSite
 	}
 }
@@ -100,6 +104,7 @@ func WithDomain[T any](domain string) Option[T] {
 		if c.CookieConfig == nil {
 			c.CookieConfig = &CookieConfig{}
 		}
+
 		c.CookieConfig.Domain = domain
 	}
 }

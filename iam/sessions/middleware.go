@@ -9,14 +9,6 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// contextKey is a private type to avoid context key collisions
-// Only used internally for session context
-// Comments in English for clarity
-
-type contextKey string
-
-const sessionContextKey contextKey = "session"
-
 // responseWriter wraps http.ResponseWriter to capture the response and hijack the request
 // This allows the handler to update the request (e.g. with a new context)
 type responseWriter struct {
@@ -60,6 +52,7 @@ func SessionMiddleware[T any](store Store[T], sessionName string) func(http.Hand
 			if currentReq == nil {
 				currentReq = r
 			}
+
 			session = GetSessionFromContext[T](currentReq)
 			if session != nil {
 				if err := store.Save(w, session); err != nil {

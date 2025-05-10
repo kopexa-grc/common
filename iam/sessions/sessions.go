@@ -66,6 +66,7 @@ type Session[T any] struct {
 // NewSession creates a new session with the given store and name
 func NewSession[T any](store Store[T], name string) *Session[T] {
 	now := time.Now()
+
 	return &Session[T]{
 		ID:        GenerateSessionID(),
 		Name:      name,
@@ -87,6 +88,7 @@ func (s *Session[T]) SetName(name string) {
 func (s *Session[T]) GetName() string {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
+
 	return s.Name
 }
 
@@ -101,6 +103,7 @@ func (s *Session[T]) Set(key string, value T) {
 func (s *Session[T]) Get(key string) T {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
+
 	return s.Values[key]
 }
 
@@ -109,6 +112,7 @@ func (s *Session[T]) GetOk(key string) (T, bool) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	value, ok := s.Values[key]
+
 	return value, ok
 }
 
@@ -140,6 +144,7 @@ func (s *Session[T]) Destroy(w http.ResponseWriter, r *http.Request) {
 func (s *Session[T]) IsExpired() bool {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
+
 	return time.Now().After(s.ExpiresAt)
 }
 
@@ -154,11 +159,13 @@ func (s *Session[T]) Rotate() {
 
 // GenerateSessionID generates a new cryptographically secure random session ID (256 Bit)
 func GenerateSessionID() string {
-	b := make([]byte, 32) // 256 Bit
+	b := make([]byte, SessionIDLength)
+
 	_, err := rand.Read(b)
 	if err != nil {
 		panic("failed to generate secure session ID: " + err.Error())
 	}
+
 	return fmt.Sprintf("%x", b)
 }
 
@@ -168,6 +175,7 @@ func validateKeyLength(key string) error {
 	if length != MinKeyLength && length != DefaultKeyLength && length != MaxKeyLength {
 		return fmt.Errorf("%w: got %d bytes, want %d, %d, or %d bytes", ErrInvalidKeyLength, length, MinKeyLength, DefaultKeyLength, MaxKeyLength)
 	}
+
 	return nil
 }
 

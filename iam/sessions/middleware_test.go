@@ -30,26 +30,29 @@ func newTestStore[T any]() *testStore[T] {
 	}
 }
 
-func (s *testStore[T]) Save(w http.ResponseWriter, session *Session[T]) error {
+func (s *testStore[T]) Save(_ http.ResponseWriter, session *Session[T]) error {
 	if s.saveErr != nil {
 		return s.saveErr
 	}
+
 	s.sessions[session.ID] = session
 	s.saved = true
+
 	return nil
 }
 
-func (s *testStore[T]) Load(r *http.Request, name string) (*Session[T], error) {
+func (s *testStore[T]) Load(_ *http.Request, _ string) (*Session[T], error) {
 	s.loaded = true
 	// In a real test, we would parse the cookie and return the session
 	// For simplicity, we just return the first session we find
 	for _, session := range s.sessions {
 		return session, nil
 	}
+
 	return nil, nil
 }
 
-func (s *testStore[T]) Destroy(w http.ResponseWriter, r *http.Request, name string) {
+func (s *testStore[T]) Destroy(_ http.ResponseWriter, _ *http.Request, name string) {
 	delete(s.sessions, name)
 }
 
@@ -150,7 +153,7 @@ func TestSessionMiddleware(t *testing.T) {
 			setupRequest: func() *http.Request {
 				return httptest.NewRequest("GET", "/", nil)
 			},
-			handler: func(w http.ResponseWriter, r *http.Request) {
+			handler: func(w http.ResponseWriter, _ *http.Request) {
 				w.WriteHeader(http.StatusInternalServerError)
 			},
 			expectedStatus: http.StatusInternalServerError,

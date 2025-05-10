@@ -6,7 +6,6 @@ package sessions
 import (
 	"context"
 	"encoding/base64"
-	"errors"
 	"fmt"
 	"net/http"
 	"sync"
@@ -18,9 +17,11 @@ import (
 
 // mockStore is a mock implementation of the Store interface
 type mockStore[T any] struct {
-	sessions map[string]*Session[T]
-	saveErr  error
-	loadErr  error
+	sessions  map[string]*Session[T]
+	saveErr   error
+	loadErr   error
+	destroyed bool
+	session   *Session[T]
 }
 
 func newMockStore[T any]() *mockStore[T] {
@@ -29,26 +30,26 @@ func newMockStore[T any]() *mockStore[T] {
 	}
 }
 
-func (s *mockStore[T]) Save(w http.ResponseWriter, session *Session[T]) error {
+func (s *mockStore[T]) Save(_ http.ResponseWriter, session *Session[T]) error {
 	if s.saveErr != nil {
 		return s.saveErr
 	}
+
 	s.sessions[session.Name] = session
+
 	return nil
 }
 
-func (s *mockStore[T]) Load(r *http.Request, name string) (*Session[T], error) {
+func (s *mockStore[T]) Load(_ *http.Request, _ string) (*Session[T], error) {
 	if s.loadErr != nil {
 		return nil, s.loadErr
 	}
-	if session, ok := s.sessions[name]; ok {
-		return session, nil
-	}
-	return nil, ErrInvalidSession
+
+	return s.session, nil
 }
 
-func (s *mockStore[T]) Destroy(w http.ResponseWriter, r *http.Request, name string) {
-	delete(s.sessions, name)
+func (s *mockStore[T]) Destroy(_ http.ResponseWriter, _ *http.Request, _ string) {
+	s.destroyed = true
 }
 
 func TestNewSession(t *testing.T) {
@@ -205,11 +206,13 @@ func TestSession_ConcurrentAccess(t *testing.T) {
 	var wg sync.WaitGroup
 	for i := 0; i < 10; i++ {
 		wg.Add(1)
+
 		go func(i int) {
 			defer wg.Done()
 			session.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
 		}(i)
 	}
+
 	wg.Wait()
 
 	// Verify all values were set
@@ -225,13 +228,13 @@ func TestSession_ErrorHandling(t *testing.T) {
 	session := NewSession(store, "test")
 
 	// Test Save error
-	store.saveErr = errors.New("save error")
+	store.saveErr = ErrSaveFailed
 	err := session.Save(nil)
 	assert.Error(t, err)
 	assert.Equal(t, "save error", err.Error())
 
 	// Test Load error
-	store.loadErr = errors.New("load error")
+	store.loadErr = ErrLoadFailed
 	_, err = store.Load(nil, "test")
 	assert.Error(t, err)
 	assert.Equal(t, "load error", err.Error())
@@ -292,20 +295,13 @@ func TestSession_SetGetName(t *testing.T) {
 }
 
 func TestSession_Destroy(t *testing.T) {
-	store := newMockStore[string]()
-	s := NewSession(store, "foo")
-	store.sessions["foo"] = s
-	w := &dummyWriter{}
-	s.Destroy(w, nil)
-	_, ok := store.sessions["foo"]
-	assert.False(t, ok)
+	store := &mockStore[string]{
+		session: NewSession[string](nil, "test"),
+	}
+	session := NewSession(store, "test")
+	session.Destroy(nil, nil)
+	assert.True(t, store.destroyed, "session should be destroyed")
 }
-
-type dummyWriter struct{}
-
-func (d *dummyWriter) Header() http.Header       { return http.Header{} }
-func (d *dummyWriter) Write([]byte) (int, error) { return 0, nil }
-func (d *dummyWriter) WriteHeader(int)           {}
 
 func TestEncryptDecrypt(t *testing.T) {
 	key := "12345678901234567890123456789012"
@@ -372,6 +368,7 @@ func TestDecodeSession_UnmarshalError(t *testing.T) {
 	plain := []byte("not a session struct")
 	enc, err := encrypt(plain, key)
 	assert.NoError(t, err)
+
 	b64 := base64.URLEncoding.EncodeToString(enc)
 	_, err = DecodeSession[string](b64, key)
 	assert.Error(t, err)

@@ -19,6 +19,7 @@ func startTestServer(t *testing.T) *server.Server {
 	opts.JetStream = true
 
 	s := test.RunServer(&opts)
+
 	t.Cleanup(func() {
 		s.Shutdown()
 	})
