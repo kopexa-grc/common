@@ -1,0 +1,12 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  code:
+    name: Code Verification
+    uses: ./.github/workflows/_verify-code.yaml
