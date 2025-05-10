@@ -50,14 +50,8 @@ jobs:
           version: v2.0
           github-token: ${{ secrets.GITHUB_TOKEN }}
           only-new-issues: true
-          args: --out-format sarif --output ./build/reports/golangci-lint.sarif
 
-      - name: Upload Static Code Analysis Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: static-code-analysis-reports
-          path: ./build/reports/**
+    
 
    unit-tests:
     runs-on: ubuntu-latest
