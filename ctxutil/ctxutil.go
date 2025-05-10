@@ -84,6 +84,7 @@ func FromOr[T any](ctx context.Context, def T) T {
 	if !ok {
 		return def
 	}
+
 	return v
 }
 
@@ -101,5 +102,6 @@ func FromOrFunc[T any](ctx context.Context, f func() T) T {
 	if !ok {
 		return f()
 	}
+
 	return v
 }

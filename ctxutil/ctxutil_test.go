@@ -195,9 +195,11 @@ func TestNestedContextWithDifferentTypes(t *testing.T) {
 	if v, ok := From[string](ctx3); !ok || v != "string-value" {
 		t.Errorf("From[string]() = %v, %v; want %v, true", v, ok, "string-value")
 	}
+
 	if v, ok := From[int](ctx3); !ok || v != 42 {
 		t.Errorf("From[int]() = %v, %v; want %v, true", v, ok, 42)
 	}
+
 	if v, ok := From[bool](ctx3); !ok || v != true {
 		t.Errorf("From[bool]() = %v, %v; want %v, true", v, ok, true)
 	}
@@ -205,6 +207,7 @@ func TestNestedContextWithDifferentTypes(t *testing.T) {
 
 func TestContextPerformance(t *testing.T) {
 	ctx := context.Background()
+
 	const depth = 1000
 
 	// Create deeply nested context
@@ -222,6 +225,7 @@ func TestContextPerformance(t *testing.T) {
 	for i := 0; i < depth/2; i++ {
 		middleCtx = context.WithValue(middleCtx, key[int]{}, i)
 	}
+
 	if v, ok := From[int](middleCtx); !ok || v != depth/2-1 {
 		t.Errorf("From[int]() = %v, %v; want %v, true", v, ok, depth/2-1)
 	}
@@ -229,7 +233,9 @@ func TestContextPerformance(t *testing.T) {
 
 func TestConcurrentAccess(t *testing.T) {
 	ctx := context.Background()
+
 	const goroutines = 10
+
 	const iterations = 1000
 
 	// Create a context with initial value
@@ -237,6 +243,7 @@ func TestConcurrentAccess(t *testing.T) {
 
 	// Test concurrent access
 	done := make(chan bool)
+
 	for i := 0; i < goroutines; i++ {
 		go func() {
 			for j := 0; j < iterations; j++ {
