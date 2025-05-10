@@ -12,27 +12,37 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// static errors for tests
+var (
+	errUnderlying = errors.New("underlying error")
+	errTest       = errors.New("test error")
+	errFoo        = errors.New("foo")
+	errNeterr     = errors.New("neterr")
+)
+
 func TestNew(t *testing.T) {
 	err := New(BadRequest, "test error")
 	if err.Code != BadRequest {
 		t.Errorf("New() code = %v, want %v", err.Code, BadRequest)
 	}
+
 	if err.Message != "test error" {
 		t.Errorf("New() message = %v, want %v", err.Message, "test error")
 	}
 }
 
 func TestNewf(t *testing.T) {
-	underlying := errors.New("underlying error")
-	err := Newf(BadRequest, underlying, "test error: %v", "formatted")
+	err := Newf(BadRequest, errUnderlying, "test error: %v", "formatted")
 	if err.Code != BadRequest {
 		t.Errorf("Newf() code = %v, want %v", err.Code, BadRequest)
 	}
+
 	if err.Message != "test error: formatted" {
 		t.Errorf("Newf() message = %v, want %v", err.Message, "test error: formatted")
 	}
-	if err.Err != underlying {
-		t.Errorf("Newf() err = %v, want %v", err.Err, underlying)
+
+	if !errors.Is(err.Err, errUnderlying) {
+		t.Errorf("Newf() err = %v, want %v", err.Err, errUnderlying)
 	}
 }
 
@@ -72,35 +82,35 @@ func TestError(t *testing.T) {
 }
 
 func TestUnwrap(t *testing.T) {
-	underlying := errors.New("underlying error")
-	err := New(BadRequest, "test error").With(underlying)
-	if err.Unwrap() != underlying {
-		t.Errorf("Unwrap() = %v, want %v", err.Unwrap(), underlying)
+	err := New(BadRequest, "test error").With(errUnderlying)
+	if !errors.Is(err.Unwrap(), errUnderlying) {
+		t.Errorf("Unwrap() = %v, want %v", err.Unwrap(), errUnderlying)
 	}
 }
 
 func TestWith(t *testing.T) {
-	underlying := errors.New("underlying error")
-	err := New(BadRequest, "test error").With(underlying)
-	if err.Err != underlying {
-		t.Errorf("With() = %v, want %v", err.Err, underlying)
+	err := New(BadRequest, "test error").With(errUnderlying)
+	if !errors.Is(err.Err, errUnderlying) {
+		t.Errorf("With() = %v, want %v", err.Err, errUnderlying)
 	}
 }
 
 func TestWrap(t *testing.T) {
-	underlying := errors.New("underlying error")
-	err := Wrap(underlying, "wrapped error")
+	err := Wrap(errUnderlying, "wrapped error")
 	if err.Code != UnexpectedFailure {
 		t.Errorf("Wrap() code = %v, want %v", err.Code, UnexpectedFailure)
 	}
+
 	if err.Status != http.StatusInternalServerError {
 		t.Errorf("Wrap() status = %v, want %v", err.Status, http.StatusInternalServerError)
 	}
+
 	if err.Message != "wrapped error" {
 		t.Errorf("Wrap() message = %v, want %v", err.Message, "wrapped error")
 	}
-	if err.Err != underlying {
-		t.Errorf("Wrap() err = %v, want %v", err.Err, underlying)
+
+	if !errors.Is(err.Err, errUnderlying) {
+		t.Errorf("Wrap() err = %v, want %v", err.Err, errUnderlying)
 	}
 }
 
@@ -109,7 +119,8 @@ func TestIsError(t *testing.T) {
 	if !IsError(err) {
 		t.Error("IsError() = false, want true")
 	}
-	if IsError(errors.New("test error")) {
+
+	if IsError(errTest) {
 		t.Error("IsError() = true, want false")
 	}
 }
@@ -119,10 +130,12 @@ func TestIs(t *testing.T) {
 	if !Is(err, BadRequest) {
 		t.Error("Is() = false, want true")
 	}
+
 	if Is(err, NotFound) {
 		t.Error("Is() = true, want false")
 	}
-	if Is(errors.New("test error"), BadRequest) {
+
+	if Is(errTest, BadRequest) {
 		t.Error("Is() = true, want false")
 	}
 }
@@ -132,9 +145,11 @@ func TestNewGone(t *testing.T) {
 	if err.Code != Gone {
 		t.Errorf("NewGone() code = %v, want %v", err.Code, Gone)
 	}
+
 	if err.Status != http.StatusGone {
 		t.Errorf("NewGone() status = %v, want %v", err.Status, http.StatusGone)
 	}
+
 	if err.Message != msgGone {
 		t.Errorf("NewGone() message = %v, want %v", err.Message, msgGone)
 	}
@@ -145,9 +160,11 @@ func TestNewUnexpectedFailure(t *testing.T) {
 	if err.Code != UnexpectedFailure {
 		t.Errorf("NewUnexpectedFailure() code = %v, want %v", err.Code, UnexpectedFailure)
 	}
+
 	if err.Status != http.StatusInternalServerError {
 		t.Errorf("NewUnexpectedFailure() status = %v, want %v", err.Status, http.StatusInternalServerError)
 	}
+
 	if err.Message != msgUnexpectedFailure {
 		t.Errorf("NewUnexpectedFailure() message = %v, want %v", err.Message, msgUnexpectedFailure)
 	}
@@ -158,7 +175,8 @@ func TestIsUnexpectedFailure(t *testing.T) {
 	if !IsUnexpectedFailure(err) {
 		t.Error("IsUnexpectedFailure() = false, want true")
 	}
-	if IsUnexpectedFailure(errors.New("test error")) {
+
+	if IsUnexpectedFailure(errTest) {
 		t.Error("IsUnexpectedFailure() = true, want false")
 	}
 }
@@ -168,9 +186,11 @@ func TestNewUnauthorized(t *testing.T) {
 	if err.Code != Unauthorized {
 		t.Errorf("NewUnauthorized() code = %v, want %v", err.Code, Unauthorized)
 	}
+
 	if err.Status != http.StatusUnauthorized {
 		t.Errorf("NewUnauthorized() status = %v, want %v", err.Status, http.StatusUnauthorized)
 	}
+
 	if err.Message != msgUnauthorized {
 		t.Errorf("NewUnauthorized() message = %v, want %v", err.Message, msgUnauthorized)
 	}
@@ -181,7 +201,8 @@ func TestIsUnauthorized(t *testing.T) {
 	if !IsUnauthorized(err) {
 		t.Error("IsUnauthorized() = false, want true")
 	}
-	if IsUnauthorized(errors.New("test error")) {
+
+	if IsUnauthorized(errTest) {
 		t.Error("IsUnauthorized() = true, want false")
 	}
 }
@@ -191,9 +212,11 @@ func TestNewUnprocessableEntity(t *testing.T) {
 	if err.Code != UnprocessableEntity {
 		t.Errorf("NewUnprocessableEntity() code = %v, want %v", err.Code, UnprocessableEntity)
 	}
+
 	if err.Status != http.StatusUnprocessableEntity {
 		t.Errorf("NewUnprocessableEntity() status = %v, want %v", err.Status, http.StatusUnprocessableEntity)
 	}
+
 	if err.Message != msgUnprocessableEntity {
 		t.Errorf("NewUnprocessableEntity() message = %v, want %v", err.Message, msgUnprocessableEntity)
 	}
@@ -204,9 +227,11 @@ func TestNewBadRequest(t *testing.T) {
 	if err.Code != BadRequest {
 		t.Errorf("NewBadRequest() code = %v, want %v", err.Code, BadRequest)
 	}
+
 	if err.Status != http.StatusBadRequest {
 		t.Errorf("NewBadRequest() status = %v, want %v", err.Status, http.StatusBadRequest)
 	}
+
 	if err.Message != msgBadRequest {
 		t.Errorf("NewBadRequest() message = %v, want %v", err.Message, msgBadRequest)
 	}
@@ -217,9 +242,11 @@ func TestNewConflict(t *testing.T) {
 	if err.Code != Conflict {
 		t.Errorf("NewConflict() code = %v, want %v", err.Code, Conflict)
 	}
+
 	if err.Status != http.StatusConflict {
 		t.Errorf("NewConflict() status = %v, want %v", err.Status, http.StatusConflict)
 	}
+
 	if err.Message != msgConflict {
 		t.Errorf("NewConflict() message = %v, want %v", err.Message, msgConflict)
 	}
@@ -230,7 +257,8 @@ func TestIsBadRequest(t *testing.T) {
 	if !IsBadRequest(err) {
 		t.Error("IsBadRequest() = false, want true")
 	}
-	if IsBadRequest(errors.New("test error")) {
+
+	if IsBadRequest(errTest) {
 		t.Error("IsBadRequest() = true, want false")
 	}
 }
@@ -240,9 +268,11 @@ func TestNewNotFound(t *testing.T) {
 	if err.Code != NotFound {
 		t.Errorf("NewNotFound() code = %v, want %v", err.Code, NotFound)
 	}
+
 	if err.Status != http.StatusNotFound {
 		t.Errorf("NewNotFound() status = %v, want %v", err.Status, http.StatusNotFound)
 	}
+
 	if err.Message != msgNotFound {
 		t.Errorf("NewNotFound() message = %v, want %v", err.Message, msgNotFound)
 	}
@@ -253,7 +283,8 @@ func TestIsNotFound(t *testing.T) {
 	if !IsNotFound(err) {
 		t.Error("IsNotFound() = false, want true")
 	}
-	if IsNotFound(errors.New("test error")) {
+
+	if IsNotFound(errTest) {
 		t.Error("IsNotFound() = true, want false")
 	}
 }
@@ -263,9 +294,11 @@ func TestNewForbidden(t *testing.T) {
 	if err.Code != Forbidden {
 		t.Errorf("NewForbidden() code = %v, want %v", err.Code, Forbidden)
 	}
+
 	if err.Status != http.StatusForbidden {
 		t.Errorf("NewForbidden() status = %v, want %v", err.Status, http.StatusForbidden)
 	}
+
 	if err.Message != msgForbidden {
 		t.Errorf("NewForbidden() message = %v, want %v", err.Message, msgForbidden)
 	}
@@ -276,7 +309,8 @@ func TestIsForbidden(t *testing.T) {
 	if !IsForbidden(err) {
 		t.Error("IsForbidden() = false, want true")
 	}
-	if IsForbidden(errors.New("test error")) {
+
+	if IsForbidden(errTest) {
 		t.Error("IsForbidden() = true, want false")
 	}
 }
@@ -286,9 +320,11 @@ func TestNewInvalidArgument(t *testing.T) {
 	if err.Code != InvalidArgument {
 		t.Errorf("NewInvalidArgument() code = %v, want %v", err.Code, InvalidArgument)
 	}
+
 	if err.Status != http.StatusBadRequest {
 		t.Errorf("NewInvalidArgument() status = %v, want %v", err.Status, http.StatusBadRequest)
 	}
+
 	if err.Message != msgInvalidArgument {
 		t.Errorf("NewInvalidArgument() message = %v, want %v", err.Message, msgInvalidArgument)
 	}
@@ -299,7 +335,8 @@ func TestIsInvalidArgument(t *testing.T) {
 	if !IsInvalidArgument(err) {
 		t.Error("IsInvalidArgument() = false, want true")
 	}
-	if IsInvalidArgument(errors.New("test error")) {
+
+	if IsInvalidArgument(errTest) {
 		t.Error("IsInvalidArgument() = true, want false")
 	}
 }
@@ -309,9 +346,11 @@ func TestNewFailedPrecondition(t *testing.T) {
 	if err.Code != FailedPrecondition {
 		t.Errorf("NewFailedPrecondition() code = %v, want %v", err.Code, FailedPrecondition)
 	}
+
 	if err.Status != http.StatusPreconditionFailed {
 		t.Errorf("NewFailedPrecondition() status = %v, want %v", err.Status, http.StatusPreconditionFailed)
 	}
+
 	if err.Message != msgFailedPrecondition {
 		t.Errorf("NewFailedPrecondition() message = %v, want %v", err.Message, msgFailedPrecondition)
 	}
@@ -322,7 +361,8 @@ func TestIsFailedPrecondition(t *testing.T) {
 	if !IsFailedPrecondition(err) {
 		t.Error("IsFailedPrecondition() = false, want true")
 	}
-	if IsFailedPrecondition(errors.New("test error")) {
+
+	if IsFailedPrecondition(errTest) {
 		t.Error("IsFailedPrecondition() = true, want false")
 	}
 }
@@ -624,19 +664,20 @@ func TestFromContextError(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 0)
 	defer cancel()
 	<-ctx.Done()
+
 	cerr := ctx.Err()
-	if cerr == context.DeadlineExceeded {
+	if errors.Is(cerr, context.DeadlineExceeded) {
 		assert.Equal(t, DeadlineExceeded, FromContextError(cerr).Code)
 	}
+
 	assert.Equal(t, RequestTimeout, FromContextError(context.Canceled).Code)
-	assert.Contains(t, FromContextError(errors.New("foo")).Error(), "Context error")
+	assert.Contains(t, FromContextError(errFoo).Error(), "Context error")
 }
 
 func TestFromNetworkError(t *testing.T) {
-	err := errors.New("neterr")
-	converted := FromNetworkError(err)
+	converted := FromNetworkError(errNeterr)
 	assert.Equal(t, ConnectionFailed, converted.Code)
-	assert.Equal(t, err, converted.Err)
+	assert.Equal(t, errNeterr, converted.Err)
 	assert.Nil(t, FromNetworkError(nil))
 }
 
@@ -681,9 +722,8 @@ func TestCodeAndStatusFallbacks(t *testing.T) {
 	assert.Equal(t, http.StatusOK, Status(nil))
 
 	// Standard error (kein *Error)
-	stdErr := errors.New("foo")
-	assert.Equal(t, UnexpectedFailure, Code(stdErr))
-	assert.Equal(t, http.StatusInternalServerError, Status(stdErr))
+	assert.Equal(t, UnexpectedFailure, Code(errFoo))
+	assert.Equal(t, http.StatusInternalServerError, Status(errFoo))
 }
 
 func TestWithDetailsNilMap(t *testing.T) {
@@ -694,13 +734,13 @@ func TestWithDetailsNilMap(t *testing.T) {
 }
 
 func TestIsAuthErrorNegative(t *testing.T) {
-	assert.False(t, IsAuthError(errors.New("foo")))
+	assert.False(t, IsAuthError(errFoo))
 }
 
 func TestIsClientErrorNegative(t *testing.T) {
-	assert.False(t, IsClientError(errors.New("foo")))
+	assert.False(t, IsClientError(errFoo))
 }
 
 func TestIsServerErrorNegative(t *testing.T) {
-	assert.False(t, IsServerError(errors.New("foo")))
+	assert.False(t, IsServerError(errFoo))
 }

@@ -40,7 +40,8 @@ const (
 	SpaceNotFound     ErrorCode = "SPACE_NOT_FOUND"
 
 	// Auth errors
-	NoAuthorization    ErrorCode = "no_authorization"
+	NoAuthorization ErrorCode = "no_authorization"
+	//nolint:gosec
 	InvalidCredentials ErrorCode = "INVALID_CREDENTIALS"
 	TokenExpired       ErrorCode = "TOKEN_EXPIRED"
 

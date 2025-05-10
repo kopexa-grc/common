@@ -46,12 +46,15 @@ func FromContextError(err error) *Error {
 	if err == nil {
 		return nil
 	}
+
 	if errors.Is(err, context.DeadlineExceeded) {
 		return New(DeadlineExceeded, "Operation timed out").WithStatus(http.StatusGatewayTimeout)
 	}
+
 	if errors.Is(err, context.Canceled) {
 		return New(RequestTimeout, "Operation was canceled").WithStatus(http.StatusRequestTimeout)
 	}
+
 	return Wrap(err, "Context error")
 }
 
@@ -73,6 +76,7 @@ func IsRetryable(err error) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -85,6 +89,7 @@ func IsTimeout(err error) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -93,6 +98,7 @@ func IsAuthError(err error) bool {
 	if e, ok := err.(*Error); ok {
 		return e.Category == CategoryAuth
 	}
+
 	return false
 }
 
@@ -101,6 +107,7 @@ func IsClientError(err error) bool {
 	if e, ok := err.(*Error); ok {
 		return e.Category == CategoryClient
 	}
+
 	return false
 }
 
@@ -109,5 +116,6 @@ func IsServerError(err error) bool {
 	if e, ok := err.(*Error); ok {
 		return e.Category == CategoryServer
 	}
+
 	return false
 }

@@ -104,7 +104,9 @@ func (e *Error) WithDetails(key string, value interface{}) *Error {
 	if e.Details == nil {
 		e.Details = make(map[string]interface{})
 	}
+
 	e.Details[key] = value
+
 	return e
 }
 
@@ -145,6 +147,7 @@ func Is(err error, code ErrorCode) bool {
 	if e, ok := err.(*Error); ok {
 		return e.Code == code
 	}
+
 	return false
 }
 
@@ -153,6 +156,7 @@ func NewGone(message string) *Error {
 	if message == "" {
 		message = msgGone
 	}
+
 	return New(Gone, message).WithStatus(http.StatusGone)
 }
 
@@ -161,6 +165,7 @@ func NewUnexpectedFailure(message string) *Error {
 	if message == "" {
 		message = msgUnexpectedFailure
 	}
+
 	return New(UnexpectedFailure, message).WithStatus(http.StatusInternalServerError)
 }
 
@@ -174,6 +179,7 @@ func NewUnauthorized(message string) *Error {
 	if message == "" {
 		message = msgUnauthorized
 	}
+
 	return New(Unauthorized, message).WithStatus(http.StatusUnauthorized)
 }
 
@@ -187,6 +193,7 @@ func NewUnprocessableEntity(message string) *Error {
 	if message == "" {
 		message = msgUnprocessableEntity
 	}
+
 	return New(UnprocessableEntity, message).WithStatus(http.StatusUnprocessableEntity)
 }
 
@@ -195,6 +202,7 @@ func NewBadRequest(message string) *Error {
 	if message == "" {
 		message = msgBadRequest
 	}
+
 	return New(BadRequest, message).WithStatus(http.StatusBadRequest)
 }
 
@@ -203,6 +211,7 @@ func NewConflict(message string) *Error {
 	if message == "" {
 		message = msgConflict
 	}
+
 	return New(Conflict, message).WithStatus(http.StatusConflict)
 }
 
@@ -216,6 +225,7 @@ func NewNotFound(message string) *Error {
 	if message == "" {
 		message = msgNotFound
 	}
+
 	return New(NotFound, message).WithStatus(http.StatusNotFound)
 }
 
@@ -229,6 +239,7 @@ func NewForbidden(message string) *Error {
 	if message == "" {
 		message = msgForbidden
 	}
+
 	return New(Forbidden, message).WithStatus(http.StatusForbidden)
 }
 
@@ -242,6 +253,7 @@ func NewInvalidArgument(message string) *Error {
 	if message == "" {
 		message = msgInvalidArgument
 	}
+
 	return New(InvalidArgument, message).WithStatus(http.StatusBadRequest)
 }
 
@@ -255,6 +267,7 @@ func NewFailedPrecondition(message string) *Error {
 	if message == "" {
 		message = msgFailedPrecondition
 	}
+
 	return New(FailedPrecondition, message).WithStatus(http.StatusPreconditionFailed)
 }
 
@@ -268,6 +281,7 @@ func NewTooManyRequests(msg string) error {
 	if msg == "" {
 		msg = msgTooManyRequests
 	}
+
 	return New(TooManyRequests, msg).WithStatus(http.StatusTooManyRequests)
 }
 
@@ -281,6 +295,7 @@ func NewNotImplemented(msg string) error {
 	if msg == "" {
 		msg = msgNotImplemented
 	}
+
 	return New(NotImplemented, msg).WithStatus(http.StatusNotImplemented)
 }
 
@@ -294,6 +309,7 @@ func NewServiceUnavailable(msg string) error {
 	if msg == "" {
 		msg = msgServiceUnavailable
 	}
+
 	return New(ServiceUnavailable, msg).WithStatus(http.StatusServiceUnavailable)
 }
 
@@ -307,6 +323,7 @@ func NewGatewayTimeout(msg string) error {
 	if msg == "" {
 		msg = msgGatewayTimeout
 	}
+
 	return New(GatewayTimeout, msg).WithStatus(http.StatusGatewayTimeout)
 }
 
@@ -320,6 +337,7 @@ func NewResourceExhausted(msg string) error {
 	if msg == "" {
 		msg = msgResourceExhausted
 	}
+
 	return New(ResourceExhausted, msg).WithStatus(http.StatusInsufficientStorage)
 }
 
@@ -333,6 +351,7 @@ func NewQuotaExceeded(msg string) error {
 	if msg == "" {
 		msg = msgQuotaExceeded
 	}
+
 	return New(QuotaExceeded, msg).WithStatus(http.StatusTooManyRequests)
 }
 
@@ -346,6 +365,7 @@ func NewInvalidCredentials(msg string) error {
 	if msg == "" {
 		msg = msgInvalidCredentials
 	}
+
 	return New(InvalidCredentials, msg).WithStatus(http.StatusUnauthorized)
 }
 
@@ -359,6 +379,7 @@ func NewTokenExpired(msg string) error {
 	if msg == "" {
 		msg = msgTokenExpired
 	}
+
 	return New(TokenExpired, msg).WithStatus(http.StatusUnauthorized)
 }
 
@@ -372,6 +393,7 @@ func NewConnectionFailed(msg string) error {
 	if msg == "" {
 		msg = msgConnectionFailed
 	}
+
 	return New(ConnectionFailed, msg).WithStatus(http.StatusServiceUnavailable)
 }
 
@@ -385,6 +407,7 @@ func NewConnectionTimeout(msg string) error {
 	if msg == "" {
 		msg = msgConnectionTimeout
 	}
+
 	return New(ConnectionTimeout, msg).WithStatus(http.StatusGatewayTimeout)
 }
 
@@ -398,6 +421,7 @@ func NewConnectionRefused(msg string) error {
 	if msg == "" {
 		msg = msgConnectionRefused
 	}
+
 	return New(ConnectionRefused, msg).WithStatus(http.StatusServiceUnavailable)
 }
 
@@ -411,6 +435,7 @@ func NewDeadlineExceeded(msg string) error {
 	if msg == "" {
 		msg = msgDeadlineExceeded
 	}
+
 	return New(DeadlineExceeded, msg).WithStatus(http.StatusGatewayTimeout)
 }
 
@@ -424,6 +449,7 @@ func NewRequestTimeout(msg string) error {
 	if msg == "" {
 		msg = msgRequestTimeout
 	}
+
 	return New(RequestTimeout, msg).WithStatus(http.StatusRequestTimeout)
 }
 
@@ -437,6 +463,7 @@ func NewOutOfRange(msg string) error {
 	if msg == "" {
 		msg = msgOutOfRange
 	}
+
 	return New(OutOfRange, msg).WithStatus(http.StatusBadRequest)
 }
 
@@ -450,9 +477,11 @@ func Code(err error) ErrorCode {
 	if err == nil {
 		return ""
 	}
+
 	if e, ok := err.(*Error); ok {
 		return e.Code
 	}
+
 	return UnexpectedFailure
 }
 
@@ -461,8 +490,10 @@ func Status(err error) int {
 	if err == nil {
 		return http.StatusOK
 	}
+
 	if e, ok := err.(*Error); ok {
 		return e.Status
 	}
+
 	return http.StatusInternalServerError
 }
