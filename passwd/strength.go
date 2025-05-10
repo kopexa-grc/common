@@ -26,6 +26,8 @@ const (
 	minLength         = 16
 	idealMinLength    = 24
 	minEntropy        = 4.0
+
+	scoreMediumThreshold = 2
 )
 
 type Feedback struct {
@@ -64,6 +66,7 @@ func EvaluateWithContext(pw, username, email, org string) Feedback {
 	}
 
 	var hasUpper, hasLower, hasDigit, hasSymbol bool
+
 	for _, r := range pw {
 		switch {
 		case unicode.IsUpper(r):
@@ -83,11 +86,13 @@ func EvaluateWithContext(pw, username, email, org string) Feedback {
 	} else {
 		messages = append(messages, fmtPasswordTooFewCharacterTypes)
 	}
+
 	if hasDigit {
 		score++
 	} else {
 		messages = append(messages, fmtPasswordTooFewNumbers)
 	}
+
 	if hasSymbol {
 		score++
 	} else {
@@ -98,12 +103,15 @@ func EvaluateWithContext(pw, username, email, org string) Feedback {
 	if len(pw) >= idealMinLength && score >= 3 && entropy > minEntropy {
 		return Feedback{VeryHigh, nil}
 	}
-	if len(pw) >= minLength && score >= 2 {
+
+	if len(pw) >= minLength && score >= scoreMediumThreshold {
 		return Feedback{High, messages}
 	}
-	if score >= 2 {
+
+	if score >= scoreMediumThreshold {
 		return Feedback{Medium, messages}
 	}
+
 	return Feedback{Low, messages}
 }
 
@@ -117,6 +125,7 @@ func isInvalid(pw string) bool {
 
 	// Replace common l33t characters and re-check
 	var normalized strings.Builder
+
 	for _, r := range pw {
 		if repl, ok := leetMap[r]; ok {
 			normalized.WriteRune(repl)
@@ -126,6 +135,7 @@ func isInvalid(pw string) bool {
 	}
 
 	_, ok := commonPasswords[normalized.String()]
+
 	return ok
 }
 
@@ -137,11 +147,14 @@ func shannonEntropy(s string) float64 {
 	for _, r := range s {
 		freq[r]++
 	}
+
 	var entropy float64
+
 	l := float64(len(s))
 	for _, count := range freq {
 		p := count / l
 		entropy -= p * math.Log2(p)
 	}
+
 	return entropy
 }
