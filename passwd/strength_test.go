@@ -260,17 +260,21 @@ func TestFeedbackMessages(t *testing.T) {
 
 func TestMinLengthFeedback(t *testing.T) {
 	pw := "XyZabc12!uvw" // 12 Zeichen, garantiert nicht common, keine personal info
+
 	feedback := EvaluateWithContext(pw, "", "", "")
 	if feedback.Level == Rejected {
 		t.Errorf("Expected not Rejected, got %v", feedback.Level)
 	}
+
 	found := false
+
 	for _, msg := range feedback.Messages {
 		if msg == "Increase length to at least 16 characters" {
 			found = true
 			break
 		}
 	}
+
 	if !found {
 		t.Errorf("Expected minLength feedback message, got %v", feedback.Messages)
 	}

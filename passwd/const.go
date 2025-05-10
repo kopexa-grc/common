@@ -46,7 +46,10 @@ const (
 	fmtPasswordTooCommon            = "Password is too common or easily guessed"
 	fmtPasswordContainsPersonalInfo = "Password contains personal information"
 	fmtPasswordIdealLength          = "Increase length to at least %d characters"
+	//nolint:gosec // This is a user-facing feedback string, not a credential
 	fmtPasswordTooFewCharacterTypes = "Use both upper and lowercase letters"
-	fmtPasswordTooFewNumbers        = "Add at least one number"
-	fmtPasswordTooFewSymbols        = "Add a special character (e.g. !, $, #)"
+	//nolint:gosec // This is a user-facing feedback string, not a credential
+	fmtPasswordTooFewNumbers = "Add at least one number"
+	//nolint:gosec // This is a user-facing feedback string, not a credential
+	fmtPasswordTooFewSymbols = "Add a special character (e.g. !, $, #)"
 )

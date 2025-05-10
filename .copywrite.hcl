@@ -19,5 +19,6 @@ project {
     "**/*.html",
     ".git/**",
     "**/*.sql",
+    "build/reports/test-unit.xml",
   ]
 }

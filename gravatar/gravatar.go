@@ -42,6 +42,7 @@ func URL(email string, opts ...Option) string {
 func Hash(email string) string {
 	normalized := strings.ToLower(strings.TrimSpace(email))
 	sum := md5.Sum([]byte(normalized)) //nolint:gosec
+
 	return hex.EncodeToString(sum[:])
 }
 
@@ -52,12 +53,15 @@ func buildQuery(opts *Options) url.Values {
 	if opts.Size > 0 {
 		q.Set("s", strconv.Itoa(opts.Size))
 	}
+
 	if opts.DefaultImage != "" {
 		q.Set("d", opts.DefaultImage)
 	}
+
 	if opts.ForceDefault {
 		q.Set("f", "y")
 	}
+
 	if opts.Rating != "" {
 		q.Set("r", opts.Rating)
 	}
