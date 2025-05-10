@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/kopexa-grc/common/compare/common-v1.1.0...common-v1.2.0) (2025-05-10)
+
+
+### Features
+
+* add ID and Audit mixins for enhanced entity management ([#15](https://github.com/kopexa-grc/common/issues/15)) ([fb44be7](https://github.com/kopexa-grc/common/commit/fb44be71e978b69d661b9f8b00907675cf0cd5f3))
+
 ## [1.1.0](https://github.com/kopexa-grc/common/compare/common-v1.0.0...common-v1.1.0) (2025-05-10)
 
 
