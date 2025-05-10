@@ -52,4 +52,11 @@ const (
 	fmtPasswordTooFewNumbers = "Add at least one number"
 	//nolint:gosec // This is a user-facing feedback string, not a credential
 	fmtPasswordTooFewSymbols = "Add a special character (e.g. !, $, #)"
+
+	// Argon2 recommended/default parameters
+	Argon2DefaultTime    = 1         // draft RFC recommends time = 1
+	Argon2DefaultMemory  = 64 * 1024 // 64 MiB
+	Argon2DefaultThreads = 2         // default parallelism
+	Argon2DefaultKeyLen  = 32        // 32 bytes for AES-256
+	Argon2DefaultSaltLen = 16        // 16 bytes salt
 )
