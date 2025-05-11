@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/kopexa-grc/common/compare/v1.4.0...v1.5.0) (2025-05-11)
+
+
+### Features
+
+* soft delete docs ([#23](https://github.com/kopexa-grc/common/issues/23)) ([94611ea](https://github.com/kopexa-grc/common/commit/94611eaffd0c8fa98ab6a294ce46922f956f911c))
+
 ## [1.4.0](https://github.com/kopexa-grc/common/compare/v1.3.0...v1.4.0) (2025-05-11)
 
 
