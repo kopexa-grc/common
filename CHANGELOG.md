@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/kopexa-grc/common/compare/v1.7.0...v1.8.0) (2025-05-11)
+
+
+### Features
+
+* **wellknown:** add Prometheus namespace constant and documentation ([#30](https://github.com/kopexa-grc/common/issues/30)) ([192b15d](https://github.com/kopexa-grc/common/commit/192b15d75d46f83c3f07b06d5e6a33ca792f538f))
+
 ## [1.7.0](https://github.com/kopexa-grc/common/compare/v1.6.0...v1.7.0) (2025-05-11)
 
 
