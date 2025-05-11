@@ -225,6 +225,7 @@ func TestBasenameAndCollectionName(t *testing.T) {
 
 func TestScanAndValue(t *testing.T) {
 	krn := MustNew("//kopexa.com/frameworks/iso-27001-2022")
+
 	var scanKRN KRN
 	// Scan from string
 	err := scanKRN.Scan("//kopexa.com/frameworks/iso-27001-2022")
