@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/kopexa-grc/common/compare/v1.3.0...v1.4.0) (2025-05-11)
+
+
+### Features
+
+* add space-aware ID support to IDMixin ([#21](https://github.com/kopexa-grc/common/issues/21)) ([10aa53e](https://github.com/kopexa-grc/common/commit/10aa53e0900d31006b0b2941646d60863d8c4856))
+
 ## [1.3.0](https://github.com/kopexa-grc/common/compare/v1.2.1...v1.3.0) (2025-05-11)
 
 
