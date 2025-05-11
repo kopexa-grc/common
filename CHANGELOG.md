@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0](https://github.com/kopexa-grc/common/compare/v1.6.0...v1.7.0) (2025-05-11)
+
+
+### Features
+
+* **graceful:** implement graceful shutdown mechanism with tests and documentation ([#29](https://github.com/kopexa-grc/common/issues/29)) ([63d72ac](https://github.com/kopexa-grc/common/commit/63d72ac79d15f012e6702de0247e9013a9003f28))
+* **krn:** implement Kopexa Resource Name (KRN) system with JSON/YAML support and database integration ([#27](https://github.com/kopexa-grc/common/issues/27)) ([6591a93](https://github.com/kopexa-grc/common/commit/6591a9354c850a39b5ee497b350383073d208698))
+
 ## [1.6.0](https://github.com/kopexa-grc/common/compare/v1.5.0...v1.6.0) (2025-05-11)
 
 
