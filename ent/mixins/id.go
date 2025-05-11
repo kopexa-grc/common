@@ -51,7 +51,7 @@ const humanIDFieldName = "display_id"
 func (i IDMixin) Fields() []ent.Field {
 	fields := []ent.Field{
 		field.String("id").
-			DefaultFunc(uuid.New).
+			DefaultFunc(uuid.NewString).
 			Immutable().
 			Comment("Unique identifier for the entity"),
 	}
