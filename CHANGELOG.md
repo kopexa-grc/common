@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/kopexa-grc/common/compare/v1.5.0...v1.6.0) (2025-05-11)
+
+
+### Features
+
+* **logger:** implement buffered and colorized logging with environment detection ([#25](https://github.com/kopexa-grc/common/issues/25)) ([e29ca04](https://github.com/kopexa-grc/common/commit/e29ca0496f985942b4121bd98a466950a441ab05))
+
 ## [1.5.0](https://github.com/kopexa-grc/common/compare/v1.4.0...v1.5.0) (2025-05-11)
 
 
