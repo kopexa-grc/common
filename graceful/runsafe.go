@@ -5,10 +5,13 @@ package graceful
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/rs/zerolog/log"
 )
+
+var ErrPanicInFunction = errors.New("panic in function")
 
 type Recoverable interface {
 	Start(context.Context) error
@@ -18,9 +21,10 @@ type Recoverable interface {
 func RunSafe(ctx context.Context, name string, r Recoverable) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Error().Any("panic", r).Str("component", name).Msg("Recovered from panic")
-			err = fmt.Errorf("panic in %s: %v", name, r)
+			log.Error().Any(LogFieldPanic, r).Str(LogFieldComponent, name).Msg(LogMsgRecoveredFromPanic)
+			err = fmt.Errorf("%w: %s: %+v", ErrPanicInFunction, name, r)
 		}
 	}()
+
 	return r.Start(ctx)
 }

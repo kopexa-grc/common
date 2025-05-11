@@ -5,6 +5,7 @@ package graceful
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"os"
 	"os/signal"
@@ -21,7 +22,7 @@ type Shutdownable interface {
 	Shutdown(context.Context) error
 }
 
-type target struct {
+type Target struct {
 	name    string
 	shut    Shutdownable
 	timeout time.Duration
@@ -29,7 +30,7 @@ type target struct {
 
 // Closer handles shutdown of servers and connections
 type Closer struct {
-	targets      []target
+	targets      []Target
 	targetsMutex sync.Mutex
 
 	done     chan struct{}
@@ -48,8 +49,15 @@ func NewCloser() *Closer {
 
 // Register inserts a target to shutdown gracefully
 func (cc *Closer) Register(name string, shut Shutdownable, timeout time.Duration) {
+	// Validate timeout
+	if timeout < MinShutdownTimeout {
+		timeout = MinShutdownTimeout
+	} else if timeout > MaxShutdownTimeout {
+		timeout = MaxShutdownTimeout
+	}
+
 	cc.targetsMutex.Lock()
-	cc.targets = append(cc.targets, target{
+	cc.targets = append(cc.targets, Target{
 		name:    name,
 		shut:    shut,
 		timeout: timeout,
@@ -58,12 +66,13 @@ func (cc *Closer) Register(name string, shut Shutdownable, timeout time.Duration
 }
 
 // GetTargets returns a copy of the registered targets (for testing)
-func (cc *Closer) GetTargets() []target {
+func (cc *Closer) GetTargets() []Target {
 	cc.targetsMutex.Lock()
 	defer cc.targetsMutex.Unlock()
 
-	targets := make([]target, len(cc.targets))
+	targets := make([]Target, len(cc.targets))
 	copy(targets, cc.targets)
+
 	return targets
 }
 
@@ -82,9 +91,9 @@ func (cc *Closer) DetectShutdown() (trigger func(), ready chan struct{}) {
 
 		select {
 		case sig := <-signals:
-			log.Info().Str("signal", sig.String()).Msg("Triggering shutdown from signal")
+			log.Info().Str(LogFieldSignal, sig.String()).Msg(LogMsgTriggeringShutdown)
 		case <-cc.done:
-			log.Info().Msg("Shutting down...")
+			log.Info().Msg(LogMsgShuttingDown)
 		}
 
 		if atomic.LoadInt32(&cc.doneBool) == 1 {
@@ -93,29 +102,33 @@ func (cc *Closer) DetectShutdown() (trigger func(), ready chan struct{}) {
 
 		if atomic.SwapInt32(&cc.doneBool, 1) != 1 {
 			wg := sync.WaitGroup{}
+			hasErrors := false
+
 			cc.targetsMutex.Lock()
 			for _, targ := range cc.targets {
 				wg.Add(1)
-				go func(targ target) {
+
+				go func(targ Target) {
 					defer wg.Done()
 
 					ctx, cancel := context.WithTimeout(context.Background(), targ.timeout)
 					defer cancel()
 
 					if err := targ.shut.Shutdown(ctx); err != nil {
-						if ctx.Err() == context.DeadlineExceeded {
+						hasErrors = true
+						if errors.Is(ctx.Err(), context.DeadlineExceeded) {
 							log.Warn().
-								Str("target", targ.name).
-								Dur("timeout", targ.timeout).
-								Msg("Shutdown timed out")
+								Str(LogFieldTarget, targ.name).
+								Dur(LogFieldTimeout, targ.timeout).
+								Msg(LogMsgShutdownTimedOut)
 						} else {
 							log.Error().
 								Err(err).
-								Str("target", targ.name).
-								Msg("Shutdown failed")
+								Str(LogFieldTarget, targ.name).
+								Msg(LogMsgShutdownFailed)
 						}
 					} else {
-						log.Info().Str("target", targ.name).Msg("Shutdown finished")
+						log.Info().Str(LogFieldTarget, targ.name).Msg(LogMsgShutdownFinished)
 					}
 				}(targ)
 			}
@@ -123,7 +136,10 @@ func (cc *Closer) DetectShutdown() (trigger func(), ready chan struct{}) {
 			wg.Wait()
 
 			if !cc.skipExit {
-				os.Exit(0)
+				if hasErrors {
+					os.Exit(ExitError)
+				}
+				os.Exit(ExitSuccess)
 			}
 		}
 	}()

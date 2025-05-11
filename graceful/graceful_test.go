@@ -38,6 +38,7 @@ func (m *MockShutdownable) Shutdown(ctx context.Context) error {
 	if m.ShouldError {
 		return assert.AnError
 	}
+
 	return nil
 }
 
@@ -147,8 +148,10 @@ func TestCloser_ConcurrentRegistration(t *testing.T) {
 	var wg sync.WaitGroup
 	for i := 0; i < 10; i++ {
 		wg.Add(1)
+
 		go func(id int) {
 			defer wg.Done()
+
 			mock := &MockShutdownable{}
 			closer.Register(fmt.Sprintf("test%d", id), mock, time.Second)
 		}(i)
