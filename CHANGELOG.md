@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/kopexa-grc/common/compare/common-v1.2.0...common-v1.2.1) (2025-05-11)
+
+
+### Bug Fixes
+
+* id mixin to use string ([#17](https://github.com/kopexa-grc/common/issues/17)) ([448c143](https://github.com/kopexa-grc/common/commit/448c143bb05be741261c06e010dacd4cc6deb8df))
+
 ## [1.2.0](https://github.com/kopexa-grc/common/compare/common-v1.1.0...common-v1.2.0) (2025-05-10)
 
 
