@@ -21,7 +21,7 @@ import (
 // It provides a robust ID system that combines:
 // - A globally unique UUID as the primary identifier
 // - An optional human-readable display ID with configurable prefix and length
-// - Automatic generation and validation of both ID types
+// - Optional space-based uniqueness for both ID types
 // - Built-in indexing for optimal query performance
 type IDMixin struct {
 	mixin.Schema
@@ -40,9 +40,16 @@ type IDMixin struct {
 	// - 6 chars: ~0.005% for 10,000 IDs, ~0.5% for 100,000 IDs
 	// - 8 chars: ~0.0001% for 1,000,000 IDs
 	DisplayIDLength int
+
+	// SpaceAware determines if the entity is space-aware.
+	// If true, uniqueness constraints will be scoped to the space_id.
+	SpaceAware bool
 }
 
-const humanIDFieldName = "display_id"
+const (
+	humanIDFieldName = "display_id"
+	spaceIDFieldName = "space_id"
+)
 
 // Fields returns the schema fields for the IDMixin.
 // It creates:
@@ -76,10 +83,23 @@ func (i IDMixin) Fields() []ent.Field {
 // It ensures:
 // - The 'id' field is globally unique
 // - The 'display_id' field is unique if SingleFieldIndex is true
+// - Space-scoped uniqueness for both 'id' and 'display_id' if SpaceAware is true
 func (i IDMixin) Indexes() []ent.Index {
 	idx := []ent.Index{
 		index.Fields("id").
 			Unique(), // enforce globally unique ids
+	}
+
+	if i.SpaceAware {
+		// Add space-scoped unique index for id
+		idx = append(idx, index.Fields(spaceIDFieldName, "id").
+			Unique())
+
+		if i.HumanIdentifierPrefix != "" && i.SingleFieldIndex {
+			// Add space-scoped unique index for display_id
+			idx = append(idx, index.Fields(spaceIDFieldName, humanIDFieldName).
+				Unique())
+		}
 	}
 
 	return idx
