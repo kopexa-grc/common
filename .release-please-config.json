@@ -4,11 +4,8 @@
   "packages": {
     ".": {
       "release-type": "go",
-      "package-name": "common",
-      "changelog-path": "CHANGELOG.md",
       "prerelease": false,
-      "include-component-in-tag": true,
-      "include-v-in-tag": true
+      "changelog-path": "CHANGELOG.md"
     }
   }
 } 
