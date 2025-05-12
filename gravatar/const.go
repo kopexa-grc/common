@@ -6,7 +6,7 @@ package gravatar
 // Constants for default Gravatar behavior
 const (
 	defaultSize   = 80
-	defaultImage  = "robohash"
+	defaultImage  = "identicon"
 	defaultRating = "pg"
 	baseURL       = "https://www.gravatar.com/avatar/"
 )
