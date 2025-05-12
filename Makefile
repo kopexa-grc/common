@@ -31,6 +31,12 @@ prep/tools:
 		lefthook install; \
 	fi
 
+prep/tools/mockgen:
+	@if ! command -v mockgen >/dev/null 2>&1; then \
+		echo "mockgen is not installed. Installing mockgen..."; \
+		go install go.uber.org/mock/mockgen@latest; \
+	fi
+
 #   🧹 Formatting   #
 ##@ Formatting
 
