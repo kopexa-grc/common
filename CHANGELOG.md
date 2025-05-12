@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/kopexa-grc/common/compare/v1.8.0...v1.9.0) (2025-05-12)
+
+
+### Features
+
+* **khttp:** add CORS and metrics middleware with comprehensive tests and documentation ([#32](https://github.com/kopexa-grc/common/issues/32)) ([f7330b0](https://github.com/kopexa-grc/common/commit/f7330b03191f1de44abf2831ce2aa11409d196fe))
+
 ## [1.8.0](https://github.com/kopexa-grc/common/compare/v1.7.0...v1.8.0) (2025-05-11)
 
 
