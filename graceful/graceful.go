@@ -116,6 +116,7 @@ func (cc *Closer) DetectShutdown() (trigger func(), ready chan struct{}) {
 
 					if err := targ.shut.Shutdown(ctx); err != nil {
 						hasErrors = true
+
 						if errors.Is(ctx.Err(), context.DeadlineExceeded) {
 							log.Warn().
 								Str(LogFieldTarget, targ.name).
@@ -139,6 +140,7 @@ func (cc *Closer) DetectShutdown() (trigger func(), ready chan struct{}) {
 				if hasErrors {
 					os.Exit(ExitError)
 				}
+
 				os.Exit(ExitSuccess)
 			}
 		}

@@ -15,6 +15,7 @@ import (
 func WriteJSON(w http.ResponseWriter, statusCode int, v any) error {
 	w.Header().Add("Content-Type", ContentTypeJSON)
 	w.WriteHeader(statusCode)
+
 	return json.NewEncoder(w).Encode(v)
 }
 

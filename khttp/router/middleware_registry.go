@@ -4,7 +4,7 @@
 package router
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
 	"reflect"
 
@@ -20,6 +20,8 @@ type MiddlewareRegistry struct {
 	middlewares *list.List[Middleware]
 }
 
+var ErrMiddlewareNotFound = errors.New("middleware not found")
+
 // NewMiddlewareRegistry creates a new MiddlewareRegistry.
 func NewMiddlewareRegistry() MiddlewareRegistry {
 	return MiddlewareRegistry{
@@ -32,6 +34,7 @@ func (registry MiddlewareRegistry) Register(middleware Middleware) {
 	if registry.findFirst(middleware) != nil {
 		return
 	}
+
 	registry.middlewares.PushBack(middleware)
 }
 
@@ -46,9 +49,11 @@ func (registry MiddlewareRegistry) UseOnRouter(router chi.Router) {
 func (registry MiddlewareRegistry) Replace(oldMiddleware Middleware, newMiddleware Middleware) error {
 	nodeToReplace := registry.findFirst(oldMiddleware)
 	if nodeToReplace == nil {
-		return fmt.Errorf("middleware not found")
+		return ErrMiddlewareNotFound
 	}
+
 	nodeToReplace.Value = newMiddleware
+
 	return nil
 }
 

@@ -17,7 +17,7 @@ func TestMiddleware(t *testing.T) {
 	GlobalRegistry = NewRegistry()
 
 	// Create test handler
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
@@ -44,7 +44,7 @@ func TestMiddleware(t *testing.T) {
 		},
 		{
 			name: "error request",
-			handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			handler: http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 				w.WriteHeader(http.StatusInternalServerError)
 			}),
 			expectedStatus: http.StatusInternalServerError,

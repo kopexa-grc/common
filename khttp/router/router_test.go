@@ -23,6 +23,7 @@ const testServiceName = "router.test"
 func TestNewObservabilityRouter(t *testing.T) {
 	systemServiceName, serviceNameSet := os.LookupEnv("SERVICE_NAME")
 	require.NoError(t, os.Setenv("SERVICE_NAME", testServiceName))
+
 	defer func() {
 		if serviceNameSet {
 			_ = os.Setenv("SERVICE_NAME", systemServiceName)
@@ -38,6 +39,7 @@ func TestNewObservabilityRouter(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/metrics", nil)
 
 		r.ServeHTTP(rec, req)
+
 		resp := rec.Result()
 		defer resp.Body.Close()
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
@@ -50,6 +52,7 @@ func TestNewObservabilityRouter(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/debug/pprof/cmdline", nil)
 
 		r.ServeHTTP(rec, req)
+
 		resp := rec.Result()
 		defer resp.Body.Close()
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
@@ -82,13 +85,15 @@ func TestRouterCors(t *testing.T) {
 
 	lo.ForEach(tests, func(test test, _ int) {
 		t.Run(test.name, func(t *testing.T) {
-			test.subject.Get("/health", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusConflict) })
+			test.subject.Get("/health", func(w http.ResponseWriter, _ *http.Request) { w.WriteHeader(http.StatusConflict) })
+
 			rec := httptest.NewRecorder()
 			req := httptest.NewRequest(http.MethodOptions, "/health", nil)
 			req.Header.Add("Origin", "some-origin")
 			req.Header.Add("Access-Control-Request-Method", "POST")
 			req.Header.Add("Access-Control-Request-Headers", "Content-Type")
 			test.subject.ServeHTTP(rec, req)
+
 			resp := rec.Result()
 			defer resp.Body.Close()
 			assert.Equal(t, http.StatusOK, resp.StatusCode)

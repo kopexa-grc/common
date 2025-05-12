@@ -20,5 +20,6 @@ func Handler() http.Handler {
 	mux.HandleFunc(PathPrefixPProf+"/symbol", pprof.Symbol)
 	mux.HandleFunc(PathPrefixPProf+"/trace", pprof.Trace)
 	mux.HandleFunc(PathPrefixPProf+"/", pprof.Index)
+
 	return mux
 }

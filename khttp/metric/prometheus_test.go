@@ -20,11 +20,11 @@ func TestMetric(t *testing.T) {
 	r := chi.NewRouter()
 	r.Use(Middleware)
 
-	r.Get("/clusters/{clusterId}", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/clusters/{clusterId}", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	r.Get("/nodes/{nodeId}", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/nodes/{nodeId}", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
@@ -33,6 +33,7 @@ func TestMetric(t *testing.T) {
 
 	for i := 0; i < 3000; i++ {
 		wg.Add(1)
+
 		go func() {
 			req := httptest.NewRequest(http.MethodGet, "/clusters/foo", nil)
 			rec := httptest.NewRecorder()
@@ -43,6 +44,7 @@ func TestMetric(t *testing.T) {
 
 	for i := 0; i < 3000; i++ {
 		wg.Add(1)
+
 		go func() {
 			req := httptest.NewRequest(http.MethodGet, "/nodes/foo", nil)
 			rec := httptest.NewRecorder()
@@ -57,6 +59,7 @@ func TestMetric(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
 	Handler.ServeHTTP(rec, req)
+
 	resp := rec.Result()
 	defer resp.Body.Close()
 	assert.Equal(t, http.StatusOK, resp.StatusCode)

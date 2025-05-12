@@ -16,7 +16,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var testMiddleware router.Middleware = func(next http.Handler) http.Handler {
+var testMiddleware router.Middleware = func(_ http.Handler) http.Handler {
 	return nil
 }
 

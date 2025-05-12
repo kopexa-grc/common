@@ -20,7 +20,7 @@ const (
 	HeaderAcceptLanguage          = "Accept-Language"
 	HeaderAuthorization           = "Authorization"
 	HeaderContentType             = "Content-Type"
-	HeaderCSRFToken               = "X-CSRF-Token"
+	HeaderCSRFToken               = "X-CSRF-Token" //nolint:gosec
 	HeaderContentDisposition      = "Content-Disposition"
 	HeaderContentTransferEncoding = "Content-Transfer-Encoding"
 	HeaderCredentials             = "Credentials"

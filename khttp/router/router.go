@@ -54,6 +54,7 @@ func NewObservabilityRouter() *chi.Mux {
 
 	r.Mount(pprof.PathPrefixPProf, pprof.Handler())
 	r.Get("/metrics", metric.Handler.ServeHTTP)
+
 	return r
 }
 

@@ -27,6 +27,7 @@ func NewRegistry() *Registry {
 		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
 		collectors.NewBuildInfoCollector(),
 	)
+
 	return &Registry{Registry: r}
 }
 
@@ -125,6 +126,7 @@ func (r *Registry) PrometheusMiddleware() func(next http.Handler) http.Handler {
 								promhttp.InstrumentHandlerTimeToWriteHeader(timeToFirstHeader,
 									http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 										next.ServeHTTP(w, r)
+
 										if req.URL != nil {
 											path := requestPath(req)
 											reqDuration.ObserverVec = requestDuration.MustCurryWith(prometheus.Labels{LabelHandler: path})

@@ -17,7 +17,7 @@ import (
 // Configuration represents the default configuration
 // used for Kopexa APIs
 var Configuration = cors.Options{
-	AllowOriginFunc: func(r *http.Request, origin string) bool { return true },
+	AllowOriginFunc: func(_ *http.Request, _ string) bool { return true },
 	AllowedMethods: []string{
 		MethodHead,
 		MethodOptions,

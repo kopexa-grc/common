@@ -15,14 +15,22 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+const (
+	ReadTimeout       = 5 * time.Second
+	WriteTimeout      = 10 * time.Second
+	IdleTimeout       = 120 * time.Second
+	ReadHeaderTimeout = 5 * time.Second
+	ShutdownTimeout   = 30 * time.Second
+)
+
 // CreateHTTPServer creates a http server, based on the recommendations from
 // https://blog.cloudflare.com/exposing-go-on-the-internet/
 func CreateHTTPServer(addr string, hand http.Handler) *http.Server {
 	return &http.Server{
-		ReadTimeout:       5 * time.Second,
-		WriteTimeout:      10 * time.Second,
-		IdleTimeout:       120 * time.Second,
-		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       ReadTimeout,
+		WriteTimeout:      WriteTimeout,
+		IdleTimeout:       IdleTimeout,
+		ReadHeaderTimeout: ReadHeaderTimeout,
 		TLSConfig: &tls.Config{
 			MinVersion:               tls.VersionTLS12,
 			PreferServerCipherSuites: true,
@@ -43,9 +51,10 @@ func ShutdownGracefully(srv *http.Server) {
 	sig := <-sigCh
 	log.Info().Msgf("shutting down server due to received signal: %s", sig)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), ShutdownTimeout)
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Fatal().Err(err).Msg("error shutting down server")
 	}
+
 	cancel()
 }

@@ -13,7 +13,7 @@ import (
 
 func TestMiddleware(t *testing.T) {
 	// Create test handler
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
@@ -83,6 +83,7 @@ func TestMiddleware(t *testing.T) {
 			if tt.origin != "" {
 				req.Header.Set("Origin", tt.origin)
 			}
+
 			if tt.requestMethod != "" {
 				req.Header.Set("Access-Control-Request-Method", tt.requestMethod)
 			}

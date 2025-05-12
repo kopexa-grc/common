@@ -46,6 +46,8 @@ func init() {
 	metric.GlobalRegistry.MustRegister(operationDuration)
 }
 
+const StatusClientClosedRequest = 499
+
 func Handle(name string, w http.ResponseWriter, r *http.Request, fn func(ctx context.Context) error) {
 	ctx := r.Context()
 
@@ -58,11 +60,13 @@ func Handle(name string, w http.ResponseWriter, r *http.Request, fn func(ctx con
 		"err":  "",
 	}
 	start := time.Now()
+
 	err := fn(ctx)
 	if err != nil {
 		span.LogKV("error", err)
 		labels["err"] = err.Error()
 	}
+
 	dur := time.Since(start)
 
 	// Note: in case of a panic these will not be completed
@@ -77,7 +81,8 @@ func Handle(name string, w http.ResponseWriter, r *http.Request, fn func(ctx con
 			case <-ctx.Done():
 				if ctx.Err() != nil {
 					log.Error().Err(err).Msg("request failed, report err to client")
-					w.WriteHeader(499)
+					w.WriteHeader(StatusClientClosedRequest)
+
 					return
 				}
 			default:

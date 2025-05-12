@@ -13,18 +13,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var dummySecurityHandler http.HandlerFunc = func(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusInternalServerError)
-	w.Write([]byte("ISE"))
-}
+func TestSecurityHeaders(t *testing.T) {
+	var dummySecurityHandler http.HandlerFunc = func(w http.ResponseWriter, _ *http.Request) {
+		_, err := w.Write([]byte("ISE"))
+		if err != nil {
+			t.Fatalf("Failed to write response: %v", err)
+		}
+	}
 
-func TestMiddleware(t *testing.T) {
 	r := Headers(dummySecurityHandler)
 
 	t.Run("check security headers", func(t *testing.T) {
 		rec := httptest.NewRecorder()
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
 		r.ServeHTTP(rec, req)
+
 		resp := rec.Result()
 		defer resp.Body.Close()
 		assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
