@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/kopexa-grc/common/compare/v1.9.0...v1.10.0) (2025-05-12)
+
+
+### Features
+
+* **parser:** add query parameter parsing functions with unit tests ([#34](https://github.com/kopexa-grc/common/issues/34)) ([4fea3eb](https://github.com/kopexa-grc/common/commit/4fea3eb66c6b7dc057eae718f3e91e74ac55bd57))
+
 ## [1.9.0](https://github.com/kopexa-grc/common/compare/v1.8.0...v1.9.0) (2025-05-12)
 
 
