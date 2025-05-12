@@ -13,8 +13,7 @@ import (
 )
 
 // Helper function to create and start an embedded NATS server
-func runNATSServer(t *testing.T, opts *server.Options) (*server.Server, error) {
-
+func runNATSServer(_ *testing.T, opts *server.Options) (*server.Server, error) {
 	if opts == nil {
 		opts = &server.Options{
 			Host:           "127.0.0.1",
@@ -104,7 +103,9 @@ func TestNATSClient_UserAuth(t *testing.T) {
 				assert.Error(t, err)
 				return
 			}
+
 			require.NoError(t, err)
+
 			defer nc.Close()
 			assert.True(t, nc.IsConnected())
 		})
@@ -162,7 +163,9 @@ func TestNATSClient_TokenAuth(t *testing.T) {
 				assert.Error(t, err)
 				return
 			}
+
 			require.NoError(t, err)
+
 			defer nc.Close()
 			assert.True(t, nc.IsConnected())
 		})

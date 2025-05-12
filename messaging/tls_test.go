@@ -65,12 +65,12 @@ func createTempFiles(t *testing.T, certPEM, keyPEM []byte) (certFile, keyFile st
 
 	// Create certificate file
 	certFile = filepath.Join(tempDir, "cert.pem")
-	err = os.WriteFile(certFile, certPEM, 0644)
+	err = os.WriteFile(certFile, certPEM, 0600)
 	require.NoError(t, err)
 
 	// Create key file
 	keyFile = filepath.Join(tempDir, "key.pem")
-	err = os.WriteFile(keyFile, keyPEM, 0644)
+	err = os.WriteFile(keyFile, keyPEM, 0600)
 	require.NoError(t, err)
 
 	return certFile, keyFile, func() {
@@ -170,6 +170,7 @@ func TestTLSConfig_TLSConfig(t *testing.T) {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
+
 				if tt.config.Enabled {
 					assert.NotNil(t, config)
 				} else {

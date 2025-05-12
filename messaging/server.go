@@ -5,13 +5,22 @@ package messaging
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
 
 	"github.com/kopexa-grc/common/errors"
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/rs/zerolog/log"
+)
+
+const (
+	defaultMaxControlLine = 256
+	defaultReadyTimeout   = 4 * time.Second
+)
+
+var (
+	ErrServerNil         = errors.New(errors.BadRequest, "server is nil")
+	ErrServerStartFailed = errors.New(errors.UnexpectedFailure, "NATS server failed to start")
 )
 
 // EmbeddedServer is an embedded NATS server that implements the Shutdownable interface
@@ -30,7 +39,7 @@ func NewEmbeddedServer(opts *server.Options) (*EmbeddedServer, error) {
 			Port:           -1, // random port
 			NoLog:          true,
 			NoSigs:         true,
-			MaxControlLine: 256,
+			MaxControlLine: defaultMaxControlLine,
 		}
 	}
 
@@ -50,21 +59,23 @@ func (es *EmbeddedServer) Start() error {
 	defer es.mu.Unlock()
 
 	if es.server == nil {
-		return fmt.Errorf("server is nil")
+		return ErrServerNil
 	}
 
 	es.ready = make(chan struct{})
 
 	log.Info().Msg("EmbeddedServer: starting server goroutine")
+
 	go func() {
 		log.Info().Msg("EmbeddedServer: inside goroutine, calling Start()")
 		es.server.Start()
 	}()
 
 	log.Info().Msg("EmbeddedServer: waiting for ReadyForConnections...")
-	if !es.server.ReadyForConnections(4 * time.Second) {
+
+	if !es.server.ReadyForConnections(defaultReadyTimeout) {
 		log.Error().Msg("EmbeddedServer: ReadyForConnections() timeout or failed")
-		return fmt.Errorf("NATS server failed to start")
+		return ErrServerStartFailed
 	}
 
 	log.Info().Msg("EmbeddedServer: ReadyForConnections() succeeded")
@@ -82,7 +93,7 @@ func (es *EmbeddedServer) Ready() <-chan struct{} {
 }
 
 // Shutdown implements the Shutdownable interface
-func (es *EmbeddedServer) Shutdown(ctx context.Context) error {
+func (es *EmbeddedServer) Shutdown(_ context.Context) error {
 	es.mu.Lock()
 	defer es.mu.Unlock()
 

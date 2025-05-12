@@ -12,6 +12,11 @@ import (
 	"github.com/kopexa-grc/common/errors"
 )
 
+var (
+	ErrFailedToAddCACert     = errors.New(errors.BadRequest, "failed to add ca cert")
+	ErrFailedToAddCACertFile = errors.New(errors.BadRequest, "failed to add ca cert at %s")
+)
+
 type TLSConfig struct {
 	CAFiles  []string `mapstructure:"ca_files" envconfig:"ca_files" json:"ca_files" yaml:"ca_files"`
 	KeyFile  string   `mapstructure:"key_file" split_words:"true" json:"key_file" yaml:"key_file"`
@@ -29,16 +34,18 @@ func (cfg TLSConfig) TLSConfig() (*tls.Config, error) {
 	var err error
 
 	tlsConf := &tls.Config{
-		MinVersion:         tls.VersionTLS12,
+		MinVersion: tls.VersionTLS12,
+		// nolint:gosec
 		InsecureSkipVerify: cfg.Insecure,
 	}
 
 	// Load CA
-	if cfg.CA != "" {
+	switch {
+	case cfg.CA != "":
 		tlsConf.RootCAs, err = LoadCAFromValue(cfg.CA)
-	} else if len(cfg.CAFiles) > 0 {
+	case len(cfg.CAFiles) > 0:
 		tlsConf.RootCAs, err = LoadCAFromFiles(cfg.CAFiles)
-	} else {
+	default:
 		tlsConf.RootCAs, err = x509.SystemCertPool()
 	}
 
@@ -87,7 +94,7 @@ func LoadCAFromFiles(cafiles []string) (*x509.CertPool, error) {
 		}
 
 		if !pool.AppendCertsFromPEM(caData) {
-			return nil, fmt.Errorf("failed to add ca cert at %s", caFile)
+			return nil, fmt.Errorf("%w: %s", ErrFailedToAddCACertFile, caFile)
 		}
 	}
 
@@ -97,7 +104,8 @@ func LoadCAFromFiles(cafiles []string) (*x509.CertPool, error) {
 func LoadCAFromValue(ca string) (*x509.CertPool, error) {
 	pool := x509.NewCertPool()
 	if !pool.AppendCertsFromPEM([]byte(ca)) {
-		return nil, fmt.Errorf("failed to add ca cert")
+		return nil, ErrFailedToAddCACert
 	}
+
 	return pool, nil
 }
