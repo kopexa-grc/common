@@ -15,6 +15,7 @@ import (
 
 func TestSecurityHeaders(t *testing.T) {
 	var dummySecurityHandler http.HandlerFunc = func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
 		_, err := w.Write([]byte("ISE"))
 		if err != nil {
 			t.Fatalf("Failed to write response: %v", err)
