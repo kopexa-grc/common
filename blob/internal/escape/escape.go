@@ -18,6 +18,7 @@ func IsASCIIAlphanumeric(r rune) bool {
 	case '0' <= r && r <= '9':
 		return true
 	}
+
 	return false
 }
 
@@ -39,12 +40,15 @@ func IsASCIIAlphanumeric(r rune) bool {
 func HexEscape(s string, shouldEscape func(r []rune, i int) bool) string {
 	// Do a first pass to see which runes (if any) need escaping.
 	runes := []rune(s)
+
 	var toEscape []int
+
 	for i := range runes {
 		if shouldEscape(runes, i) {
 			toEscape = append(toEscape, i)
 		}
 	}
+
 	if len(toEscape) == 0 {
 		return s
 	}
@@ -55,6 +59,7 @@ func HexEscape(s string, shouldEscape func(r []rune, i int) bool) string {
 	escaped := make([]rune, len(runes)+13*len(toEscape))
 	n := 0 // current index into toEscape
 	j := 0 // current index into escaped
+
 	for i, r := range runes {
 		if n < len(toEscape) && i == toEscape[n] {
 			// We were asked to escape this rune.
@@ -62,18 +67,21 @@ func HexEscape(s string, shouldEscape func(r []rune, i int) bool) string {
 				escaped[j] = x
 				j++
 			}
+
 			n++
 		} else {
 			escaped[j] = r
 			j++
 		}
 	}
+
 	return string(escaped[0:j])
 }
 
 // HexUnescape reverses HexEscape.
 func HexUnescape(s string) string {
 	var unescaped []rune
+
 	runes := []rune(s)
 	for i := 0; i < len(runes); i++ {
 		if ok, newR, newI := unescape(runes, i); ok {
@@ -86,15 +94,18 @@ func HexUnescape(s string) string {
 				unescaped = make([]rune, i)
 				copy(unescaped, runes)
 			}
+
 			unescaped = append(unescaped, newR)
 			i = newI
 		} else if unescaped != nil {
 			unescaped = append(unescaped, runes[i])
 		}
 	}
+
 	if unescaped == nil {
 		return s
 	}
+
 	return string(unescaped)
 }
 
@@ -107,18 +118,22 @@ func unescape(r []rune, i int) (bool, rune, int) {
 	if r[i] != '_' {
 		return false, 0, 0
 	}
+
 	i++
 	if i >= len(r) || r[i] != '_' {
 		return false, 0, 0
 	}
+
 	i++
 	if i >= len(r) || r[i] != '0' {
 		return false, 0, 0
 	}
+
 	i++
 	if i >= len(r) || r[i] != 'x' {
 		return false, 0, 0
 	}
+
 	i++
 	// Capture the digits until the next "_" (if any).
 	var hexdigits []rune
@@ -129,6 +144,7 @@ func unescape(r []rune, i int) (bool, rune, int) {
 	if i >= len(r) || r[i] != '_' {
 		return false, 0, 0
 	}
+
 	i++
 	if i >= len(r) || r[i] != '_' {
 		return false, 0, 0
@@ -138,5 +154,6 @@ func unescape(r []rune, i int) (bool, rune, int) {
 	if err != nil {
 		return false, 0, 0
 	}
+
 	return true, rune(retval), i
 }

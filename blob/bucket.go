@@ -42,6 +42,7 @@ func (b *Bucket) Delete(ctx context.Context, key string) (err error) {
 
 	b.mu.RLock()
 	defer b.mu.RUnlock()
+
 	if b.closed {
 		return errClosed
 	}
@@ -87,7 +88,9 @@ func (b *Bucket) SignedURL(ctx context.Context, key string, opts *SignedURLOptio
 	if !utf8.ValidString(key) {
 		return "", kerr.Newf(kerr.InvalidArgument, nil, "blob: SignedURL key must be a valid UTF-8 string: %q", key)
 	}
+
 	dopts := new(driver.SignedURLOptions)
+
 	if opts == nil {
 		opts = new(SignedURLOptions)
 	}
@@ -119,6 +122,7 @@ func (b *Bucket) SignedURL(ctx context.Context, key string, opts *SignedURLOptio
 
 	b.mu.RLock()
 	defer b.mu.RUnlock()
+
 	if b.closed {
 		return "", errClosed
 	}
@@ -151,6 +155,7 @@ func (b *Bucket) Copy(ctx context.Context, dstKey, srcKey string, opts *CopyOpti
 	if !utf8.ValidString(dstKey) {
 		return kerr.Newf(kerr.InvalidArgument, nil, "blob: Copy dstKey must be a valid UTF-8 string: %q", dstKey)
 	}
+
 	if !utf8.ValidString(srcKey) {
 		return kerr.Newf(kerr.InvalidArgument, nil, "blob: Copy srcKey must be a valid UTF-8 string: %q", srcKey)
 	}
@@ -165,6 +170,7 @@ func (b *Bucket) Copy(ctx context.Context, dstKey, srcKey string, opts *CopyOpti
 
 	b.mu.RLock()
 	defer b.mu.RUnlock()
+
 	if b.closed {
 		return errClosed
 	}

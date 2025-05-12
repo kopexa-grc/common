@@ -33,7 +33,7 @@ func (store *AzureStore) SignedURL(ctx context.Context, key string, opts *driver
 	return blob.SignedURL(ctx, opts)
 }
 
-func (store *AzureStore) GetSignedUploadURL(ctx context.Context, key string, expires time.Duration, maxSize int64, contentType string) (string, error) {
+func (store *AzureStore) GetSignedUploadURL(ctx context.Context, key string, expires time.Duration, _ int64, contentType string) (string, error) {
 	blob, err := store.Service.NewBlob(ctx, key)
 	if err != nil {
 		return "", err
@@ -90,25 +90,26 @@ func (store *AzureStore) Copy(ctx context.Context, dstKey, srcKey string, opts *
 	}
 
 	nErrors := 0
+
 	copyStatus := *resp.CopyStatus
 	for copyStatus == blob.CopyStatusTypePending {
-		// Poll until the copy is complete
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(defaultCopyPollMs * time.Millisecond)
+
 		propertiesResp, err := dstBlobClient.GetProperties(ctx, nil)
 		if err != nil {
-			// A GetProperties failure may be transient, so allow a couple
-			// of them before giving up.
 			nErrors++
 			if ctx.Err() != nil || nErrors == 3 {
 				return err
 			}
+
+			continue
 		}
 
 		copyStatus = *propertiesResp.CopyStatus
 	}
 
 	if copyStatus != blob.CopyStatusTypeSuccess {
-		return fmt.Errorf("copy failed with status: %s", copyStatus)
+		return fmt.Errorf("%w: %s", driver.ErrCopyFailed, copyStatus)
 	}
 
 	return nil

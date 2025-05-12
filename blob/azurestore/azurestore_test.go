@@ -18,17 +18,10 @@ import (
 const mockContainer = "kopexa"
 const mockID = "123"
 
-var mockInfo = map[string]interface{}{
-	"id":   mockID,
-	"name": "test",
-	"size": 100,
-	"type": "file",
-	"url":  "https://example.com/test",
-}
-
 func TestGetSignedUploadURL(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
+
 	assert := assert.New(t)
 
 	ctx := context.Background()
@@ -64,6 +57,7 @@ func TestGetSignedUploadURL(t *testing.T) {
 func TestGetSignedDownloadURL(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
+
 	assert := assert.New(t)
 
 	ctx := context.Background()
@@ -98,6 +92,7 @@ func TestGetSignedDownloadURL(t *testing.T) {
 func TestDelete(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
+
 	assert := assert.New(t)
 
 	ctx, cancel := context.WithCancel(t.Context())
@@ -114,7 +109,8 @@ func TestDelete(t *testing.T) {
 		blockBlob.EXPECT().Delete(ctx).Return(nil).Times(1),
 	)
 
-	store.DeleteObject(ctx, mockID+".info")
+	err := store.DeleteObject(ctx, mockID+".info")
+	assert.NoError(err)
 
 	cancel()
 }

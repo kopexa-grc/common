@@ -4,40 +4,10 @@
 package blob
 
 import (
-	"context"
 	"testing"
 
-	"github.com/kopexa-grc/common/blob/driver"
 	"github.com/stretchr/testify/assert"
 )
-
-// mockBucket implements driver.Bucket for testing
-type mockBucket struct {
-	deleteFunc    func(ctx context.Context, key string) error
-	signedURLFunc func(ctx context.Context, key string, opts *driver.SignedURLOptions) (string, error)
-	copyFunc      func(ctx context.Context, dstKey, srcKey string, opts *driver.CopyOptions) error
-}
-
-func (m *mockBucket) Delete(ctx context.Context, key string) error {
-	if m.deleteFunc != nil {
-		return m.deleteFunc(ctx, key)
-	}
-	return nil
-}
-
-func (m *mockBucket) SignedURL(ctx context.Context, key string, opts *driver.SignedURLOptions) (string, error) {
-	if m.signedURLFunc != nil {
-		return m.signedURLFunc(ctx, key, opts)
-	}
-	return "https://mock-url.com/" + key, nil
-}
-
-func (m *mockBucket) Copy(ctx context.Context, dstKey, srcKey string, opts *driver.CopyOptions) error {
-	if m.copyFunc != nil {
-		return m.copyFunc(ctx, dstKey, srcKey, opts)
-	}
-	return nil
-}
 
 func TestNew(t *testing.T) {
 	tests := []struct {

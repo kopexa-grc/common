@@ -21,7 +21,7 @@ type AzureConfig struct {
 
 type BucketProvider interface {
 	Public() (*Bucket, error)
-	Space(spaceId string) (*Bucket, error)
+	Space(spaceID string) (*Bucket, error)
 }
 
 type bucketProvider struct {
@@ -53,12 +53,12 @@ func (p *bucketProvider) Public() (*Bucket, error) {
 	return &Bucket{b: store}, nil
 }
 
-func (p *bucketProvider) Space(spaceId string) (*Bucket, error) {
+func (p *bucketProvider) Space(spaceID string) (*Bucket, error) {
 	azConfig := &azurestore.AzConfig{
 		AccountName:         p.config.Azure.AccountName,
 		AccountKey:          p.config.Azure.AccountKey,
 		Endpoint:            p.config.Azure.Endpoint,
-		ContainerName:       fmt.Sprintf("space-%s", spaceId),
+		ContainerName:       fmt.Sprintf("space-%s", spaceID),
 		ContainerAccessType: privateAccessType,
 		BlobAccessTier:      hotAccessTier,
 	}

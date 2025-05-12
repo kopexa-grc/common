@@ -6,3 +6,9 @@ package azurestore
 const (
 	InfoBlobSuffix string = ".info"
 )
+
+const (
+	maxRetryDelay = 5000
+	retryDelay    = 100
+	maxRetries    = 5
+)

@@ -37,18 +37,23 @@ var WeirdStrings = map[string]string{
 
 func makeASCIIString(start, end int) string {
 	var s []byte
+
 	for i := start; i < end; i++ {
 		if i >= 'a' && i <= 'z' {
 			continue
 		}
+
 		if i >= 'A' && i <= 'Z' {
 			continue
 		}
+
 		if i >= '0' && i <= '9' {
 			continue
 		}
+
 		s = append(s, byte(i))
 	}
+
 	return string(s)
 }
 
@@ -94,6 +99,7 @@ func TestHexEscape(t *testing.T) {
 		if got != tc.want {
 			t.Errorf("%s: got escaped %q want %q", tc.description, got, tc.want)
 		}
+
 		got = escape.HexUnescape(got)
 		if got != tc.s {
 			t.Errorf("%s: got unescaped %q want %q", tc.description, got, tc.s)
@@ -104,6 +110,7 @@ func TestHexEscape(t *testing.T) {
 func TestHexEscapeUnescapeWeirdStrings(t *testing.T) {
 	for name, s := range WeirdStrings {
 		escaped := escape.HexEscape(s, func(r []rune, i int) bool { return !escape.IsASCIIAlphanumeric(r[i]) })
+
 		unescaped := escape.HexUnescape(escaped)
 		if unescaped != s {
 			t.Errorf("%s: got unescaped %q want %q", name, unescaped, s)

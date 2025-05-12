@@ -44,6 +44,7 @@ func TestBucket_Delete(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setup()
+
 			err := bucket.Delete(context.Background(), tt.key)
 			if tt.wantErr {
 				assert.Error(t, err)
@@ -122,6 +123,7 @@ func TestBucket_SignedURL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setup()
+
 			url, err := bucket.SignedURL(context.Background(), tt.key, tt.opts)
 			if tt.wantErr {
 				assert.Error(t, err)
@@ -182,6 +184,7 @@ func TestBucket_Copy(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setup()
+
 			err := bucket.Copy(context.Background(), tt.dstKey, tt.srcKey, tt.opts)
 			if tt.wantErr {
 				assert.Error(t, err)
