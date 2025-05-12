@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/kopexa-grc/common/compare/v1.12.0...v1.13.0) (2025-05-12)
+
+
+### Features
+
+* **tests:** add PostgreSQL test container utility ([#41](https://github.com/kopexa-grc/common/issues/41)) ([a85d99d](https://github.com/kopexa-grc/common/commit/a85d99d543c0e7fb5165658988bfc60c3b80967a))
+
 ## [1.12.0](https://github.com/kopexa-grc/common/compare/v1.11.0...v1.12.0) (2025-05-12)
 
 
