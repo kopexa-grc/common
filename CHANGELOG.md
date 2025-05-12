@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.0](https://github.com/kopexa-grc/common/compare/v1.10.0...v1.11.0) (2025-05-12)
+
+
+### Features
+
+* **blob:** implement Azure Blob storage integration with bucket oper… ([#36](https://github.com/kopexa-grc/common/issues/36)) ([1122452](https://github.com/kopexa-grc/common/commit/11224525d4d979d2f9c7442a9d5aec116f2cb749))
+* **messaging:** implement NATS client and embedded server with authe… ([#37](https://github.com/kopexa-grc/common/issues/37)) ([9c621d5](https://github.com/kopexa-grc/common/commit/9c621d598c0ce07ae96c3bf869a626f2da91098b))
+
 ## [1.10.0](https://github.com/kopexa-grc/common/compare/v1.9.0...v1.10.0) (2025-05-12)
 
 
