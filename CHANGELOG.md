@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/kopexa-grc/common/compare/v1.11.0...v1.12.0) (2025-05-12)
+
+
+### Features
+
+* change default gravatar kind ([#39](https://github.com/kopexa-grc/common/issues/39)) ([beadddb](https://github.com/kopexa-grc/common/commit/beadddbbc2158e92326678df20a9702613bb31a5))
+
 ## [1.11.0](https://github.com/kopexa-grc/common/compare/v1.10.0...v1.11.0) (2025-05-12)
 
 
