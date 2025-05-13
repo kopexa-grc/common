@@ -15,7 +15,9 @@ var (
 	// ErrUnauthorized is returned when the client is not authorized to perform an operation.
 	ErrUnauthorized = errors.New("unauthorized")
 	// ErrNotFound is returned when a requested resource is not found.
-	ErrNotFound = errors.New("not found")
+	ErrNotFound      = errors.New("not found")
+	ErrEmptyResponse = errors.New("empty response from server")
+	ErrInvalidEntity = errors.New("invalid entity")
 )
 
 // WriteError represents an error that occurred during a write operation to the FGA service.

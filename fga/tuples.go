@@ -8,7 +8,6 @@ package fga
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -151,7 +150,7 @@ func (c *Client) handleWrite(resp *client.ClientWriteResponse, err error) (*clie
 	}
 
 	if resp == nil {
-		return nil, errors.New("empty response from server")
+		return nil, ErrEmptyResponse
 	}
 
 	// Avoid any tuple parsing if we don't allow duplicates

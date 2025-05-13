@@ -18,7 +18,7 @@ func NewMockFGAClient(c *fgamock.MockSdkClient) *Client {
 	}
 }
 
-const mockStoreId = "01JV5FY6B75PMFSK86MV6EX3Y9"
+const mockStoreID = "01JV5FY6B75PMFSK86MV6EX3Y9"
 
 func TestNewClient_Success(t *testing.T) {
 	client, err := NewClient("https://api.openfga.example")
@@ -31,13 +31,13 @@ func TestNewClient_Success(t *testing.T) {
 func TestNewClient_WithOptions(t *testing.T) {
 	client, err := NewClient(
 		"https://api.openfga.example",
-		WithStoreID(mockStoreId),
+		WithStoreID(mockStoreID),
 		WithIgnoreDuplicateKeyError(false),
 	)
 	assert.NoError(t, err)
 	assert.NotNil(t, client)
 	assert.Equal(t, "https://api.openfga.example", client.config.ApiUrl)
-	assert.Equal(t, mockStoreId, client.config.StoreId)
+	assert.Equal(t, mockStoreID, client.config.StoreId)
 	assert.False(t, client.IgnoreDuplicateKeyError)
 }
 
@@ -49,9 +49,9 @@ func TestNewClient_EmptyHost(t *testing.T) {
 
 func TestWithStoreID(t *testing.T) {
 	c := &Client{config: &client.ClientConfiguration{}}
-	opt := WithStoreID(mockStoreId)
+	opt := WithStoreID(mockStoreID)
 	opt(c)
-	assert.Equal(t, mockStoreId, c.config.StoreId)
+	assert.Equal(t, mockStoreID, c.config.StoreId)
 }
 
 func TestWithIgnoreDuplicateKeyError(t *testing.T) {

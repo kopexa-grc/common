@@ -16,6 +16,10 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+var (
+	ErrClientError = errors.New("client error")
+)
+
 func TestClient_ListTuples(t *testing.T) {
 	tests := []struct {
 		name        string
@@ -80,7 +84,7 @@ func TestClient_ListTuples(t *testing.T) {
 					Identifier: "123",
 				},
 			},
-			mockErr:     errors.New("client error"),
+			mockErr:     ErrClientError,
 			expected:    nil,
 			expectError: true,
 		},
@@ -181,7 +185,7 @@ func TestClient_WriteTupleKeys(t *testing.T) {
 					},
 				},
 			},
-			mockErr:     errors.New("client error"),
+			mockErr:     ErrClientError,
 			expected:    nil,
 			expectError: true,
 		},

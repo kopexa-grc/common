@@ -127,12 +127,12 @@ var entityRegex = regexp.MustCompile(`([A-za-z0-9_][A-za-z0-9_-]*):([A-za-z0-9_]
 func ParseEntity(key string) (Entity, error) {
 	c := strings.Count(key, ":")
 	if c != 1 {
-		return Entity{}, fmt.Errorf("invalid entity: %s", key)
+		return Entity{}, fmt.Errorf("%w: %s", ErrInvalidEntity, key)
 	}
 
 	match := entityRegex.FindStringSubmatch(key)
 	if match == nil {
-		return Entity{}, fmt.Errorf("invalid entity: %s", key)
+		return Entity{}, fmt.Errorf("%w: %s", ErrInvalidEntity, key)
 	}
 
 	return Entity{

@@ -41,12 +41,6 @@ import (
 // Options are used to customize the behavior of the FGA client.
 type Option func(*Client)
 
-// Options contains configuration options for the FGA client.
-// These options are used to configure the client's behavior.
-type Options struct {
-	storeID string
-}
-
 // WithStoreID sets the store ID for the FGA client.
 // This is required when working with multiple stores.
 // The store ID is used to identify which authorization store to use.
