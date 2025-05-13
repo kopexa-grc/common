@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/kopexa-grc/common/compare/v1.14.0...v1.15.0) (2025-05-13)
+
+
+### Features
+
+* added fga client to common library ([#45](https://github.com/kopexa-grc/common/issues/45)) ([21ba8b1](https://github.com/kopexa-grc/common/commit/21ba8b13507252a65b7a166a9e7186e9d700fe88))
+
 ## [1.14.0](https://github.com/kopexa-grc/common/compare/v1.13.0...v1.14.0) (2025-05-13)
 
 
