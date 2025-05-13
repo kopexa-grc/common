@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.0](https://github.com/kopexa-grc/common/compare/v1.13.0...v1.14.0) (2025-05-13)
+
+
+### Features
+
+* **mixins:** add TranslationMixin for handling locale and parent field indexing ([#43](https://github.com/kopexa-grc/common/issues/43)) ([0664217](https://github.com/kopexa-grc/common/commit/0664217580f336c8d14fed445f2fd8be26af5b28))
+
 ## [1.13.0](https://github.com/kopexa-grc/common/compare/v1.12.0...v1.13.0) (2025-05-12)
 
 
