@@ -1,3 +1,6 @@
+// Copyright (c) Kopexa GmbH
+// SPDX-License-Identifier: BUSL-1.1
+
 // Package fga provides a client for interacting with OpenFGA (Fine Grained Authorization).
 // It offers a type-safe and idiomatic Go interface for managing authorization tuples,
 // checking permissions, and handling authorization-related operations.
@@ -76,6 +79,7 @@ func (c *Client) ListTuples(ctx context.Context, req ListTuplesRequest) (*ListTu
 			Str("relation", relationStr).
 			Str("object", objectStr).
 			Msg("failed to list tuples")
+
 		return nil, fmt.Errorf("failed to list tuples: %w", err)
 	}
 
@@ -91,6 +95,7 @@ func (c *Client) validateListTuplesRequest(req ListTuplesRequest) error {
 	if req.Subject.Identifier == "" && req.Relation == "" && req.Object.Identifier == "" {
 		return fmt.Errorf("%w: at least one filter (subject, relation, or object) must be provided", ErrInvalidArgument)
 	}
+
 	return nil
 }
 
@@ -99,12 +104,14 @@ func (c *Client) validateListTuplesRequest(req ListTuplesRequest) error {
 // It uses ParseFGATupleKey to handle the conversion of individual tuples.
 func convertToTuples(clientTuples []openfga.Tuple) []TupleKey {
 	tuples := make([]TupleKey, len(clientTuples))
+
 	for i, t := range clientTuples {
 		tupleKey := ParseFGATupleKey(t.Key)
 		if tupleKey != nil {
 			tuples[i] = *tupleKey
 		}
 	}
+
 	return tuples
 }
 
@@ -154,6 +161,7 @@ func (c *Client) handleWrite(resp *client.ClientWriteResponse, err error) (*clie
 			Interface("writes", resp.Writes).
 			Interface("deletes", resp.Deletes).
 			Msg("error writing tuples")
+
 		return resp, nil
 	}
 

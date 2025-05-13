@@ -1,9 +1,12 @@
+// Copyright (c) Kopexa GmbH
+// SPDX-License-Identifier: BUSL-1.1
+
 package fga
 
 import (
 	"testing"
 
-	"github.com/kopexa-grc/kopexa/pkg/fga/internal/fgamock"
+	"github.com/kopexa-grc/common/fga/internal/fgamock"
 	"github.com/openfga/go-sdk/client"
 
 	"github.com/stretchr/testify/assert"

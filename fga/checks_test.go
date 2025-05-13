@@ -1,10 +1,13 @@
+// Copyright (c) Kopexa GmbH
+// SPDX-License-Identifier: BUSL-1.1
+
 package fga_test
 
 import (
 	"testing"
 
-	"github.com/kopexa-grc/kopexa/pkg/fga"
-	"github.com/kopexa-grc/kopexa/pkg/fga/internal/fgamock"
+	"github.com/kopexa-grc/common/fga"
+	"github.com/kopexa-grc/common/fga/internal/fgamock"
 	openfga "github.com/openfga/go-sdk"
 	"github.com/openfga/go-sdk/client"
 	"go.uber.org/mock/gomock"
@@ -42,7 +45,6 @@ func TestClient_checkTuple(t *testing.T) {
 	}
 	for _, tt := range testsCases {
 		t.Run(tt.name, func(t *testing.T) {
-
 			c := fga.NewMockFGAClient(mockSdk)
 
 			mockSdk.EXPECT().Check(gomock.Any()).Return(mockCheck).Times(1)
@@ -58,6 +60,7 @@ func TestClient_checkTuple(t *testing.T) {
 				t.Errorf("Client.checkTuple() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if got != tt.want {
 				t.Errorf("Client.checkTuple() = %v, want %v", got, tt.want)
 			}

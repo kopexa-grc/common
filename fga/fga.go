@@ -1,3 +1,6 @@
+// Copyright (c) Kopexa GmbH
+// SPDX-License-Identifier: BUSL-1.1
+
 // Package fga provides a high-level client for interacting with the OpenFGA service.
 // It implements a fluent interface for managing fine-grained authorization (FGA) in a type-safe manner.
 //

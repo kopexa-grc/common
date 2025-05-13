@@ -1,3 +1,6 @@
+// Copyright (c) Kopexa GmbH
+// SPDX-License-Identifier: BUSL-1.1
+
 package fga
 
 import (
@@ -42,6 +45,7 @@ func (b *RevokeBuilder) Relation(relation string) *RevokeBuilder {
 func (b *RevokeBuilder) From(objectType, objectID string) *RevokeBuilder {
 	b.object.Kind = Kind(objectType)
 	b.object.Identifier = objectID
+
 	return b
 }
 
@@ -55,5 +59,6 @@ func (b *RevokeBuilder) Apply(ctx context.Context) error {
 	}
 
 	_, err := b.client.WriteTupleKeys(ctx, []TupleKey{}, []TupleKey{tuple})
+
 	return err
 }

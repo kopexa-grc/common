@@ -1,10 +1,13 @@
+// Copyright (c) Kopexa GmbH
+// SPDX-License-Identifier: BUSL-1.1
+
 package fga_test
 
 import (
 	"testing"
 
-	"github.com/kopexa-grc/kopexa/pkg/fga"
-	"github.com/kopexa-grc/kopexa/pkg/fga/internal/fgamock"
+	"github.com/kopexa-grc/common/fga"
+	"github.com/kopexa-grc/common/fga/internal/fgamock"
 	"github.com/openfga/go-sdk/client"
 	"go.uber.org/mock/gomock"
 )
@@ -47,6 +50,7 @@ func TestClient_Revoke(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := fga.NewMockFGAClient(mockSdk)
+
 			tt.setupMock()
 
 			err := c.Revoke().
