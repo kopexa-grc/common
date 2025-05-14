@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.0](https://github.com/kopexa-grc/common/compare/v1.15.0...v1.16.0) (2025-05-14)
+
+
+### Features
+
+* **fga:** add API token authentication support ([#47](https://github.com/kopexa-grc/common/issues/47)) ([8ca632f](https://github.com/kopexa-grc/common/commit/8ca632fa87f38c95465c6c998d457ffbceeefa2d))
+
 ## [1.15.0](https://github.com/kopexa-grc/common/compare/v1.14.0...v1.15.0) (2025-05-13)
 
 
