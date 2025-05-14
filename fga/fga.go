@@ -35,6 +35,7 @@ package fga
 import (
 	"github.com/kopexa-grc/common/errors"
 	"github.com/openfga/go-sdk/client"
+	"github.com/openfga/go-sdk/credentials"
 )
 
 // Option is a function that configures a Client.
@@ -56,6 +57,34 @@ func WithStoreID(storeID string) Option {
 func WithIgnoreDuplicateKeyError(ignore bool) Option {
 	return func(c *Client) {
 		c.IgnoreDuplicateKeyError = ignore
+	}
+}
+
+// Credentials represents the authentication credentials for the OpenFGA service.
+// It is used to configure the client with the necessary authentication information.
+type Credentials struct {
+	// APIToken is the API token used to authenticate with the OpenFGA service.
+	// This token is required for all API calls to the service.
+	APIToken string `json:"api_token" koanf:"api_token" jsonschema:"description=The API token for the OpenFGA service"`
+}
+
+// WithToken configures the FGA client with an API token for authentication.
+// The token is used to authenticate all requests to the OpenFGA service.
+// This option is required for production use of the client.
+//
+// Example:
+//
+//	client, err := fga.NewClient("https://api.openfga.example",
+//	    fga.WithToken("your-api-token"),
+//	)
+func WithToken(token string) Option {
+	return func(c *Client) {
+		c.config.Credentials = &credentials.Credentials{
+			Method: credentials.CredentialsMethodApiToken,
+			Config: &credentials.Config{
+				ApiToken: token,
+			},
+		}
 	}
 }
 

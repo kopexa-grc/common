@@ -15,8 +15,10 @@ import (
 	gomock "go.uber.org/mock/gomock"
 )
 
-const mockContainer = "kopexa"
-const mockID = "123"
+const (
+	mockContainer = "kopexa"
+	mockID        = "123"
+)
 
 func TestGetSignedUploadURL(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
