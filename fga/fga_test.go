@@ -8,6 +8,7 @@ import (
 
 	"github.com/kopexa-grc/common/fga/internal/fgamock"
 	"github.com/openfga/go-sdk/client"
+	"github.com/openfga/go-sdk/credentials"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -59,4 +60,12 @@ func TestWithIgnoreDuplicateKeyError(t *testing.T) {
 	opt := WithIgnoreDuplicateKeyError(true)
 	opt(c)
 	assert.True(t, c.IgnoreDuplicateKeyError)
+}
+
+func TestWithToken(t *testing.T) {
+	c := &Client{config: &client.ClientConfiguration{}}
+	opt := WithToken("test-token")
+	opt(c)
+	assert.Equal(t, credentials.CredentialsMethodApiToken, c.config.Credentials.Method)
+	assert.Equal(t, "test-token", c.config.Credentials.Config.ApiToken)
 }

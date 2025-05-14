@@ -16,9 +16,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-var (
-	ErrClientError = errors.New("client error")
-)
+var ErrClientError = errors.New("client error")
 
 func TestClient_ListTuples(t *testing.T) {
 	tests := []struct {

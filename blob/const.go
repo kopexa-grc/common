@@ -9,9 +9,7 @@ import (
 	kerr "github.com/kopexa-grc/common/errors"
 )
 
-var (
-	errClosed = kerr.Newf(kerr.FailedPrecondition, nil, "blob: Bucket has been closed")
-)
+var errClosed = kerr.Newf(kerr.FailedPrecondition, nil, "blob: Bucket has been closed")
 
 // DefaultSignedURLExpiry is the default duration for SignedURLOptions.Expiry.
 const DefaultSignedURLExpiry = 1 * time.Hour

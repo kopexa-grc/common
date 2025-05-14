@@ -65,12 +65,12 @@ func createTempFiles(t *testing.T, certPEM, keyPEM []byte) (certFile, keyFile st
 
 	// Create certificate file
 	certFile = filepath.Join(tempDir, "cert.pem")
-	err = os.WriteFile(certFile, certPEM, 0600)
+	err = os.WriteFile(certFile, certPEM, 0o600)
 	require.NoError(t, err)
 
 	// Create key file
 	keyFile = filepath.Join(tempDir, "key.pem")
-	err = os.WriteFile(keyFile, keyPEM, 0600)
+	err = os.WriteFile(keyFile, keyPEM, 0o600)
 	require.NoError(t, err)
 
 	return certFile, keyFile, func() {
