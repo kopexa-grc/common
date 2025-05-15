@@ -110,7 +110,15 @@ func TestEntity_String(t *testing.T) {
 				Kind:       "",
 				Identifier: "",
 			},
-			expected: ":",
+			expected: "",
+		},
+		{
+			name: "wildcard entity",
+			entity: fga.Entity{
+				Kind:       "*",
+				Identifier: "*",
+			},
+			expected: "*",
 		},
 	}
 

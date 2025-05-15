@@ -54,8 +54,12 @@ type Entity struct {
 // If no Relation is specified, returns "<kind>:<identifier>"
 // If a Relation is specified, returns "<kind>:<identifier>#<relation>"
 func (e Entity) String() string {
+	if e.Kind == "*" && e.Identifier == "*" {
+		return "*"
+	}
+
 	if e.Kind == "" && e.Identifier == "" {
-		return ":"
+		return ""
 	}
 
 	if e.Relation == "" {
