@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.18.0](https://github.com/kopexa-grc/common/compare/v1.17.0...v1.18.0) (2025-05-15)
+
+
+### Features
+
+* **fga:** add Context field to AccessCheck for conditional relationships ([#51](https://github.com/kopexa-grc/common/issues/51)) ([4664a5f](https://github.com/kopexa-grc/common/commit/4664a5f9b03718cfdc992ab0ba43639f46bdac08))
+
 ## [1.17.0](https://github.com/kopexa-grc/common/compare/v1.16.0...v1.17.0) (2025-05-15)
 
 
