@@ -24,6 +24,8 @@ type AccessCheck struct {
 	ObjectType string
 	// Relation is the relation to check (e.g., "viewer", "editor")
 	Relation string
+	// Context is the context of the request used for conditional relationships
+	Context *map[string]any
 }
 
 // validate ensures that all required fields are present in the AccessCheck.
@@ -44,17 +46,21 @@ func (ac AccessCheck) toCheckRequest() (*client.ClientCheckRequest, error) {
 		return nil, err
 	}
 
+	sub := Entity{
+		Kind:       Kind(ac.SubjectType),
+		Identifier: ac.SubjectID,
+	}
+
+	obj := Entity{
+		Kind:       Kind(ac.ObjectType),
+		Identifier: ac.ObjectID,
+	}
+
 	return &client.ClientCheckRequest{
-		User: (&Entity{
-			Kind:       Kind(ac.SubjectType),
-			Identifier: ac.SubjectID,
-		}).String(),
+		User:     sub.String(),
 		Relation: ac.Relation,
-		Object: (&Entity{
-			Kind:       Kind(ac.ObjectType),
-			Identifier: ac.ObjectID,
-			Relation:   Relation(ac.Relation),
-		}).String(),
+		Object:   obj.String(),
+		Context:  ac.Context,
 	}, nil
 }
 
