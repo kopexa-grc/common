@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.0](https://github.com/kopexa-grc/common/compare/v1.16.0...v1.17.0) (2025-05-15)
+
+
+### Features
+
+* **fga:** update Entity.String method to handle wildcard entities ([#49](https://github.com/kopexa-grc/common/issues/49)) ([ee521e1](https://github.com/kopexa-grc/common/commit/ee521e11aa868c9b5448858ae40ee1d75748c6ea))
+
 ## [1.16.0](https://github.com/kopexa-grc/common/compare/v1.15.0...v1.16.0) (2025-05-14)
 
 
