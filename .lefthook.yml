@@ -7,9 +7,6 @@ pre-commit:
     license:
       glob: "*.{go,mod}"
       run: make license/headers/check
-    fmt:
-      glob: "*.go"
-      run: make fmt/check
     lint:
       glob: "*.go"
       run: make lint
