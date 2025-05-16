@@ -16,16 +16,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// Common error messages and constants
-const (
-	// ErrDuplicateKey is the error message for duplicate key errors
-	ErrDuplicateKey = "write a tuple which already exists"
-
-	// Operation types
-	OpWrite  = "write"
-	OpDelete = "delete"
-)
-
 // ListTuplesRequest represents a request to list tuples from the FGA service.
 // It allows filtering tuples by user, relation, and object.
 type ListTuplesRequest struct {
