@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.0](https://github.com/kopexa-grc/common/compare/v1.18.0...v1.19.0) (2025-05-16)
+
+
+### Features
+
+* fgalist ([#53](https://github.com/kopexa-grc/common/issues/53)) ([bed7a00](https://github.com/kopexa-grc/common/commit/bed7a00d852f4112d1aaf2f4af545a3b5d30e310))
+
 ## [1.18.0](https://github.com/kopexa-grc/common/compare/v1.17.0...v1.18.0) (2025-05-15)
 
 
