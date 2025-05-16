@@ -74,6 +74,7 @@ func (c *Client) ListObjectIDsWithAccess(ctx context.Context, req ListRequest) (
 	}
 
 	objectIDs := make([]string, len(list.Objects))
+
 	for i := range list.Objects {
 		entity, err := ParseEntity(list.Objects[i])
 		if err != nil {
