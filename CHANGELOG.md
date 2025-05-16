@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.20.0](https://github.com/kopexa-grc/common/compare/v1.19.0...v1.20.0) (2025-05-16)
+
+
+### Features
+
+* iam tokens ([#56](https://github.com/kopexa-grc/common/issues/56)) ([b7944b8](https://github.com/kopexa-grc/common/commit/b7944b87d13905a22e2ede40ab90366b11bfce84))
+
 ## [1.19.0](https://github.com/kopexa-grc/common/compare/v1.18.0...v1.19.0) (2025-05-16)
 
 
