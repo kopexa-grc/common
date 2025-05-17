@@ -9,7 +9,7 @@ pre-commit:
       run: make license/headers/check
     fmt:
       glob: "*.go"
-      run: make fmt/check
+      run: make fmt
     lint:
       glob: "*.go"
       run: make lint
