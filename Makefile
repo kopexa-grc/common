@@ -40,19 +40,19 @@ prep/tools/mockgen:
 #   🧹 Formatting   #
 ##@ Formatting
 
-fmt: license/headers/check
+fmt:
 	gofumpt -w .
 
-fmt/check: license/headers/check
+fmt/check:
 	gofumpt -d .
 
 #   🔍 Linting     #
 ##@ Linting
 
-lint: license/headers/check
+lint:
 	golangci-lint run ./...
 
-lint/fix: license/headers/check
+lint/fix:
 	golangci-lint run --fix ./...
 
 #   ⛹🏽‍ License   #

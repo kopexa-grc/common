@@ -22,6 +22,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.37.0
 	github.com/testcontainers/testcontainers-go/modules/postgres v0.37.0
+	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zyedidia/generic v1.2.1
 	go.uber.org/mock v0.5.2
 	golang.org/x/crypto v0.38.0
@@ -86,6 +87,7 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
 	github.com/tklauser/numcpus v0.6.1 // indirect
+	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.49.0 // indirect
