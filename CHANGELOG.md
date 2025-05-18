@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.0](https://github.com/kopexa-grc/common/compare/v1.21.0...v1.22.0) (2025-05-18)
+
+
+### Features
+
+* **types:** Verbesserte Dokumentation und Code-Qualität ([#60](https://github.com/kopexa-grc/common/issues/60)) ([0e9bd76](https://github.com/kopexa-grc/common/commit/0e9bd766c6c7577ed45ba116d2a9fdc16e4e2121))
+
 ## [1.21.0](https://github.com/kopexa-grc/common/compare/v1.20.0...v1.21.0) (2025-05-17)
 
 
