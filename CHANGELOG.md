@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.26.0](https://github.com/kopexa-grc/common/compare/v1.25.0...v1.26.0) (2025-05-19)
+
+
+### Features
+
+* author type ([#70](https://github.com/kopexa-grc/common/issues/70)) ([b9d9f38](https://github.com/kopexa-grc/common/commit/b9d9f38cf536270459e7ca45574aa35dedbdaf3c))
+
 ## [1.25.0](https://github.com/kopexa-grc/common/compare/v1.24.0...v1.25.0) (2025-05-19)
 
 
