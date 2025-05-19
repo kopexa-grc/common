@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.25.0](https://github.com/kopexa-grc/common/compare/v1.24.0...v1.25.0) (2025-05-19)
+
+
+### Features
+
+* **types:** Verbesserte Reference Implementierung ([#68](https://github.com/kopexa-grc/common/issues/68)) ([12ab449](https://github.com/kopexa-grc/common/commit/12ab4492149056a198e8e668642e8dd32c69faa8))
+
 ## [1.24.0](https://github.com/kopexa-grc/common/compare/v1.23.1...v1.24.0) (2025-05-19)
 
 
