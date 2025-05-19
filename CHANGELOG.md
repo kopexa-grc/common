@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.23.0](https://github.com/kopexa-grc/common/compare/v1.22.0...v1.23.0) (2025-05-19)
+
+
+### Features
+
+* added risk type ([#62](https://github.com/kopexa-grc/common/issues/62)) ([421569b](https://github.com/kopexa-grc/common/commit/421569b07bbf0c6977cd19fc502b7413414d046d))
+
 ## [1.22.0](https://github.com/kopexa-grc/common/compare/v1.21.0...v1.22.0) (2025-05-18)
 
 
