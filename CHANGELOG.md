@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.23.1](https://github.com/kopexa-grc/common/compare/v1.23.0...v1.23.1) (2025-05-19)
+
+
+### Bug Fixes
+
+* **types:** Konsistente Receiver-Namen in ResponseData ([#64](https://github.com/kopexa-grc/common/issues/64)) ([4a02f45](https://github.com/kopexa-grc/common/commit/4a02f45bb0a111ff82b31715e211ee63773d6cea))
+
 ## [1.23.0](https://github.com/kopexa-grc/common/compare/v1.22.0...v1.23.0) (2025-05-19)
 
 
