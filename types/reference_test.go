@@ -44,8 +44,10 @@ func TestReference_Validate(t *testing.T) {
 			if tt.wantErr {
 				assert.Error(t, err)
 				assert.ErrorIs(t, err, ErrInvalidReference)
+
 				return
 			}
+
 			assert.NoError(t, err)
 		})
 	}
@@ -85,6 +87,7 @@ func TestReference_JSON(t *testing.T) {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, string(got))
 
@@ -132,12 +135,15 @@ func TestReference_UnmarshalGQL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var got Reference
+
 			err := got.UnmarshalGQL(tt.input)
 			if tt.wantErr {
 				assert.Error(t, err)
 				assert.ErrorIs(t, err, ErrInvalidReference)
+
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, got)
 		})

@@ -44,6 +44,7 @@ func (m Metadata) Get(key string) (string, error) {
 	if !ok {
 		return "", fmt.Errorf("%w: %s", ErrKeyNotFound, key)
 	}
+
 	return value, nil
 }
 

@@ -127,11 +127,13 @@ func TestResponseData_UnmarshalJSON(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var got ResponseData
+
 			err := json.Unmarshal([]byte(tt.input), &got)
 			if tt.wantErr {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, got)
 		})
@@ -206,6 +208,7 @@ func TestResponseData_JSON(t *testing.T) {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, string(got))
 
