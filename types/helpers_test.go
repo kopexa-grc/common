@@ -41,17 +41,22 @@ func TestMarshalGQLJSON(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			w, asNil := tt.writer()
+
 			var err error
+
 			if asNil {
 				err = marshalGQLJSON[any](nil, tt.input)
 				assert.Error(t, err)
+
 				return
 			}
+
 			err = marshalGQLJSON(w, tt.input)
 			if tt.wantErr {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, w.String())
 		})
@@ -93,6 +98,7 @@ func TestUnmarshalGQLJSON(t *testing.T) {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			// Dereferenzieren, falls Pointer
 			switch v := tt.target.(type) {
