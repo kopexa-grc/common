@@ -34,9 +34,11 @@ func (r *Reference) Validate() error {
 	if r.ID == "" && r.KRN == "" {
 		return fmt.Errorf("%w: either ID or KRN must be set", ErrInvalidReference)
 	}
+
 	if r.ID != "" && r.KRN != "" {
 		return fmt.Errorf("%w: cannot set both ID and KRN", ErrInvalidReference)
 	}
+
 	return nil
 }
 
@@ -52,6 +54,7 @@ func (r *Reference) UnmarshalGQL(v interface{}) error {
 	if err := unmarshalGQLJSON(v, r); err != nil {
 		return fmt.Errorf("failed to unmarshal reference: %w", err)
 	}
+
 	return r.Validate()
 }
 

@@ -37,12 +37,15 @@ func (a Author) Validate() error {
 	if a.Name == "" {
 		return fmt.Errorf("%w: name is required", ErrInvalidAuthor)
 	}
+
 	if a.Email == "" {
 		return fmt.Errorf("%w: email is required", ErrInvalidAuthor)
 	}
+
 	if !strings.Contains(a.Email, "@") {
 		return fmt.Errorf("%w: invalid email format", ErrInvalidAuthor)
 	}
+
 	return nil
 }
 
@@ -80,5 +83,6 @@ func (a *Author) UnmarshalGQL(v interface{}) error {
 	if err := unmarshalGQLJSON(v, a); err != nil {
 		return fmt.Errorf("failed to unmarshal author: %w", err)
 	}
+
 	return a.Validate()
 }

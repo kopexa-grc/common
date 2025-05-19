@@ -89,8 +89,10 @@ func TestMetadata_Get(t *testing.T) {
 			if tt.wantErr {
 				assert.Error(t, err)
 				assert.ErrorIs(t, err, tt.expectedErr)
+
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, got)
 		})
@@ -131,6 +133,7 @@ func TestMetadata_JSON(t *testing.T) {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, string(got))
 
