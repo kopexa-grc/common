@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.24.0](https://github.com/kopexa-grc/common/compare/v1.23.1...v1.24.0) (2025-05-19)
+
+
+### Features
+
+* **types:** Verbesserte Metadata Implementierung ([#66](https://github.com/kopexa-grc/common/issues/66)) ([bded201](https://github.com/kopexa-grc/common/commit/bded2019630759d4902d37395c5a5fa744ef8a4d))
+
 ## [1.23.1](https://github.com/kopexa-grc/common/compare/v1.23.0...v1.23.1) (2025-05-19)
 
 
