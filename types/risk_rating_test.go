@@ -318,6 +318,7 @@ func TestRiskRating_JSON(t *testing.T) {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, string(got))
 

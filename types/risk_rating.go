@@ -76,6 +76,7 @@ func (r *RiskRating) Score() int {
 	if r.IsZero() {
 		return DefaultScore
 	}
+
 	return r.Likelihood * r.Consequence
 }
 
