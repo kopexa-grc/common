@@ -55,6 +55,7 @@ func (c ContactPoint) Validate() error {
 		if c.Email == "" {
 			return fmt.Errorf("%w: email is required for email contact method", ErrInvalidContactPoint)
 		}
+
 		if !strings.Contains(c.Email, "@") {
 			return fmt.Errorf("%w: invalid email format", ErrInvalidContactPoint)
 		}
@@ -66,6 +67,7 @@ func (c ContactPoint) Validate() error {
 		if c.URL == "" {
 			return fmt.Errorf("%w: url is required for web form contact method", ErrInvalidContactPoint)
 		}
+
 		if !strings.HasPrefix(c.URL, "http://") && !strings.HasPrefix(c.URL, "https://") {
 			return fmt.Errorf("%w: url must start with http:// or https://", ErrInvalidContactPoint)
 		}
@@ -88,6 +90,7 @@ func (c ContactPoint) String() string {
 	if c.Name != "" {
 		details = append(details, c.Name)
 	}
+
 	if c.Role != "" {
 		details = append(details, fmt.Sprintf("(%s)", c.Role))
 	}
@@ -131,5 +134,6 @@ func (c *ContactPoint) UnmarshalGQL(v interface{}) error {
 	if err := unmarshalGQLJSON(v, c); err != nil {
 		return fmt.Errorf("failed to unmarshal contact point: %w", err)
 	}
+
 	return c.Validate()
 }

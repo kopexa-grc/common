@@ -142,6 +142,7 @@ func TestContactMethod_JSON(t *testing.T) {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, string(got))
 
@@ -195,11 +196,13 @@ func TestContactMethod_UnmarshalGQL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var got ContactMethod
+
 			err := got.UnmarshalGQL(tt.input)
 			if tt.wantErr {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, got)
 		})
