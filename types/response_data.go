@@ -148,3 +148,26 @@ func (rd *ResponseData) MarshalGQL(w io.Writer) {
 func (rd *ResponseData) UnmarshalGQL(v interface{}) error {
 	return unmarshalGQLJSON(v, rd)
 }
+
+// MarshalGQL implements the graphql.Marshaler interface for ResponseMeta.
+// It allows ResponseMeta to be used as a GraphQL scalar type.
+//
+// Parameters:
+//   - w: The writer to write the ResponseMeta to
+func (rm ResponseMeta) MarshalGQL(w io.Writer) {
+	if err := marshalGQLJSON(w, rm); err != nil {
+		log.Error().Err(err).Msg("failed to marshal response meta to GraphQL")
+	}
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface for ResponseMeta.
+// It allows ResponseMeta to be used as a GraphQL scalar type.
+//
+// Parameters:
+//   - v: The value to unmarshal
+//
+// Returns:
+//   - error: If unmarshaling fails
+func (rm *ResponseMeta) UnmarshalGQL(v interface{}) error {
+	return unmarshalGQLJSON(v, rm)
+}

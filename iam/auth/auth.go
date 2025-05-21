@@ -5,6 +5,8 @@ package auth
 
 import (
 	"context"
+	"fmt"
+	"io"
 )
 
 // ContextKey is used to store values in the request context.
@@ -30,6 +32,36 @@ const (
 	// ActorTypeSystem represents an automated system process.
 	ActorTypeSystem ActorType = "system"
 )
+
+// Values returns a list of all possible ActorType values.
+func (ActorType) Values() []string {
+	return []string{
+		string(ActorTypeUser),
+		string(ActorTypeSystem),
+	}
+}
+
+// String returns the string representation of the ActorType value.
+func (r ActorType) String() string {
+	return string(r)
+}
+
+// MarshalGQL implements the gqlgen Marshaler interface.
+func (r ActorType) MarshalGQL(w io.Writer) {
+	_, _ = w.Write([]byte(`"` + r.String() + `"`))
+}
+
+// UnmarshalGQL implements the gqlgen Unmarshaler interface.
+func (r *ActorType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("wrong type for ActorType, got: %T", v) //nolint:err113
+	}
+
+	*r = ActorType(str)
+
+	return nil
+}
 
 // Actor represents an entity that can perform actions in the system.
 // It contains the ID, type, locale, and optional organization and space context.
