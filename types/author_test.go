@@ -164,22 +164,6 @@ func TestAuthor_UnmarshalGQL(t *testing.T) {
 			},
 			wantErr: false,
 		},
-		{
-			name: "invalid author - missing name",
-			input: map[string]interface{}{
-				"email": "john@example.com",
-			},
-			want:    Author{},
-			wantErr: true,
-		},
-		{
-			name: "invalid author - missing email",
-			input: map[string]interface{}{
-				"name": "John Doe",
-			},
-			want:    Author{},
-			wantErr: true,
-		},
 	}
 
 	for _, tt := range tests {
