@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.28.0](https://github.com/kopexa-grc/common/compare/v1.27.0...v1.28.0) (2025-05-21)
+
+
+### Features
+
+* **auth:** Add ActorType methods and error handling ([#75](https://github.com/kopexa-grc/common/issues/75)) ([242589e](https://github.com/kopexa-grc/common/commit/242589ee51e35d121b4721b11d98e6708d2d9198))
+
+
+### Bug Fixes
+
+* **types:** Remove unnecessary validation in UnmarshalGQL method of Author type ([#73](https://github.com/kopexa-grc/common/issues/73)) ([0824c20](https://github.com/kopexa-grc/common/commit/0824c205e3be1dcbbe6393ecc17d0fe97b8563c9))
+* **types:** Update MarshalGQL method to use pointer receiver for ResponseMeta ([#78](https://github.com/kopexa-grc/common/issues/78)) ([8e015c2](https://github.com/kopexa-grc/common/commit/8e015c2c2c60e7b5ae7abd36b2e10f1521f65ad2))
+
 ## [1.27.0](https://github.com/kopexa-grc/common/compare/v1.26.1...v1.27.0) (2025-05-21)
 
 
