@@ -84,5 +84,5 @@ func (a *Author) UnmarshalGQL(v interface{}) error {
 		return fmt.Errorf("failed to unmarshal author: %w", err)
 	}
 
-	return a.Validate()
+	return nil
 }
