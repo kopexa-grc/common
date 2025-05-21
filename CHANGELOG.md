@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.26.1](https://github.com/kopexa-grc/common/compare/v1.26.0...v1.26.1) (2025-05-21)
+
+
+### Bug Fixes
+
+* **types:** Remove unnecessary validation in UnmarshalGQL method of Author type ([#73](https://github.com/kopexa-grc/common/issues/73)) ([0824c20](https://github.com/kopexa-grc/common/commit/0824c205e3be1dcbbe6393ecc17d0fe97b8563c9))
+
 ## [1.26.0](https://github.com/kopexa-grc/common/compare/v1.25.0...v1.26.0) (2025-05-19)
 
 
