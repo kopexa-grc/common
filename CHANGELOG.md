@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.27.0](https://github.com/kopexa-grc/common/compare/v1.26.1...v1.27.0) (2025-05-21)
+
+
+### Features
+
+* **auth:** Add ActorType methods and error handling ([#75](https://github.com/kopexa-grc/common/issues/75)) ([242589e](https://github.com/kopexa-grc/common/commit/242589ee51e35d121b4721b11d98e6708d2d9198))
+
 ## [1.26.1](https://github.com/kopexa-grc/common/compare/v1.26.0...v1.26.1) (2025-05-21)
 
 
