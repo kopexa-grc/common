@@ -154,7 +154,7 @@ func (rd *ResponseData) UnmarshalGQL(v interface{}) error {
 //
 // Parameters:
 //   - w: The writer to write the ResponseMeta to
-func (rm ResponseMeta) MarshalGQL(w io.Writer) {
+func (rm *ResponseMeta) MarshalGQL(w io.Writer) {
 	if err := marshalGQLJSON(w, rm); err != nil {
 		log.Error().Err(err).Msg("failed to marshal response meta to GraphQL")
 	}
