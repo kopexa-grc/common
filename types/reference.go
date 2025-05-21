@@ -63,7 +63,7 @@ func (r *Reference) UnmarshalGQL(v interface{}) error {
 //
 // Parameters:
 //   - w: The writer to write the Reference to
-func (r *Reference) MarshalGQL(w io.Writer) {
+func (r Reference) MarshalGQL(w io.Writer) {
 	if err := marshalGQLJSON(w, r); err != nil {
 		log.Error().Err(err).Msg("failed to marshal reference to GraphQL")
 	}
