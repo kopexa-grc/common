@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.28.1](https://github.com/kopexa-grc/common/compare/v1.28.0...v1.28.1) (2025-05-21)
+
+
+### Bug Fixes
+
+* **types:** Change MarshalGQL method receivers from pointer to value for Reference, ResponseData, and ResponseMeta types ([#79](https://github.com/kopexa-grc/common/issues/79)) ([d23832a](https://github.com/kopexa-grc/common/commit/d23832a44ebb8f58b4c26d5e897c470ba8c02c40))
+
 ## [1.28.0](https://github.com/kopexa-grc/common/compare/v1.27.0...v1.28.0) (2025-05-21)
 
 
