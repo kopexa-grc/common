@@ -283,7 +283,16 @@ func (c *Client) batchCheckTuples(ctx context.Context, checks []client.ClientBat
 //   - []string: A list of all possible relations for the object type
 //   - error: If the model query failed
 func (c *Client) getRelationsFromModel(ctx context.Context, objectType string) ([]string, error) {
-	model, err := c.client.ReadAuthorizationModel(ctx).Execute()
+	var (
+		model *client.ClientReadAuthorizationModelResponse
+		err   error
+	)
+	if c.config.AuthorizationModelId == "" {
+		model, err = c.client.ReadLatestAuthorizationModel(ctx).Execute()
+	} else {
+		model, err = c.client.ReadAuthorizationModel(ctx).Execute()
+	}
+
 	if err != nil {
 		log.Error().
 			Err(err).
