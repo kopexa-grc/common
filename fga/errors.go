@@ -18,6 +18,9 @@ var (
 	ErrNotFound      = errors.New("not found")
 	ErrEmptyResponse = errors.New("empty response from server")
 	ErrInvalidEntity = errors.New("invalid entity")
+	// ErrEmptyBatchCheckResponse is returned when a batch check operation returns an empty response.
+	// This indicates that the FGA service did not return any results for the batch check request.
+	ErrEmptyBatchCheckResponse = errors.New("empty response from batch check")
 )
 
 // WriteError represents an error that occurred during a write operation to the FGA service.
