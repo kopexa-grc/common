@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.30.0](https://github.com/kopexa-grc/common/compare/v1.29.0...v1.30.0) (2025-05-22)
+
+
+### Features
+
+* **auth:** Add AuthenticationMethodsReferences and constants for RFC8176 compliance ([#83](https://github.com/kopexa-grc/common/issues/83)) ([451bc79](https://github.com/kopexa-grc/common/commit/451bc793dfd04ea486704064fd41e779c636dd53))
+
 ## [1.29.0](https://github.com/kopexa-grc/common/compare/v1.28.1...v1.29.0) (2025-05-22)
 
 
