@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.32.0](https://github.com/kopexa-grc/common/compare/v1.31.0...v1.32.0) (2025-05-22)
+
+
+### Features
+
+* **fga:** Enhance error handling and add ListAccess functionality ([#87](https://github.com/kopexa-grc/common/issues/87)) ([f198146](https://github.com/kopexa-grc/common/commit/f198146f0ef43ddcbcde81e22158c6cc77cfab7a))
+
 ## [1.31.0](https://github.com/kopexa-grc/common/compare/v1.30.0...v1.31.0) (2025-05-22)
 
 
