@@ -287,6 +287,7 @@ func (c *Client) getRelationsFromModel(ctx context.Context, objectType string) (
 		model *client.ClientReadAuthorizationModelResponse
 		err   error
 	)
+
 	if c.config.AuthorizationModelId == "" {
 		model, err = c.client.ReadLatestAuthorizationModel(ctx).Execute()
 	} else {
