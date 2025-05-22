@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.33.0](https://github.com/kopexa-grc/common/compare/v1.32.0...v1.33.0) (2025-05-22)
+
+
+### Features
+
+* **ci:** Add GitHub Actions workflow for linting pull requests ([#90](https://github.com/kopexa-grc/common/issues/90)) ([d47a411](https://github.com/kopexa-grc/common/commit/d47a411807f7e34a66e8a1192171b43ad153fb1c))
+
 ## [1.32.0](https://github.com/kopexa-grc/common/compare/v1.31.0...v1.32.0) (2025-05-22)
 
 
