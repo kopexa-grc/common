@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.29.0](https://github.com/kopexa-grc/common/compare/v1.28.1...v1.29.0) (2025-05-22)
+
+
+### Features
+
+* **auth:** Implement AuthLevel type with methods for string conversion and GraphQL marshaling ([#81](https://github.com/kopexa-grc/common/issues/81)) ([a822d8f](https://github.com/kopexa-grc/common/commit/a822d8fdd9b6739ca427db822f0871a7d94aea2a))
+
 ## [1.28.1](https://github.com/kopexa-grc/common/compare/v1.28.0...v1.28.1) (2025-05-21)
 
 
