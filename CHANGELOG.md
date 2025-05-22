@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.31.0](https://github.com/kopexa-grc/common/compare/v1.30.0...v1.31.0) (2025-05-22)
+
+
+### Features
+
+* **fga:** Add batch access check functionality and ULID correlation ID generation ([#85](https://github.com/kopexa-grc/common/issues/85)) ([28b9b32](https://github.com/kopexa-grc/common/commit/28b9b3292ff2e9b1cdaa9a2a6734e594257b03e5))
+
 ## [1.30.0](https://github.com/kopexa-grc/common/compare/v1.29.0...v1.30.0) (2025-05-22)
 
 
