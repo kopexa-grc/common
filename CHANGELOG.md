@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.34.0](https://github.com/kopexa-grc/common/compare/v1.33.0...v1.34.0) (2025-05-23)
+
+
+### Features
+
+* **auth:** Add organization subscription context and price struct ([#92](https://github.com/kopexa-grc/common/issues/92)) ([b244ab0](https://github.com/kopexa-grc/common/commit/b244ab0d5b28b5fc62c9c983abb8cc4fd044cc6a))
+
 ## [1.33.0](https://github.com/kopexa-grc/common/compare/v1.32.0...v1.33.0) (2025-05-22)
 
 
