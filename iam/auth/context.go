@@ -76,3 +76,39 @@ func IsSpaceCreation(ctx context.Context) bool {
 	value, ok := ctx.Value(SpaceCreationContextKey{}).(bool)
 	return ok && value
 }
+
+// OrgSubscriptionContextKey is used to indicate that the current operation
+// is part of an organization subscription process. This allows the ent privacy rules
+// to bypass certain restrictions and create default entities during subscription setup.
+//
+// Example usage:
+//
+//	ctx = auth.WithOrgSubscription(ctx)
+//	if auth.IsOrgSubscription(ctx) {
+//		// Create subscription-related entities
+//	}
+type OrgSubscriptionContextKey struct{}
+
+// WithOrgSubscription marks the context as being part of an organization subscription process.
+// This allows the ent privacy rules to create default entities during subscription setup.
+//
+// Parameters:
+//   - ctx: The context to modify
+//
+// Returns:
+//   - context.Context: A new context with the organization subscription flag set
+func WithOrgSubscription(ctx context.Context) context.Context {
+	return context.WithValue(ctx, OrgSubscriptionContextKey{}, true)
+}
+
+// IsOrgSubscription checks if the current context is part of an organization subscription process.
+//
+// Parameters:
+//   - ctx: The context to check
+//
+// Returns:
+//   - bool: true if the context is part of an organization subscription process, false otherwise
+func IsOrgSubscription(ctx context.Context) bool {
+	value, ok := ctx.Value(OrgSubscriptionContextKey{}).(bool)
+	return ok && value
+}
