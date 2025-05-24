@@ -33,60 +33,11 @@
 package fga
 
 import (
+	"context"
+
 	"github.com/kopexa-grc/common/errors"
 	"github.com/openfga/go-sdk/client"
-	"github.com/openfga/go-sdk/credentials"
 )
-
-// Option is a function that configures a Client.
-// Options are used to customize the behavior of the FGA client.
-type Option func(*Client)
-
-// WithStoreID sets the store ID for the FGA client.
-// This is required when working with multiple stores.
-// The store ID is used to identify which authorization store to use.
-func WithStoreID(storeID string) Option {
-	return func(c *Client) {
-		c.config.StoreId = storeID
-	}
-}
-
-// WithIgnoreDuplicateKeyError configures whether duplicate key errors should be ignored.
-// When set to true, attempts to write duplicate tuples will be silently ignored.
-// This is useful in scenarios where idempotency is desired.
-func WithIgnoreDuplicateKeyError(ignore bool) Option {
-	return func(c *Client) {
-		c.IgnoreDuplicateKeyError = ignore
-	}
-}
-
-// Credentials represents the authentication credentials for the OpenFGA service.
-// It is used to configure the client with the necessary authentication information.
-type Credentials struct {
-	// APIToken is the API token used to authenticate with the OpenFGA service.
-	// This token is required for all API calls to the service.
-	APIToken string `json:"api_token" koanf:"api_token" jsonschema:"description=The API token for the OpenFGA service"`
-}
-
-// WithToken configures the FGA client with an API token for authentication.
-// The token is used to authenticate all requests to the OpenFGA service.
-// This option is required for production use of the client.
-//
-// Example:
-//
-//	client, err := fga.NewClient("https://api.openfga.example",
-//	    fga.WithToken("your-api-token"),
-//	)
-func WithToken(token string) Option {
-	return func(c *Client) {
-		c.config.Credentials = &credentials.Credentials{
-			Method: credentials.CredentialsMethodApiToken,
-			Config: &credentials.Config{
-				ApiToken: token,
-			},
-		}
-	}
-}
 
 // Client represents a connection to the OpenFGA service.
 // It provides methods for checking and managing permissions in a type-safe manner.
@@ -134,4 +85,140 @@ func NewClient(host string, opts ...Option) (*Client, error) {
 	}
 
 	return c, nil
+}
+
+// CreateClientWithStore creates a new FGA client with a store and model configuration.
+// It handles the complete setup process including:
+// - Creating or using an existing store
+// - Setting up authentication credentials
+// - Creating or using an existing authorization model
+//
+// The function supports two ways of providing the model:
+// 1. Using ModelData: Directly providing the model definition as []byte
+// 2. Using ModelFile: Loading the model from a file
+//
+// Example:
+//
+//	config := fga.Config{
+//	    HostURL: "https://api.openfga.example",
+//	    ModelData: []byte("model\n  schema 1.1\n\ntype user\n\ntype document\n  relations\n    define viewer: [user]"),
+//	    StoreName: "my-store",
+//	}
+//	client, err := fga.CreateClientWithStore(ctx, config)
+//
+// Parameters:
+//   - ctx: Context for the request
+//   - c: Configuration containing store and model settings
+//
+// Returns:
+//   - *Client: A configured FGA client
+//   - error: If the setup process fails
+func CreateClientWithStore(ctx context.Context, c Config) (*Client, error) {
+	opts := []Option{
+		WithIgnoreDuplicateKeyError(c.IgnoreDuplicateKeyError),
+	}
+
+	// set credentials if provided
+	if c.Credentials.APIToken != "" {
+		opts = append(opts, WithAPITokenCredentials(c.Credentials.APIToken))
+	} else if c.Credentials.ClientID != "" && c.Credentials.ClientSecret != "" {
+		opts = append(opts, WithClientCredentials(
+			c.Credentials.ClientID,
+			c.Credentials.ClientSecret,
+			c.Credentials.Audience,
+			c.Credentials.Issuer,
+			c.Credentials.Scopes,
+		))
+	}
+
+	// create store if an ID was not configured
+	if c.StoreID == "" {
+		// Create new store
+		fgaClient, err := NewClient(
+			c.HostURL,
+			opts...,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		c.StoreID, err = fgaClient.CreateStore(c.StoreName)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// add store ID to the options
+	opts = append(opts, WithStoreID(c.StoreID))
+
+	// create model if ID was not configured
+	if c.ModelID == "" {
+		// create fga client with store ID
+		fgaClient, err := NewClient(
+			c.HostURL,
+			opts...,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		var modelID string
+		if c.ModelData != nil {
+			// Create model from provided data
+			modelID, err = fgaClient.CreateModelFromDSL(ctx, c.ModelData)
+		} else {
+			// Create model from file if no data provided
+			modelID, err = fgaClient.CreateModelFromFile(ctx, c.ModelFile, c.CreateNewModel)
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		// Set ModelID in the config
+		c.ModelID = modelID
+	}
+
+	// add model ID to the options
+	opts = append(opts,
+		WithAuthorizationModelID(c.ModelID),
+	)
+
+	// create fga client with store ID
+	return NewClient(
+		c.HostURL,
+		opts...,
+	)
+}
+
+// Healthcheck returns a function that checks if the FGA service is accessible.
+// The returned function can be used as a health check in service monitoring.
+// It verifies the connection by attempting to read the authorization model.
+//
+// Example:
+//
+//	healthcheck := fga.Healthcheck(client)
+//	err := healthcheck(ctx)
+//	if err != nil {
+//	    // Service is not healthy
+//	}
+//
+// Parameters:
+//   - c: The FGA client to check
+//
+// Returns:
+//   - func(ctx context.Context) error: A function that performs the health check
+func Healthcheck(c Client) func(ctx context.Context) error {
+	return func(ctx context.Context) error {
+		opts := client.ClientReadAuthorizationModelOptions{
+			AuthorizationModelId: &c.config.AuthorizationModelId,
+		}
+
+		_, err := c.client.ReadAuthorizationModel(ctx).Options(opts).Execute()
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}
 }
