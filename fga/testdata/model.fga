@@ -1,0 +1,11 @@
+model
+  schema 1.1
+
+type user
+    relations
+        define _self: [user]
+
+type document
+    relations
+        define viewer: [user]
+        define can_view: viewer 
