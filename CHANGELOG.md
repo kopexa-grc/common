@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.35.0](https://github.com/kopexa-grc/common/compare/v1.34.0...v1.35.0) (2025-05-24)
+
+
+### Features
+
+* fga create store ([#94](https://github.com/kopexa-grc/common/issues/94)) ([453f78a](https://github.com/kopexa-grc/common/commit/453f78a2515924ed1b6425a78acf253429c5d6e1))
+
 ## [1.34.0](https://github.com/kopexa-grc/common/compare/v1.33.0...v1.34.0) (2025-05-23)
 
 
