@@ -170,6 +170,7 @@ func CreateClientWithStore(ctx context.Context, c Config) (*Client, error) {
 			// Create model from file if no data provided
 			modelID, err = fgaClient.CreateModelFromFile(ctx, c.ModelFile, c.CreateNewModel)
 		}
+
 		if err != nil {
 			return nil, err
 		}
