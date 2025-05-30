@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"strings"
 
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
@@ -60,6 +61,9 @@ func (i IDMixin) Fields() []ent.Field {
 		field.String("id").
 			DefaultFunc(uuid.NewString).
 			Immutable().
+			Annotations(
+				entgql.Skip(entgql.SkipMutationCreateInput | entgql.SkipMutationUpdateInput),
+			).
 			Comment("Unique identifier for the entity"),
 	}
 
@@ -67,6 +71,9 @@ func (i IDMixin) Fields() []ent.Field {
 		displayField := field.String(humanIDFieldName).
 			Comment(fmt.Sprintf("Human-readable identifier for the entity, prefix: %s", i.HumanIdentifierPrefix)).
 			NotEmpty().
+			Annotations(
+				entgql.Skip(entgql.SkipMutationCreateInput | entgql.SkipMutationUpdateInput),
+			).
 			Immutable()
 
 		if i.SingleFieldIndex {
