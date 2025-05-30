@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.36.0](https://github.com/kopexa-grc/common/compare/v1.35.0...v1.36.0) (2025-05-30)
+
+
+### Features
+
+* added display id annotations ([#96](https://github.com/kopexa-grc/common/issues/96)) ([0d004c2](https://github.com/kopexa-grc/common/commit/0d004c267345a6dd20142a5b7df6343f60424d7d))
+
 ## [1.35.0](https://github.com/kopexa-grc/common/compare/v1.34.0...v1.35.0) (2025-05-24)
 
 
