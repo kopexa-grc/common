@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.37.0](https://github.com/kopexa-grc/common/compare/v1.36.0...v1.37.0) (2025-06-07)
+
+
+### Features
+
+* **audit:** Add GraphQL annotations to audit fields for improved mutation handling ([54a0157](https://github.com/kopexa-grc/common/commit/54a01576413d94fe8461437faaf73c008856ffd2))
+
 ## [1.36.0](https://github.com/kopexa-grc/common/compare/v1.35.0...v1.36.0) (2025-05-30)
 
 
