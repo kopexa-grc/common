@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
@@ -30,15 +31,38 @@ func (AuditMixin) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("created_at").
 			Immutable().
-			Default(time.Now),
+			Default(time.Now).
+			Annotations(
+				entgql.Skip(
+					entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput,
+				),
+				entgql.OrderField("created_at"),
+			),
 		field.String("created_by").
 			Immutable().
-			Optional(),
+			Optional().
+			Annotations(
+				entgql.Skip(
+					entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput,
+				),
+			),
 		field.Time("updated_at").
 			Default(time.Now).
-			UpdateDefault(time.Now),
+			Optional().
+			UpdateDefault(time.Now).
+			Annotations(
+				entgql.Skip(
+					entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput,
+				),
+				entgql.OrderField("updated_at"),
+			),
 		field.String("updated_by").
-			Optional(),
+			Optional().
+			Annotations(
+				entgql.Skip(
+					entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput,
+				),
+			),
 	}
 }
 
