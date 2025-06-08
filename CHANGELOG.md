@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.38.0](https://github.com/kopexa-grc/common/compare/v1.37.0...v1.38.0) (2025-06-08)
+
+
+### Features
+
+* **types:** Add compliance types and GraphQL marshaling/unmarshaling tests ([5ad6dd4](https://github.com/kopexa-grc/common/commit/5ad6dd4b6141b589c3cf32b32497e0f6c5c8b11b))
+
 ## [1.37.0](https://github.com/kopexa-grc/common/compare/v1.36.0...v1.37.0) (2025-06-07)
 
 
