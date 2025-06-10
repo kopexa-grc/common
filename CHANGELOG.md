@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.39.0](https://github.com/kopexa-grc/common/compare/v1.38.0...v1.39.0) (2025-06-10)
+
+
+### Features
+
+* **localization:** Implement localization utilities and tests ([6f098ea](https://github.com/kopexa-grc/common/commit/6f098ea05fe4e098fbc3d25407253bbb7091c3d0))
+
 ## [1.38.0](https://github.com/kopexa-grc/common/compare/v1.37.0...v1.38.0) (2025-06-08)
 
 
