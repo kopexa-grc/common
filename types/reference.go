@@ -11,10 +11,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var (
-	// ErrInvalidReference is returned when a reference is invalid
-	ErrInvalidReference = errors.New("invalid reference")
-)
+// ErrInvalidReference is returned when a reference is invalid
+var ErrInvalidReference = errors.New("invalid reference")
 
 // Reference represents a reference to a resource, which can be identified either by an ID or a KRN (Kopexa Resource Name).
 // It is commonly used for referencing resources across the system.

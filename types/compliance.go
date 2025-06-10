@@ -3,7 +3,11 @@
 
 package types
 
-import "io"
+import (
+	"io"
+
+	"github.com/rs/zerolog/log"
+)
 
 // ExampleEvidence represents evidence for compliance documentation.
 // It is used to store information about documentation examples and their descriptions.
@@ -54,7 +58,9 @@ type ImplementationGuidance struct {
 // Parameters:
 //   - w: The writer to write the marshaled data to
 func (e ExampleEvidence) MarshalGQL(w io.Writer) {
-	marshalGQLJSON(w, e)
+	if err := marshalGQLJSON(w, e); err != nil {
+		log.Error().Err(err).Msg("failed to marshal ExampleEvidence to GraphQL")
+	}
 }
 
 // UnmarshalGQL implements the Unmarshaler interface for gqlgen.
@@ -75,7 +81,9 @@ func (e *ExampleEvidence) UnmarshalGQL(v any) error {
 // Parameters:
 //   - w: The writer to write the marshaled data to
 func (i ImplementationGuidance) MarshalGQL(w io.Writer) {
-	marshalGQLJSON(w, i)
+	if err := marshalGQLJSON(w, i); err != nil {
+		log.Error().Err(err).Msg("failed to marshal ImplementationGuidance to GraphQL")
+	}
 }
 
 // UnmarshalGQL implements the Unmarshaler interface for gqlgen.

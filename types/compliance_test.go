@@ -54,6 +54,7 @@ func TestExampleEvidence_MarshalGQL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
+
 			tt.evidence.MarshalGQL(&buf)
 			assert.Equal(t, tt.want, buf.String())
 		})
@@ -105,11 +106,13 @@ func TestExampleEvidence_UnmarshalGQL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var evidence ExampleEvidence
+
 			err := evidence.UnmarshalGQL(tt.input)
 			if tt.wantErr {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, evidence)
 		})
@@ -216,6 +219,7 @@ func TestImplementationGuidance_MarshalGQL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
+
 			tt.guidance.MarshalGQL(&buf)
 			assert.Equal(t, tt.want, buf.String())
 		})
@@ -299,11 +303,13 @@ func TestImplementationGuidance_UnmarshalGQL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var guidance ImplementationGuidance
+
 			err := guidance.UnmarshalGQL(tt.input)
 			if tt.wantErr {
 				assert.Error(t, err)
 				return
 			}
+
 			assert.NoError(t, err)
 			assert.Equal(t, tt.want, guidance)
 		})
@@ -362,6 +368,7 @@ func TestImplementationGuidance_JSON(t *testing.T) {
 
 			// Compare fields individually to handle nil vs empty slice
 			assert.Equal(t, tt.guidance.ReferenceID, unmarshaled.ReferenceID)
+
 			if tt.guidance.Guidance == nil {
 				assert.Nil(t, unmarshaled.Guidance)
 			} else {

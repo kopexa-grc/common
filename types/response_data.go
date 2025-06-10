@@ -11,10 +11,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var (
-	// ErrInvalidResponseData is returned when the response data is invalid
-	ErrInvalidResponseData = fmt.Errorf("invalid response data")
-)
+// ErrInvalidResponseData is returned when the response data is invalid
+var ErrInvalidResponseData = fmt.Errorf("invalid response data")
 
 // ResponseMeta contains additional metadata about the response.
 // It is a map of string keys to arbitrary values.

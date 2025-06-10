@@ -12,10 +12,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var (
-	// ErrInvalidAuthor is returned when an author is invalid
-	ErrInvalidAuthor = errors.New("invalid author")
-)
+// ErrInvalidAuthor is returned when an author is invalid
+var ErrInvalidAuthor = errors.New("invalid author")
 
 // Author represents a person who has created or modified a resource.
 // It contains basic information about the author including their ID, name, and email.

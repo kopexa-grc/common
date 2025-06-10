@@ -11,10 +11,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var (
-	// ErrKeyNotFound is returned when a key is not found in the metadata
-	ErrKeyNotFound = errors.New("key not found in metadata")
-)
+// ErrKeyNotFound is returned when a key is not found in the metadata
+var ErrKeyNotFound = errors.New("key not found in metadata")
 
 // Metadata represents a collection of key-value pairs for storing additional information.
 // It is commonly used for storing metadata about resources, documents, or other entities.

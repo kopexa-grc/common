@@ -1,4 +1,6 @@
-GO_TEST = go run -modfile ./tools/go.mod gotest.tools/gotestsum --format pkgname
+GO_TEST = go tool gotest.tools/gotestsum --format pkgname
+GO_FUMPT = go tool mvdan.cc/gofumpt
+GO_LINT = go tool github.com/golangci/golangci-lint/v2/cmd/golangci-lint
 
 #   🔨 TOOLS       #
 ##@ Tools
@@ -14,11 +16,6 @@ prep/tools:
 	@if ! command -v copywrite >/dev/null 2>&1; then \
 		echo "copywrite is not installed. Installing copywrite..."; \
 		go install github.com/hashicorp/copywrite@latest; \
-	fi
-
-	@if ! command -v gofumpt >/dev/null 2>&1; then \
-		echo "gofumpt is not installed. Installing gofumpt..."; \
-		go install mvdan.cc/gofumpt@latest; \
 	fi
 
 	@if ! command -v lefthook >/dev/null 2>&1; then \
@@ -41,19 +38,19 @@ prep/tools/mockgen:
 ##@ Formatting
 
 fmt:
-	gofumpt -w .
+	$(GO_FUMPT) -w .
 
 fmt/check:
-	gofumpt -d .
+	$(GO_FUMPT) -d .
 
 #   🔍 Linting     #
 ##@ Linting
 
 lint:
-	golangci-lint run ./...
+	$(GO_LINT) run ./...
 
 lint/fix:
-	golangci-lint run --fix ./...
+	$(GO_LINT) run --fix ./...
 
 #   ⛹🏽‍ License   #
 ##@ License

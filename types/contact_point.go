@@ -12,10 +12,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var (
-	// ErrInvalidContactPoint is returned when a contact point is invalid
-	ErrInvalidContactPoint = errors.New("invalid contact point")
-)
+// ErrInvalidContactPoint is returned when a contact point is invalid
+var ErrInvalidContactPoint = errors.New("invalid contact point")
 
 // ContactPoint contains vendor contact information.
 // It represents a single point of contact with a specific method and details.

@@ -19,10 +19,8 @@ const (
 	DefaultScore = 25
 )
 
-var (
-	// ErrInvalidRiskValue is returned when likelihood or consequence is outside valid range
-	ErrInvalidRiskValue = fmt.Errorf("risk value must be between %d and %d", MinRiskValue, MaxRiskValue)
-)
+// ErrInvalidRiskValue is returned when likelihood or consequence is outside valid range
+var ErrInvalidRiskValue = fmt.Errorf("risk value must be between %d and %d", MinRiskValue, MaxRiskValue)
 
 // ActionRisk represents the risk assessment details for an action.
 // It includes both the inherent risk (before treatment) and the residual risk (after treatment).
