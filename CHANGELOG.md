@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.40.0](https://github.com/kopexa-grc/common/compare/v1.39.0...v1.40.0) (2025-06-12)
+
+
+### Features
+
+* risk audit entity ([390d960](https://github.com/kopexa-grc/common/commit/390d96031d5f8d0d01caf6438936fb4fb3c68367))
+
 ## [1.39.0](https://github.com/kopexa-grc/common/compare/v1.38.0...v1.39.0) (2025-06-10)
 
 
