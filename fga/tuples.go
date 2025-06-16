@@ -264,3 +264,107 @@ func tupleKeyToDeleteRequest(tupleKeys []TupleKey) []openfga.TupleKeyWithoutCond
 
 	return req
 }
+
+// TupleRequest is the fields needed to check a tuple in the FGA store
+type TupleRequest struct {
+	// ObjectID is the identifier of the object that the subject is related to
+	ObjectID string
+	// ObjectType is the type of object that the subject is related to
+	ObjectType string
+	// ObjectRelation is the tuple set relation for the object (e.g #member)
+	ObjectRelation string
+	// SubjectID is the identifier of the subject that is related to the object
+	SubjectID string
+	// SubjectType is the type of subject that is related to the object
+	SubjectType string
+	// SubjectRelation is the tuple set relation for the subject (e.g #member)
+	SubjectRelation string
+	// Relation is the relationship between the subject and object
+	Relation string
+	// ConditionName for the relationship
+	ConditionName string
+	// ConditionContext for the relationship
+	ConditionContext *map[string]any
+}
+
+// WithSubject sets the subject for the tuple request.
+func (r *TupleRequest) WithSubjectType(subjectType string) *TupleRequest {
+	r.SubjectType = subjectType
+	return r
+}
+
+// GetTupleKey creates a Tuple key with the provided subject, object, and role
+func GetTupleKey(req TupleRequest) TupleKey {
+	sub := Entity{
+		Kind:       Kind(req.SubjectType),
+		Identifier: req.SubjectID,
+	}
+
+	if req.SubjectRelation != "" {
+		sub.Relation = Relation(req.SubjectRelation)
+	}
+
+	object := Entity{
+		Kind:       Kind(req.ObjectType),
+		Identifier: req.ObjectID,
+	}
+
+	if req.ObjectRelation != "" {
+		object.Relation = Relation(req.ObjectRelation)
+	}
+
+	k := TupleKey{
+		Subject:  sub,
+		Object:   object,
+		Relation: Relation(req.Relation),
+	}
+
+	if req.ConditionName != "" {
+		k.Condition = Condition{
+			Name:    req.ConditionName,
+			Context: req.ConditionContext,
+		}
+	}
+
+	return k
+}
+
+// CreatePublicWildcardTuples creates a slice of TupleKey for public access with the specified relation.
+// This is an internal method that requires all parameters.
+//
+// Args:
+//   - relation: The relation to use for the tuples
+//   - objectType: The type of object to create tuples for
+//   - objectID: The ID of the object
+//
+// Returns:
+//   - []TupleKey: A slice of TupleKey with wildcard subject and the specified relation and object
+func CreatePublicWildcardTuples(relation Relation, objectType string, objectID string) []TupleKey {
+	base := TupleRequest{
+		ObjectID:   objectID,
+		ObjectType: objectType,
+		SubjectID:  Wildcard,
+		Relation:   string(relation),
+	}
+
+	userTuple := base.WithSubjectType(userSubject)
+	serviceTuple := base.WithSubjectType(serviceSubject)
+
+	return []TupleKey{
+		GetTupleKey(*userTuple),
+		GetTupleKey(*serviceTuple),
+	}
+}
+
+// CreatePublicViewTuples creates a slice of TupleKey for public view access.
+// This is a convenience method that uses "canView" as the default relation.
+//
+// Args:
+//   - objectType: The type of object to create tuples for
+//   - objectID: The ID of the object
+//
+// Returns:
+//   - []TupleKey: A slice of TupleKey with wildcard subject and "canView" relation
+func CreatePublicViewTuples(objectType string, objectID string) []TupleKey {
+	return CreatePublicWildcardTuples(CanView, objectType, objectID)
+}

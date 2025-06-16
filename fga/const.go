@@ -35,4 +35,12 @@ const (
 	// CanDelete represents the permission to remove a resource.
 	// Users with this relation can delete the associated object.
 	CanDelete Relation = "can_delete"
+
+	// Wildcard allows for public access to all resources.
+	Wildcard = "*"
+)
+
+const (
+	userSubject    = "user"
+	serviceSubject = "service"
 )
