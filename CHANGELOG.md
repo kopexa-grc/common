@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.41.0](https://github.com/kopexa-grc/common/compare/v1.40.0...v1.41.0) (2025-06-16)
+
+
+### Features
+
+* Add wildcard support and public access tuple creation ([e05ac49](https://github.com/kopexa-grc/common/commit/e05ac498aa684cff2c3ef62c55a94a8281173221))
+
 ## [1.40.0](https://github.com/kopexa-grc/common/compare/v1.39.0...v1.40.0) (2025-06-12)
 
 
