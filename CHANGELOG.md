@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.41.1](https://github.com/kopexa-grc/common/compare/v1.41.0...v1.41.1) (2025-06-19)
+
+
+### Bug Fixes
+
+* pointer usage bug ([ffaca51](https://github.com/kopexa-grc/common/commit/ffaca51d5bea2694d45a8664ef3226397ccc432e))
+
 ## [1.41.0](https://github.com/kopexa-grc/common/compare/v1.40.0...v1.41.0) (2025-06-16)
 
 
