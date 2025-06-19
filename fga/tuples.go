@@ -340,15 +340,20 @@ func GetTupleKey(req TupleRequest) TupleKey {
 // Returns:
 //   - []TupleKey: A slice of TupleKey with wildcard subject and the specified relation and object
 func CreatePublicWildcardTuples(relation Relation, objectType string, objectID string) []TupleKey {
-	base := TupleRequest{
-		ObjectID:   objectID,
-		ObjectType: objectType,
-		SubjectID:  Wildcard,
-		Relation:   string(relation),
+	userTuple := &TupleRequest{
+		ObjectID:    objectID,
+		ObjectType:  objectType,
+		SubjectID:   Wildcard,
+		Relation:    string(relation),
+		SubjectType: userSubject,
 	}
-
-	userTuple := base.WithSubjectType(userSubject)
-	serviceTuple := base.WithSubjectType(serviceSubject)
+	serviceTuple := &TupleRequest{
+		ObjectID:    objectID,
+		ObjectType:  objectType,
+		SubjectID:   Wildcard,
+		Relation:    string(relation),
+		SubjectType: serviceSubject,
+	}
 
 	return []TupleKey{
 		GetTupleKey(*userTuple),
