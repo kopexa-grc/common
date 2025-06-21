@@ -5,6 +5,7 @@ package escape
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 )
 
@@ -156,4 +157,9 @@ func unescape(r []rune, i int) (bool, rune, int) {
 	}
 
 	return true, rune(retval), i
+}
+
+// URLEscape uses url.PathEscape to escape s.
+func URLEscape(s string) string {
+	return url.PathEscape(s)
 }

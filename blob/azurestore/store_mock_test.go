@@ -72,6 +72,36 @@ func (mr *MockAzBlobMockRecorder) GetProperties(ctx, o any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProperties", reflect.TypeOf((*MockAzBlob)(nil).GetProperties), ctx, o)
 }
 
+// NewRangeReader mocks base method.
+func (m *MockAzBlob) NewRangeReader(ctx context.Context, key string, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NewRangeReader", ctx, key, offset, length, opts)
+	ret0, _ := ret[0].(driver.Reader)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// NewRangeReader indicates an expected call of NewRangeReader.
+func (mr *MockAzBlobMockRecorder) NewRangeReader(ctx, key, offset, length, opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewRangeReader", reflect.TypeOf((*MockAzBlob)(nil).NewRangeReader), ctx, key, offset, length, opts)
+}
+
+// NewTypedWriter mocks base method.
+func (m *MockAzBlob) NewTypedWriter(ctx context.Context, key, contentType string, opts *driver.WriterOptions) (driver.Writer, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NewTypedWriter", ctx, key, contentType, opts)
+	ret0, _ := ret[0].(driver.Writer)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// NewTypedWriter indicates an expected call of NewTypedWriter.
+func (mr *MockAzBlobMockRecorder) NewTypedWriter(ctx, key, contentType, opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewTypedWriter", reflect.TypeOf((*MockAzBlob)(nil).NewTypedWriter), ctx, key, contentType, opts)
+}
+
 // SignedURL mocks base method.
 func (m *MockAzBlob) SignedURL(ctx context.Context, opts *driver.SignedURLOptions) (string, error) {
 	m.ctrl.T.Helper()

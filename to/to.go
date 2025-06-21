@@ -7,6 +7,11 @@ package to
 
 import "time"
 
+// Ptr returns a pointer to the provided value.
+func Ptr[T any](v T) *T {
+	return &v
+}
+
 // Bool returns a pointer to the given bool value.
 func Bool(v bool) *bool {
 	return &v

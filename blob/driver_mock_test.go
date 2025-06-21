@@ -11,6 +11,7 @@ package blob_test
 
 import (
 	context "context"
+	io "io"
 	reflect "reflect"
 
 	driver "github.com/kopexa-grc/common/blob/driver"
@@ -69,6 +70,36 @@ func (mr *MockBucketMockRecorder) Delete(ctx, key any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockBucket)(nil).Delete), ctx, key)
 }
 
+// NewRangeReader mocks base method.
+func (m *MockBucket) NewRangeReader(ctx context.Context, key string, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NewRangeReader", ctx, key, offset, length, opts)
+	ret0, _ := ret[0].(driver.Reader)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// NewRangeReader indicates an expected call of NewRangeReader.
+func (mr *MockBucketMockRecorder) NewRangeReader(ctx, key, offset, length, opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewRangeReader", reflect.TypeOf((*MockBucket)(nil).NewRangeReader), ctx, key, offset, length, opts)
+}
+
+// NewTypedWriter mocks base method.
+func (m *MockBucket) NewTypedWriter(ctx context.Context, key, contentType string, opts *driver.WriterOptions) (driver.Writer, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NewTypedWriter", ctx, key, contentType, opts)
+	ret0, _ := ret[0].(driver.Writer)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// NewTypedWriter indicates an expected call of NewTypedWriter.
+func (mr *MockBucketMockRecorder) NewTypedWriter(ctx, key, contentType, opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewTypedWriter", reflect.TypeOf((*MockBucket)(nil).NewTypedWriter), ctx, key, contentType, opts)
+}
+
 // SignedURL mocks base method.
 func (m *MockBucket) SignedURL(ctx context.Context, key string, opts *driver.SignedURLOptions) (string, error) {
 	m.ctrl.T.Helper()
@@ -82,4 +113,214 @@ func (m *MockBucket) SignedURL(ctx context.Context, key string, opts *driver.Sig
 func (mr *MockBucketMockRecorder) SignedURL(ctx, key, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SignedURL", reflect.TypeOf((*MockBucket)(nil).SignedURL), ctx, key, opts)
+}
+
+// MockReader is a mock of Reader interface.
+type MockReader struct {
+	ctrl     *gomock.Controller
+	recorder *MockReaderMockRecorder
+	isgomock struct{}
+}
+
+// MockReaderMockRecorder is the mock recorder for MockReader.
+type MockReaderMockRecorder struct {
+	mock *MockReader
+}
+
+// NewMockReader creates a new mock instance.
+func NewMockReader(ctrl *gomock.Controller) *MockReader {
+	mock := &MockReader{ctrl: ctrl}
+	mock.recorder = &MockReaderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockReader) EXPECT() *MockReaderMockRecorder {
+	return m.recorder
+}
+
+// As mocks base method.
+func (m *MockReader) As(arg0 any) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "As", arg0)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// As indicates an expected call of As.
+func (mr *MockReaderMockRecorder) As(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "As", reflect.TypeOf((*MockReader)(nil).As), arg0)
+}
+
+// Attributes mocks base method.
+func (m *MockReader) Attributes() *driver.ReaderAttributes {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Attributes")
+	ret0, _ := ret[0].(*driver.ReaderAttributes)
+	return ret0
+}
+
+// Attributes indicates an expected call of Attributes.
+func (mr *MockReaderMockRecorder) Attributes() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Attributes", reflect.TypeOf((*MockReader)(nil).Attributes))
+}
+
+// Close mocks base method.
+func (m *MockReader) Close() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Close")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Close indicates an expected call of Close.
+func (mr *MockReaderMockRecorder) Close() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockReader)(nil).Close))
+}
+
+// Read mocks base method.
+func (m *MockReader) Read(p []byte) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Read", p)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Read indicates an expected call of Read.
+func (mr *MockReaderMockRecorder) Read(p any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Read", reflect.TypeOf((*MockReader)(nil).Read), p)
+}
+
+// MockDownloader is a mock of Downloader interface.
+type MockDownloader struct {
+	ctrl     *gomock.Controller
+	recorder *MockDownloaderMockRecorder
+	isgomock struct{}
+}
+
+// MockDownloaderMockRecorder is the mock recorder for MockDownloader.
+type MockDownloaderMockRecorder struct {
+	mock *MockDownloader
+}
+
+// NewMockDownloader creates a new mock instance.
+func NewMockDownloader(ctrl *gomock.Controller) *MockDownloader {
+	mock := &MockDownloader{ctrl: ctrl}
+	mock.recorder = &MockDownloaderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDownloader) EXPECT() *MockDownloaderMockRecorder {
+	return m.recorder
+}
+
+// Download mocks base method.
+func (m *MockDownloader) Download(w io.Writer) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Download", w)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Download indicates an expected call of Download.
+func (mr *MockDownloaderMockRecorder) Download(w any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Download", reflect.TypeOf((*MockDownloader)(nil).Download), w)
+}
+
+// MockUploader is a mock of Uploader interface.
+type MockUploader struct {
+	ctrl     *gomock.Controller
+	recorder *MockUploaderMockRecorder
+	isgomock struct{}
+}
+
+// MockUploaderMockRecorder is the mock recorder for MockUploader.
+type MockUploaderMockRecorder struct {
+	mock *MockUploader
+}
+
+// NewMockUploader creates a new mock instance.
+func NewMockUploader(ctrl *gomock.Controller) *MockUploader {
+	mock := &MockUploader{ctrl: ctrl}
+	mock.recorder = &MockUploaderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockUploader) EXPECT() *MockUploaderMockRecorder {
+	return m.recorder
+}
+
+// Upload mocks base method.
+func (m *MockUploader) Upload(r io.Reader) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Upload", r)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Upload indicates an expected call of Upload.
+func (mr *MockUploaderMockRecorder) Upload(r any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Upload", reflect.TypeOf((*MockUploader)(nil).Upload), r)
+}
+
+// MockWriter is a mock of Writer interface.
+type MockWriter struct {
+	ctrl     *gomock.Controller
+	recorder *MockWriterMockRecorder
+	isgomock struct{}
+}
+
+// MockWriterMockRecorder is the mock recorder for MockWriter.
+type MockWriterMockRecorder struct {
+	mock *MockWriter
+}
+
+// NewMockWriter creates a new mock instance.
+func NewMockWriter(ctrl *gomock.Controller) *MockWriter {
+	mock := &MockWriter{ctrl: ctrl}
+	mock.recorder = &MockWriterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockWriter) EXPECT() *MockWriterMockRecorder {
+	return m.recorder
+}
+
+// Close mocks base method.
+func (m *MockWriter) Close() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Close")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Close indicates an expected call of Close.
+func (mr *MockWriterMockRecorder) Close() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockWriter)(nil).Close))
+}
+
+// Write mocks base method.
+func (m *MockWriter) Write(p []byte) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Write", p)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Write indicates an expected call of Write.
+func (mr *MockWriterMockRecorder) Write(p any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Write", reflect.TypeOf((*MockWriter)(nil).Write), p)
 }

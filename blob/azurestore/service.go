@@ -6,7 +6,9 @@ package azurestore
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -29,6 +31,8 @@ type AzBlob interface {
 	GetProperties(ctx context.Context, o *blob.GetPropertiesOptions) (blob.GetPropertiesResponse, error)
 	Delete(ctx context.Context) error
 	URL() string
+	NewRangeReader(ctx context.Context, key string, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error)
+	NewTypedWriter(ctx context.Context, key, contentType string, opts *driver.WriterOptions) (driver.Writer, error)
 }
 
 type BlockBlob struct {
@@ -211,6 +215,174 @@ func (blockBlob *BlockBlob) URL() string {
 // GetProperties gets the properties of the blockBlob
 func (blockBlob *BlockBlob) GetProperties(ctx context.Context, o *blob.GetPropertiesOptions) (blob.GetPropertiesResponse, error) {
 	return blockBlob.BlobClient.GetProperties(ctx, o)
+}
+
+// reader reads an azblob. It implements io.ReadCloser.
+type reader struct {
+	body  io.ReadCloser
+	attrs driver.ReaderAttributes
+	raw   *azblob.DownloadStreamResponse
+}
+
+func (r *reader) Read(p []byte) (int, error) {
+	return r.body.Read(p)
+}
+
+func (r *reader) Close() error {
+	return r.body.Close()
+}
+
+func (r *reader) Attributes() *driver.ReaderAttributes {
+	return &r.attrs
+}
+
+func (r *reader) As(i any) bool {
+	p, ok := i.(*azblob.DownloadStreamResponse)
+	if !ok {
+		return false
+	}
+	*p = *r.raw
+	return true
+}
+
+// NewRangeReader implements driver.NewRangeReader.
+func (blockBlob *BlockBlob) NewRangeReader(ctx context.Context, key string, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error) {
+	key = escapeKey(key, false)
+	blobClient := blockBlob.BlobClient
+	downloadOpts := azblob.DownloadStreamOptions{}
+	if offset != 0 {
+		downloadOpts.Range.Offset = offset
+	}
+	if length >= 0 {
+		downloadOpts.Range.Count = length
+	}
+	if opts.BeforeRead != nil {
+		asFunc := func(i any) bool {
+			if p, ok := i.(**azblob.DownloadStreamOptions); ok {
+				*p = &downloadOpts
+				return true
+			}
+			return false
+		}
+		if err := opts.BeforeRead(asFunc); err != nil {
+			return nil, err
+		}
+	}
+	blobDownloadResponse, err := blobClient.DownloadStream(ctx, &downloadOpts)
+	if err != nil {
+		return nil, err
+	}
+	attrs := driver.ReaderAttributes{
+		ContentType: *blobDownloadResponse.ContentType,
+		Size:        getSize(blobDownloadResponse.ContentLength, *blobDownloadResponse.ContentRange),
+		ModTime:     *blobDownloadResponse.LastModified,
+	}
+	var body io.ReadCloser
+	if length == 0 {
+		body = http.NoBody
+	} else {
+		body = blobDownloadResponse.Body
+	}
+	return &reader{
+		body:  body,
+		attrs: attrs,
+		raw:   &blobDownloadResponse,
+	}, nil
+}
+
+func (blockBlob *BlockBlob) NewTypedWriter(ctx context.Context, key, contentType string, opts *driver.WriterOptions) (driver.Writer, error) {
+	key = escapeKey(key, false)
+	blobClient := blockBlob.BlobClient
+	if opts.BufferSize == 0 {
+		opts.BufferSize = defaultUploadBlockSize
+	}
+	if opts.MaxConcurrency == 0 {
+		opts.MaxConcurrency = defaultUploadBuffers
+	}
+
+	md := make(map[string]*string, len(opts.Metadata))
+	for k, v := range opts.Metadata {
+		// See the package comments for more details on escaping of metadata
+		// keys & values.
+		e := escape.HexEscape(k, func(runes []rune, i int) bool {
+			c := runes[i]
+			switch {
+			case i == 0 && c >= '0' && c <= '9':
+				return true
+			case escape.IsASCIIAlphanumeric(c):
+				return false
+			case c == '_':
+				return false
+			}
+			return true
+		})
+		if _, ok := md[e]; ok {
+			return nil, fmt.Errorf("duplicate keys after escaping: %q => %q", k, e)
+		}
+		escaped := escape.URLEscape(v)
+		md[e] = &escaped
+	}
+	uploadOpts := &azblob.UploadStreamOptions{
+		BlockSize:   int64(opts.BufferSize),
+		Concurrency: opts.MaxConcurrency,
+		Metadata:    md,
+		HTTPHeaders: &blob.HTTPHeaders{
+			BlobCacheControl:       &opts.CacheControl,
+			BlobContentDisposition: &opts.ContentDisposition,
+			BlobContentEncoding:    &opts.ContentEncoding,
+			BlobContentLanguage:    &opts.ContentLanguage,
+			BlobContentMD5:         opts.ContentMD5,
+			BlobContentType:        &contentType,
+		},
+	}
+	if opts.IfNotExist {
+		etagAny := azcore.ETagAny
+		uploadOpts.AccessConditions = &azblob.AccessConditions{
+			ModifiedAccessConditions: &blob.ModifiedAccessConditions{
+				IfNoneMatch: &etagAny,
+			},
+		}
+	}
+	if opts.BeforeWrite != nil {
+		asFunc := func(i any) bool {
+			p, ok := i.(**azblob.UploadStreamOptions)
+			if !ok {
+				return false
+			}
+			*p = uploadOpts
+			return true
+		}
+		if err := opts.BeforeWrite(asFunc); err != nil {
+			return nil, err
+		}
+	}
+	return &writer{
+		ctx:        ctx,
+		client:     blobClient,
+		uploadOpts: uploadOpts,
+		donec:      make(chan struct{}),
+	}, nil
+
+}
+
+func getSize(contentLength *int64, contentRange string) int64 {
+	var size int64
+	// Default size to ContentLength, but that's incorrect for partial-length reads,
+	// where ContentLength refers to the size of the returned Body, not the entire
+	// size of the blob. ContentRange has the full size.
+	if contentLength != nil {
+		size = *contentLength
+	}
+	if contentRange != "" {
+		// Sample: bytes 10-14/27 (where 27 is the full size).
+		parts := strings.Split(contentRange, "/")
+		if len(parts) == 2 {
+			if i, err := strconv.ParseInt(parts[1], 10, 64); err == nil {
+				size = i
+			}
+		}
+	}
+	return size
 }
 
 // escapeKey does all required escaping for UTF-8 strings to work

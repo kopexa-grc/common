@@ -46,6 +46,24 @@ func (store *AzureStore) GetSignedUploadURL(ctx context.Context, key string, exp
 	})
 }
 
+func (store *AzureStore) NewRangeReader(ctx context.Context, key string, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error) {
+	blob, err := store.Service.NewBlob(ctx, key)
+	if err != nil {
+		return nil, err
+	}
+
+	return blob.NewRangeReader(ctx, key, offset, length, opts)
+}
+
+func (store *AzureStore) NewTypedWriter(ctx context.Context, key, contentType string, opts *driver.WriterOptions) (driver.Writer, error) {
+	blob, err := store.Service.NewBlob(ctx, key)
+	if err != nil {
+		return nil, err
+	}
+
+	return blob.NewTypedWriter(ctx, key, contentType, opts)
+}
+
 func (store *AzureStore) GetSignedDownloadURL(ctx context.Context, key string, expires time.Duration) (string, error) {
 	blob, err := store.Service.NewBlob(ctx, key)
 	if err != nil {
