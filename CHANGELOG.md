@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.42.1](https://github.com/kopexa-grc/common/compare/v1.42.0...v1.42.1) (2025-06-21)
+
+
+### Bug Fixes
+
+* nil pointer for metrics if not provided ([dfe2c38](https://github.com/kopexa-grc/common/commit/dfe2c3819d3c24076c05687f163ff9f282f8d0e1))
+
 ## [1.42.0](https://github.com/kopexa-grc/common/compare/v1.41.1...v1.42.0) (2025-06-21)
 
 
