@@ -98,13 +98,19 @@ func (w *Writer) Write(p []byte) (int, error) {
 // canceled or reaches its deadline.
 func (w *Writer) Close() (err error) {
 	w.closed = true
+
+	// Store context before it might be set to nil in open()
+	ctx := w.ctx
+
 	defer func() {
-		w.end(err)
+		if w.end != nil {
+			w.end(err)
+		}
 		// Emit only on close to avoid an allocation on each call to Write().
 		// Record bytes written metric with OpenTelemetry
-		if w.bytesWrittenCounter != nil && w.bytesWritten > 0 {
+		if w.bytesWrittenCounter != nil && w.bytesWritten > 0 && ctx != nil {
 			w.bytesWrittenCounter.Add(
-				w.ctx,
+				ctx,
 				int64(w.bytesWritten))
 		}
 	}()
