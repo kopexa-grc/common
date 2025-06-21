@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.42.0](https://github.com/kopexa-grc/common/compare/v1.41.1...v1.42.0) (2025-06-21)
+
+
+### Features
+
+* Implement new Reader and Writer interfaces with range reading and writing capabilities ([ed43e11](https://github.com/kopexa-grc/common/commit/ed43e1140426793d40cd0e24a84fac11f12061df))
+
+
+### Bug Fixes
+
+* Update blob package for improved error handling and code clarity ([5a9fe3a](https://github.com/kopexa-grc/common/commit/5a9fe3a8cbdbc43f0f9737ff096657ec62db16e9))
+
 ## [1.41.1](https://github.com/kopexa-grc/common/compare/v1.41.0...v1.41.1) (2025-06-19)
 
 
