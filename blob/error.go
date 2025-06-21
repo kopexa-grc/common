@@ -10,7 +10,7 @@ import (
 	kerr "github.com/kopexa-grc/common/errors"
 )
 
-func wrapError(b driver.Bucket, err error, key string) error {
+func wrapError(_ driver.Bucket, err error, key string) error {
 	if err == nil {
 		return nil
 	}
@@ -19,6 +19,7 @@ func wrapError(b driver.Bucket, err error, key string) error {
 	if key != "" {
 		msg += fmt.Sprintf(" (key %q)", key)
 	}
+
 	code := kerr.Code(err)
 
 	return kerr.New(code, msg)

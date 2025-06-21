@@ -37,12 +37,14 @@ func (w *writer) Write(p []byte) (int, error) {
 	if len(p) == 0 {
 		return 0, nil
 	}
+
 	if w.pw == nil {
 		// We'll write into pw and use pr as an io.Reader for the
 		// Upload call to Azure.
 		w.pr, w.pw = io.Pipe()
 		w.open(w.pr, true)
 	}
+
 	return w.pw.Write(p)
 }
 
@@ -51,6 +53,7 @@ func (w *writer) Write(p []byte) (int, error) {
 func (w *writer) Upload(r io.Reader) error {
 	w.upload = true
 	w.open(r, false)
+
 	return nil
 }
 
@@ -64,6 +67,7 @@ func (w *writer) open(r io.Reader, closePipeOnError bool) {
 		if r == nil {
 			r = http.NoBody
 		}
+
 		_, w.err = w.client.UploadStream(w.ctx, r, w.uploadOpts)
 		if w.err != nil {
 			if closePipeOnError {
@@ -82,6 +86,7 @@ func (w *writer) Close() error {
 		if w.pr != nil {
 			defer w.pr.Close()
 		}
+
 		if w.pw == nil {
 			// We never got any bytes written. We'll write an http.NoBody.
 			w.open(nil, false)
@@ -89,6 +94,8 @@ func (w *writer) Close() error {
 			return err
 		}
 	}
+
 	<-w.donec
+
 	return w.err
 }

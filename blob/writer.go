@@ -61,6 +61,7 @@ func (w *Writer) Write(p []byte) (int, error) {
 			return 0, err
 		}
 	}
+
 	if w.w != nil {
 		return w.write(p)
 	}
@@ -79,6 +80,7 @@ func (w *Writer) Write(p []byte) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+
 	if w.buf.Len() >= sniffLen {
 		// Note that w.open will return the full length of the buffer; we don't want
 		// to return that as the length of this write since some of them were written in
@@ -86,6 +88,7 @@ func (w *Writer) Write(p []byte) (int, error) {
 		_, err := w.open(w.buf.Bytes())
 		return n, err
 	}
+
 	return n, nil
 }
 
@@ -105,6 +108,7 @@ func (w *Writer) Close() (err error) {
 				int64(w.bytesWritten))
 		}
 	}()
+
 	if len(w.contentMD5) > 0 {
 		// Verify the MD5 hash of what was written matches the ContentMD5 provided
 		// by the user.
@@ -113,20 +117,25 @@ func (w *Writer) Close() (err error) {
 			// No match! Return an error, but first cancel the context and call the
 			// driver's Close function to ensure the write is aborted.
 			w.cancel()
+
 			if w.w != nil {
 				_ = w.w.Close()
 			}
+
 			return kerr.Newf(kerr.FailedPrecondition, nil, "blob: the WriterOptions.ContentMD5 you specified (%X) did not match what was written (%X)", w.contentMD5, md5sum)
 		}
 	}
 
 	defer w.cancel()
+
 	if w.w != nil {
 		return wrapError(w.b, w.w.Close(), w.key)
 	}
+
 	if _, err := w.open(w.buf.Bytes()); err != nil {
 		return err
 	}
+
 	return wrapError(w.b, w.w.Close(), w.key)
 }
 
@@ -134,7 +143,9 @@ func (w *Writer) Close() (err error) {
 // The error it returns is wrapped.
 func (w *Writer) open(p []byte) (int, error) {
 	ct := http.DetectContentType(p)
+
 	var err error
+
 	if w.w, err = w.b.NewTypedWriter(w.ctx, w.key, ct, w.opts); err != nil {
 		return 0, wrapError(w.b, err, w.key)
 	}
@@ -143,12 +154,14 @@ func (w *Writer) open(p []byte) (int, error) {
 	w.buf = nil
 	w.ctx = nil
 	w.opts = nil
+
 	return w.write(p)
 }
 
 func (w *Writer) write(p []byte) (int, error) {
 	n, err := w.w.Write(p)
 	w.bytesWritten += n
+
 	return n, wrapError(w.b, err, w.key)
 }
 
@@ -170,6 +183,7 @@ func (w *Writer) ReadFrom(r io.Reader) (int64, error) {
 	}
 
 	nr, _, err := readFromWriteTo(r, w)
+
 	return nr, err
 }
 
@@ -191,9 +205,11 @@ func (w *Writer) uploadAndClose(r io.Reader) (err error) {
 			_, err = w.ReadFrom(r)
 		}
 	}
+
 	cerr := w.Close()
 	if err == nil && cerr != nil {
 		err = cerr
 	}
+
 	return err
 }

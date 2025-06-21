@@ -5,7 +5,6 @@ package blob
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"log"
 	"time"
@@ -65,18 +64,22 @@ func (r *Reader) Read(p []byte) (int, error) {
 					return 0, kerr.Newf(kerr.UnexpectedFailure, nil, "blob: invalid Seek (base length %d, relative offset %d)", r.baseLength, r.relativeOffset)
 				}
 			}
+
 			newR, err := r.b.NewRangeReader(r.ctx, r.key, r.baseOffset+r.relativeOffset, length, r.dopts)
 			if err != nil {
 				return 0, wrapError(r.b, err, r.key)
 			}
+
 			_ = r.r.Close()
 			r.savedOffset = -1
 			r.r = newR
 		}
 	}
+
 	n, err := r.r.Read(p)
 	r.bytesRead += n
 	r.relativeOffset += int64(n)
+
 	return n, wrapError(r.b, err, r.key)
 }
 
@@ -95,6 +98,7 @@ func (r *Reader) Seek(offset int64, whence int) (int64, error) {
 	if r.baseLength >= 0 && r.baseLength < maxRelativeOffset {
 		maxRelativeOffset = r.baseLength
 	}
+
 	switch whence {
 	case io.SeekStart:
 		r.relativeOffset = offset
@@ -103,12 +107,15 @@ func (r *Reader) Seek(offset int64, whence int) (int64, error) {
 	case io.SeekEnd:
 		r.relativeOffset = maxRelativeOffset + offset
 	}
+
 	if r.relativeOffset < 0 {
 		// "Seeking to an offset before the start of the file is an error."
 		invalidOffset := r.relativeOffset
 		r.relativeOffset = 0
-		return 0, fmt.Errorf("Seek resulted in invalid offset %d, using 0", invalidOffset)
+
+		return 0, kerr.Newf(kerr.InvalidArgument, nil, "Seek resulted in invalid offset %d, using 0", invalidOffset)
 	}
+
 	if r.relativeOffset > maxRelativeOffset {
 		// "Seeking to any positive offset is legal, but the behavior of subsequent
 		// I/O operations on the underlying object is implementation-dependent."
@@ -116,6 +123,7 @@ func (r *Reader) Seek(offset int64, whence int) (int64, error) {
 		log.Printf("blob.Reader.Seek set an offset after EOF (base offset/length from NewRangeReader %d, %d; actual blob size %d; relative offset %d -> absolute offset %d).", r.baseOffset, r.baseLength, r.Size(), r.relativeOffset, r.baseOffset+r.relativeOffset)
 		r.relativeOffset = maxRelativeOffset
 	}
+
 	return r.relativeOffset, nil
 }
 
@@ -131,6 +139,7 @@ func (r *Reader) Close() error {
 			r.ctx,
 			int64(r.bytesRead))
 	}
+
 	return err
 }
 
@@ -176,27 +185,8 @@ func (r *Reader) WriteTo(w io.Writer) (int64, error) {
 	}
 
 	_, nw, err := readFromWriteTo(r, w)
-	return nw, err
-}
 
-// downloadAndClose is similar to WriteTo, but ensures it's the only read.
-// This pattern is more optimal for some drivers.
-func (r *Reader) downloadAndClose(w io.Writer) (err error) {
-	if r.bytesRead != 0 {
-		// Shouldn't happen.
-		return kerr.Newf(kerr.UnexpectedFailure, nil, "blob: downloadAndClose isn't the first read")
-	}
-	driverDownloader, ok := r.r.(driver.Downloader)
-	if ok {
-		err = driverDownloader.Download(w)
-	} else {
-		_, err = r.WriteTo(w)
-	}
-	cerr := r.Close()
-	if err == nil && cerr != nil {
-		err = cerr
-	}
-	return err
+	return nw, err
 }
 
 // readFromWriteTo is a helper for ReadFrom and WriteTo.
@@ -206,22 +196,28 @@ func (r *Reader) downloadAndClose(w io.Writer) (err error) {
 func readFromWriteTo(r io.Reader, w io.Writer) (int64, int64, error) {
 	// Note: can't use io.Copy because it will try to use r.WriteTo
 	// or w.WriteTo, which is recursive in this context.
-	buf := make([]byte, 1024)
+	const bufferSize = 1024
+	buf := make([]byte, bufferSize)
+
 	var totalRead, totalWritten int64
+
 	for {
 		numRead, rerr := r.Read(buf)
 		if numRead > 0 {
 			totalRead += int64(numRead)
 			numWritten, werr := w.Write(buf[0:numRead])
 			totalWritten += int64(numWritten)
+
 			if werr != nil {
 				return totalRead, totalWritten, werr
 			}
 		}
+
 		if rerr == io.EOF {
 			// Done!
 			return totalRead, totalWritten, nil
 		}
+
 		if rerr != nil {
 			return totalRead, totalWritten, rerr
 		}

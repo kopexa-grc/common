@@ -22,6 +22,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
 	"github.com/kopexa-grc/common/blob/driver"
 	"github.com/kopexa-grc/common/blob/internal/escape"
+	kerr "github.com/kopexa-grc/common/errors"
 	"github.com/rs/zerolog/log"
 )
 
@@ -31,8 +32,8 @@ type AzBlob interface {
 	GetProperties(ctx context.Context, o *blob.GetPropertiesOptions) (blob.GetPropertiesResponse, error)
 	Delete(ctx context.Context) error
 	URL() string
-	NewRangeReader(ctx context.Context, key string, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error)
-	NewTypedWriter(ctx context.Context, key, contentType string, opts *driver.WriterOptions) (driver.Writer, error)
+	NewRangeReader(ctx context.Context, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error)
+	NewTypedWriter(ctx context.Context, contentType string, opts *driver.WriterOptions) (driver.Writer, error)
 }
 
 type BlockBlob struct {
@@ -241,48 +242,57 @@ func (r *reader) As(i any) bool {
 	if !ok {
 		return false
 	}
+
 	*p = *r.raw
+
 	return true
 }
 
 // NewRangeReader implements driver.NewRangeReader.
-func (blockBlob *BlockBlob) NewRangeReader(ctx context.Context, key string, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error) {
-	key = escapeKey(key, false)
+func (blockBlob *BlockBlob) NewRangeReader(ctx context.Context, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error) {
 	blobClient := blockBlob.BlobClient
+
 	downloadOpts := azblob.DownloadStreamOptions{}
 	if offset != 0 {
 		downloadOpts.Range.Offset = offset
 	}
+
 	if length >= 0 {
 		downloadOpts.Range.Count = length
 	}
+
 	if opts.BeforeRead != nil {
 		asFunc := func(i any) bool {
 			if p, ok := i.(**azblob.DownloadStreamOptions); ok {
 				*p = &downloadOpts
 				return true
 			}
+
 			return false
 		}
 		if err := opts.BeforeRead(asFunc); err != nil {
 			return nil, err
 		}
 	}
+
 	blobDownloadResponse, err := blobClient.DownloadStream(ctx, &downloadOpts)
 	if err != nil {
 		return nil, err
 	}
+
 	attrs := driver.ReaderAttributes{
 		ContentType: *blobDownloadResponse.ContentType,
 		Size:        getSize(blobDownloadResponse.ContentLength, *blobDownloadResponse.ContentRange),
 		ModTime:     *blobDownloadResponse.LastModified,
 	}
+
 	var body io.ReadCloser
 	if length == 0 {
 		body = http.NoBody
 	} else {
 		body = blobDownloadResponse.Body
 	}
+
 	return &reader{
 		body:  body,
 		attrs: attrs,
@@ -290,22 +300,25 @@ func (blockBlob *BlockBlob) NewRangeReader(ctx context.Context, key string, offs
 	}, nil
 }
 
-func (blockBlob *BlockBlob) NewTypedWriter(ctx context.Context, key, contentType string, opts *driver.WriterOptions) (driver.Writer, error) {
-	key = escapeKey(key, false)
+func (blockBlob *BlockBlob) NewTypedWriter(ctx context.Context, contentType string, opts *driver.WriterOptions) (driver.Writer, error) {
 	blobClient := blockBlob.BlobClient
+
 	if opts.BufferSize == 0 {
 		opts.BufferSize = defaultUploadBlockSize
 	}
+
 	if opts.MaxConcurrency == 0 {
 		opts.MaxConcurrency = defaultUploadBuffers
 	}
 
 	md := make(map[string]*string, len(opts.Metadata))
+
 	for k, v := range opts.Metadata {
 		// See the package comments for more details on escaping of metadata
 		// keys & values.
 		e := escape.HexEscape(k, func(runes []rune, i int) bool {
 			c := runes[i]
+
 			switch {
 			case i == 0 && c >= '0' && c <= '9':
 				return true
@@ -314,14 +327,17 @@ func (blockBlob *BlockBlob) NewTypedWriter(ctx context.Context, key, contentType
 			case c == '_':
 				return false
 			}
+
 			return true
 		})
 		if _, ok := md[e]; ok {
-			return nil, fmt.Errorf("duplicate keys after escaping: %q => %q", k, e)
+			return nil, kerr.Newf(kerr.InvalidArgument, nil, "duplicate keys after escaping: %q => %q", k, e)
 		}
+
 		escaped := escape.URLEscape(v)
 		md[e] = &escaped
 	}
+
 	uploadOpts := &azblob.UploadStreamOptions{
 		BlockSize:   int64(opts.BufferSize),
 		Concurrency: opts.MaxConcurrency,
@@ -335,6 +351,7 @@ func (blockBlob *BlockBlob) NewTypedWriter(ctx context.Context, key, contentType
 			BlobContentType:        &contentType,
 		},
 	}
+
 	if opts.IfNotExist {
 		etagAny := azcore.ETagAny
 		uploadOpts.AccessConditions = &azblob.AccessConditions{
@@ -343,26 +360,29 @@ func (blockBlob *BlockBlob) NewTypedWriter(ctx context.Context, key, contentType
 			},
 		}
 	}
+
 	if opts.BeforeWrite != nil {
 		asFunc := func(i any) bool {
 			p, ok := i.(**azblob.UploadStreamOptions)
 			if !ok {
 				return false
 			}
+
 			*p = uploadOpts
+
 			return true
 		}
 		if err := opts.BeforeWrite(asFunc); err != nil {
 			return nil, err
 		}
 	}
+
 	return &writer{
 		ctx:        ctx,
 		client:     blobClient,
 		uploadOpts: uploadOpts,
 		donec:      make(chan struct{}),
 	}, nil
-
 }
 
 func getSize(contentLength *int64, contentRange string) int64 {
@@ -373,15 +393,20 @@ func getSize(contentLength *int64, contentRange string) int64 {
 	if contentLength != nil {
 		size = *contentLength
 	}
+
 	if contentRange != "" {
 		// Sample: bytes 10-14/27 (where 27 is the full size).
 		parts := strings.Split(contentRange, "/")
-		if len(parts) == 2 {
+
+		const expectedParts = 2
+
+		if len(parts) == expectedParts {
 			if i, err := strconv.ParseInt(parts[1], 10, 64); err == nil {
 				size = i
 			}
 		}
 	}
+
 	return size
 }
 

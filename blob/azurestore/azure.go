@@ -52,7 +52,7 @@ func (store *AzureStore) NewRangeReader(ctx context.Context, key string, offset,
 		return nil, err
 	}
 
-	return blob.NewRangeReader(ctx, key, offset, length, opts)
+	return blob.NewRangeReader(ctx, offset, length, opts)
 }
 
 func (store *AzureStore) NewTypedWriter(ctx context.Context, key, contentType string, opts *driver.WriterOptions) (driver.Writer, error) {
@@ -61,7 +61,7 @@ func (store *AzureStore) NewTypedWriter(ctx context.Context, key, contentType st
 		return nil, err
 	}
 
-	return blob.NewTypedWriter(ctx, key, contentType, opts)
+	return blob.NewTypedWriter(ctx, contentType, opts)
 }
 
 func (store *AzureStore) GetSignedDownloadURL(ctx context.Context, key string, expires time.Duration) (string, error) {

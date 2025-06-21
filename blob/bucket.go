@@ -6,7 +6,7 @@ package blob
 import (
 	"bytes"
 	"context"
-	"crypto/md5"
+	"crypto/md5" //nolint:gosec // MD5 is used for Content-MD5 validation as per RFC 1864
 	"fmt"
 	"io"
 	"log"
@@ -291,10 +291,12 @@ func (b *Bucket) Upload(ctx context.Context, key string, r io.Reader, opts *Writ
 	if opts == nil || opts.ContentType == "" {
 		return kerr.Newf(kerr.InvalidArgument, nil, "blob: Upload requires WriterOptions.ContentType")
 	}
+
 	w, err := b.NewWriter(ctx, key, opts)
 	if err != nil {
 		return err
 	}
+
 	return w.uploadAndClose(r)
 }
 
@@ -317,9 +319,11 @@ func (b *Bucket) NewWriter(ctx context.Context, key string, opts *WriterOptions)
 	if !utf8.ValidString(key) {
 		return nil, kerr.Newf(kerr.InvalidArgument, nil, "blob: NewWriter key must be a valid UTF-8 string: %q", key)
 	}
+
 	if opts == nil {
 		opts = &WriterOptions{}
 	}
+
 	dopts := &driver.WriterOptions{
 		CacheControl:                opts.CacheControl,
 		ContentDisposition:          opts.ContentDisposition,
@@ -332,34 +336,44 @@ func (b *Bucket) NewWriter(ctx context.Context, key string, opts *WriterOptions)
 		DisableContentTypeDetection: opts.DisableContentTypeDetection,
 		IfNotExist:                  opts.IfNotExist,
 	}
+
 	if len(opts.Metadata) > 0 {
 		// Services are inconsistent, but at least some treat keys
 		// as case-insensitive. To make the behavior consistent, we
 		// force-lowercase them when writing and reading.
 		md := make(map[string]string, len(opts.Metadata))
+
 		for k, v := range opts.Metadata {
 			if k == "" {
 				return nil, kerr.Newf(kerr.InvalidArgument, nil, "blob: WriterOptions.Metadata keys may not be empty strings")
 			}
+
 			if !utf8.ValidString(k) {
 				return nil, kerr.Newf(kerr.InvalidArgument, nil, "blob: WriterOptions.Metadata keys must be valid UTF-8 strings: %q", k)
 			}
+
 			if !utf8.ValidString(v) {
 				return nil, kerr.Newf(kerr.InvalidArgument, nil, "blob: WriterOptions.Metadata values must be valid UTF-8 strings: %q", v)
 			}
+
 			lowerK := strings.ToLower(k)
 			if _, found := md[lowerK]; found {
 				return nil, kerr.Newf(kerr.InvalidArgument, nil, "blob: WriterOptions.Metadata has a duplicate case-insensitive metadata key: %q", lowerK)
 			}
+
 			md[lowerK] = v
 		}
+
 		dopts.Metadata = md
 	}
+
 	b.mu.RLock()
 	defer b.mu.RUnlock()
+
 	if b.closed {
 		return nil, errClosed
 	}
+
 	ctx, cancel := context.WithCancel(ctx)
 
 	w := &Writer{
@@ -367,24 +381,29 @@ func (b *Bucket) NewWriter(ctx context.Context, key string, opts *WriterOptions)
 		cancel:     cancel,
 		key:        key,
 		contentMD5: opts.ContentMD5,
-		md5hash:    md5.New(),
+		md5hash:    md5.New(), //nolint:gosec // MD5 is used for Content-MD5 validation as per RFC 1864
 		ctx:        ctx,
 	}
+
 	if opts.ContentType != "" || opts.DisableContentTypeDetection {
 		var ct string
+
 		if opts.ContentType != "" {
 			t, p, err := mime.ParseMediaType(opts.ContentType)
 			if err != nil {
 				cancel()
 				return nil, err
 			}
+
 			ct = mime.FormatMediaType(t, p)
 		}
+
 		dw, err := b.b.NewTypedWriter(ctx, key, ct, dopts)
 		if err != nil {
 			cancel()
 			return nil, wrapError(b.b, err, key)
 		}
+
 		w.w = dw
 	} else {
 		// Save the fields needed to called NewTypedWriter later, once we've gotten
@@ -392,16 +411,20 @@ func (b *Bucket) NewWriter(ctx context.Context, key string, opts *WriterOptions)
 		w.opts = dopts
 		w.buf = bytes.NewBuffer([]byte{})
 	}
+
 	_, file, lineno, ok := runtime.Caller(1)
+
 	runtime.SetFinalizer(w, func(w *Writer) {
 		if !w.closed {
 			var caller string
 			if ok {
 				caller = fmt.Sprintf(" (%s:%d)", file, lineno)
 			}
+
 			log.Printf("A blob.Writer writing to %q was never closed%s", key, caller)
 		}
 	})
+
 	return w, nil
 }
 
@@ -428,23 +451,29 @@ func (b *Bucket) NewRangeReader(ctx context.Context, key string, offset, length 
 func (b *Bucket) newRangeReader(ctx context.Context, key string, offset, length int64, opts *ReaderOptions) (_ *Reader, err error) {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
+
 	if b.closed {
 		return nil, errClosed
 	}
+
 	if offset < 0 {
 		return nil, kerr.Newf(kerr.InvalidArgument, nil, "blob: NewRangeReader offset must be non-negative (%d)", offset)
 	}
+
 	if !utf8.ValidString(key) {
 		return nil, kerr.Newf(kerr.InvalidArgument, nil, "blob: NewRangeReader key must be a valid UTF-8 string: %q", key)
 	}
+
 	if opts == nil {
 		opts = &ReaderOptions{}
 	}
+
 	dopts := &driver.ReaderOptions{
 		BeforeRead: opts.BeforeRead,
 	}
 
 	var dr driver.Reader
+
 	dr, err = b.b.NewRangeReader(ctx, key, offset, length, dopts)
 	if err != nil {
 		return nil, wrapError(b.b, err, key)
@@ -460,16 +489,20 @@ func (b *Bucket) newRangeReader(ctx context.Context, key string, offset, length 
 		baseLength:  length,
 		savedOffset: -1,
 	}
-	_, file, lineno, ok := runtime.Caller(2)
+	//lint:ignore mnd Magic number for stack depth is intentional here
+	_, file, lineno, ok := runtime.Caller(2) //nolint:mnd
+
 	runtime.SetFinalizer(r, func(r *Reader) {
 		if !r.closed {
 			var caller string
 			if ok {
 				caller = fmt.Sprintf(" (%s:%d)", file, lineno)
 			}
+
 			log.Printf("A blob.Reader reading from %q was never closed%s", key, caller)
 		}
 	})
+
 	return r, nil
 }
 
