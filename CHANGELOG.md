@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.43.0](https://github.com/kopexa-grc/common/compare/v1.42.1...v1.43.0) (2025-06-23)
+
+
+### Features
+
+* add duration parsing and formatting functionality with tests ([#107](https://github.com/kopexa-grc/common/issues/107)) ([5e20220](https://github.com/kopexa-grc/common/commit/5e20220f041b00485735f9ce181fb2ed62b32420))
+
 ## [1.42.1](https://github.com/kopexa-grc/common/compare/v1.42.0...v1.42.1) (2025-06-21)
 
 
