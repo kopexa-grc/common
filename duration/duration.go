@@ -1,3 +1,6 @@
+// Copyright (c) Kopexa GmbH
+// SPDX-License-Identifier: BUSL-1.1
+
 // This code is based on the implementation from the "sosodev/duration" repository, licensed under the MIT License.
 // Original contributor: https://github.com/sosodev/duration
 package duration
