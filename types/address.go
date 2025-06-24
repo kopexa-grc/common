@@ -65,6 +65,10 @@ type Address struct {
 	Country string `json:"country"`
 }
 
+func (a Address) Validate() error {
+	return nil
+}
+
 // String returns a formatted string representation of the address.
 // It combines address components in the German format, handling empty fields appropriately.
 //
