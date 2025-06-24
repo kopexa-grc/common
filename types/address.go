@@ -6,7 +6,6 @@ package types
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"strings"
 
@@ -43,77 +42,27 @@ var (
 type Address struct {
 	// Line1 is the street name and house number.
 	// @example "Musterstraße 123"
-	Line1 string `json:"line1" validate:"required,max=100"`
+	Line1 string `json:"line1"`
 
 	// Line2 is additional address information (e.g., floor, apartment, company name).
 	// @example "Etage 4"
-	Line2 string `json:"line2" validate:"max=100"`
+	Line2 string `json:"line2"`
 
 	// City is the city or municipality name.
 	// @example "Berlin"
-	City string `json:"city" validate:"required,max=100"`
+	City string `json:"city"`
 
 	// State is the federal state (Bundesland).
 	// @example "Berlin"
-	State string `json:"state" validate:"required,max=100"`
+	State string `json:"state"`
 
 	// PostalCode is the German postal code (PLZ).
 	// @example "10115"
-	PostalCode string `json:"postalCode" validate:"required,len=5"`
+	PostalCode string `json:"postalCode"`
 
 	// Country is the country name.
 	// @example "Deutschland"
-	Country string `json:"country" validate:"required,max=100"`
-}
-
-// Validate checks if the Address is valid.
-// It verifies that all required fields are present and within length limits.
-//
-// Returns:
-//   - error: If the Address is invalid
-func (a Address) Validate() error {
-	if a.Line1 == "" {
-		return fmt.Errorf("%w: line1 is required", ErrInvalidAddress)
-	}
-
-	if a.City == "" {
-		return fmt.Errorf("%w: city is required", ErrInvalidAddress)
-	}
-
-	if a.State == "" {
-		return fmt.Errorf("%w: state is required", ErrInvalidAddress)
-	}
-
-	if a.PostalCode == "" {
-		return fmt.Errorf("%w: postalCode is required", ErrInvalidAddress)
-	}
-
-	if len(a.PostalCode) != PostalCodeLength {
-		return fmt.Errorf("%w: postal code must be %d digits", ErrInvalidAddress, PostalCodeLength)
-	}
-
-	// Check field lengths
-	if len(a.Line1) > MaxAddressLength {
-		return fmt.Errorf("%w: line1 exceeds maximum length", ErrAddressTooLong)
-	}
-
-	if len(a.Line2) > MaxAddressLength {
-		return fmt.Errorf("%w: line2 exceeds maximum length", ErrAddressTooLong)
-	}
-
-	if len(a.City) > MaxAddressLength {
-		return fmt.Errorf("%w: city exceeds maximum length", ErrAddressTooLong)
-	}
-
-	if len(a.State) > MaxAddressLength {
-		return fmt.Errorf("%w: state exceeds maximum length", ErrAddressTooLong)
-	}
-
-	if len(a.Country) > MaxAddressLength {
-		return fmt.Errorf("%w: country exceeds maximum length", ErrAddressTooLong)
-	}
-
-	return nil
+	Country string `json:"country"`
 }
 
 // String returns a formatted string representation of the address.
