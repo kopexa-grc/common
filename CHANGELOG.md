@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.44.0](https://github.com/kopexa-grc/common/compare/v1.43.1...v1.44.0) (2025-06-24)
+
+
+### Features
+
+* implement a no-op validation method for Address struct ([#111](https://github.com/kopexa-grc/common/issues/111)) ([24c1133](https://github.com/kopexa-grc/common/commit/24c1133064b5cfa8860c99ef10beea984b2e29fb))
+
 ## [1.43.1](https://github.com/kopexa-grc/common/compare/v1.43.0...v1.43.1) (2025-06-24)
 
 
