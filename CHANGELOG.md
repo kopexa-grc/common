@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.43.1](https://github.com/kopexa-grc/common/compare/v1.43.0...v1.43.1) (2025-06-24)
+
+
+### Bug Fixes
+
+* remove validation logic from Address struct and related tests ([#109](https://github.com/kopexa-grc/common/issues/109)) ([6ac7687](https://github.com/kopexa-grc/common/commit/6ac7687411f83fa812000e6aecf0180cc59b543a))
+
 ## [1.43.0](https://github.com/kopexa-grc/common/compare/v1.42.1...v1.43.0) (2025-06-23)
 
 
