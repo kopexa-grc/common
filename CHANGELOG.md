@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.44.1](https://github.com/kopexa-grc/common/compare/v1.44.0...v1.44.1) (2025-06-25)
+
+
+### Bug Fixes
+
+* solves a duplication error ([e81397d](https://github.com/kopexa-grc/common/commit/e81397dbc0356ef0d8f5c2bbdf620c335ca862f5))
+
 ## [1.44.0](https://github.com/kopexa-grc/common/compare/v1.43.1...v1.44.0) (2025-06-24)
 
 
