@@ -135,8 +135,8 @@ func (c *Client) WriteTupleKeys(ctx context.Context, writes []TupleKey, deletes 
 // If IgnoreDuplicateKeyError is true, duplicate key errors are logged and skipped.
 // Otherwise, all errors are returned to the caller.
 func (c *Client) handleWrite(resp *client.ClientWriteResponse, err error) (*client.ClientWriteResponse, error) {
-	if err != nil {
-		return nil, err
+	if err == nil {
+		return resp, nil
 	}
 
 	if resp == nil {
@@ -169,8 +169,8 @@ func (c *Client) handleWrite(resp *client.ClientWriteResponse, err error) (*clie
 
 		// avoid string allocations by using HasPrefix directly on error messages (lightweight)
 		msg := entry.Error.Error()
-		if strings.HasPrefix(msg, ErrDuplicateKey) || strings.Contains(msg, ErrDuplicateKey) {
-			ll.Warn().Msg("duplicate relation, skipping")
+		if strings.Contains(msg, ErrDuplicateKey) {
+			ll.Debug().Msg("duplicate relation, skipping")
 			continue
 		}
 
