@@ -7,7 +7,7 @@ require (
 	entgo.io/ent v0.14.4
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.18.0
 	github.com/Azure/azure-sdk-for-go/sdk/storage/azblob v1.6.1
-	github.com/go-chi/chi/v5 v5.2.1
+	github.com/go-chi/chi/v5 v5.2.2
 	github.com/go-chi/cors v1.2.1
 	github.com/goccy/go-yaml v1.17.1
 	github.com/google/uuid v1.6.0
@@ -27,6 +27,7 @@ require (
 	github.com/testcontainers/testcontainers-go/modules/postgres v0.37.0
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zyedidia/generic v1.2.1
+	go.opentelemetry.io/otel/metric v1.35.0
 	go.uber.org/mock v0.5.2
 	golang.org/x/crypto v0.38.0
 	google.golang.org/protobuf v1.36.6
@@ -280,7 +281,6 @@ require (
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.59.0 // indirect
 	go.opentelemetry.io/otel v1.35.0 // indirect
-	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/automaxprocs v1.6.0 // indirect
