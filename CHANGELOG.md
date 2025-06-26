@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.45.1](https://github.com/kopexa-grc/common/compare/v1.45.0...v1.45.1) (2025-06-26)
+
+
+### Bug Fixes
+
+* blob docs ([105ea40](https://github.com/kopexa-grc/common/commit/105ea40064c012f4a0e274269fe4f5de24573457))
+
 ## [1.45.0](https://github.com/kopexa-grc/common/compare/v1.44.1...v1.45.0) (2025-06-26)
 
 
