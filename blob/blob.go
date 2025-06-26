@@ -19,21 +19,16 @@ type AzureConfig struct {
 	Endpoint    string
 }
 
-type BucketProvider interface {
-	Public() (*Bucket, error)
-	Space(spaceID string) (*Bucket, error)
-}
-
-type bucketProvider struct {
+type BucketProvider struct {
 	config *Config
 }
 
 // New opens the bucket
-func New(config *Config) (BucketProvider, error) {
-	return &bucketProvider{config: config}, nil
+func New(config *Config) (*BucketProvider, error) {
+	return &BucketProvider{config: config}, nil
 }
 
-func (p *bucketProvider) Public() (*Bucket, error) {
+func (p *BucketProvider) Public() (*Bucket, error) {
 	azConfig := &azurestore.AzConfig{
 		AccountName:         p.config.Azure.AccountName,
 		AccountKey:          p.config.Azure.AccountKey,
@@ -53,7 +48,7 @@ func (p *bucketProvider) Public() (*Bucket, error) {
 	return &Bucket{b: store}, nil
 }
 
-func (p *bucketProvider) Space(spaceID string) (*Bucket, error) {
+func (p *BucketProvider) Space(spaceID string) (*Bucket, error) {
 	azConfig := &azurestore.AzConfig{
 		AccountName:         p.config.Azure.AccountName,
 		AccountKey:          p.config.Azure.AccountKey,
