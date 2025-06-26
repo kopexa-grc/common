@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.46.0](https://github.com/kopexa-grc/common/compare/v1.45.1...v1.46.0) (2025-06-26)
+
+
+### Features
+
+* **gql:** add GraphQL pagination and constant handling ([15c55bc](https://github.com/kopexa-grc/common/commit/15c55bc930a22f6b17bbd0e6b2d38c3e80e33acd))
+
 ## [1.45.1](https://github.com/kopexa-grc/common/compare/v1.45.0...v1.45.1) (2025-06-26)
 
 
