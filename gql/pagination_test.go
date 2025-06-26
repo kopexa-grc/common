@@ -21,55 +21,55 @@ func TestSetDefaultPaginationLimit(t *testing.T) {
 	}{
 		{
 			name:        "nil maxPageSize",
-			field:       createMockField(t, "users", true),
+			field:       createMockField(true),
 			maxPageSize: nil,
 			description: "should not modify field when maxPageSize is nil",
 		},
 		{
 			name:        "field without pagination support",
-			field:       createMockField(t, "user", false),
+			field:       createMockField(false),
 			maxPageSize: intPtr(10),
 			description: "should not modify field when it doesn't support pagination",
 		},
 		{
 			name:        "field with no existing pagination args",
-			field:       createMockField(t, "users", true),
+			field:       createMockField(true),
 			maxPageSize: intPtr(10),
 			description: "should add default first argument when no pagination args exist",
 		},
 		{
 			name:        "field with valid first argument",
-			field:       createMockFieldWithFirstArg(t, "users", "5"),
+			field:       createMockFieldWithFirstArg("5"),
 			maxPageSize: intPtr(10),
 			description: "should not modify field when first argument is within limit",
 		},
 		{
 			name:        "field with first argument exceeding limit",
-			field:       createMockFieldWithFirstArg(t, "users", "15"),
+			field:       createMockFieldWithFirstArg("15"),
 			maxPageSize: intPtr(10),
 			description: "should cap first argument to maxPageSize when it exceeds limit",
 		},
 		{
 			name:        "field with valid last argument",
-			field:       createMockFieldWithLastArg(t, "users", "5"),
+			field:       createMockFieldWithLastArg("5"),
 			maxPageSize: intPtr(10),
 			description: "should not modify field when last argument is within limit",
 		},
 		{
 			name:        "field with last argument exceeding limit",
-			field:       createMockFieldWithLastArg(t, "users", "15"),
+			field:       createMockFieldWithLastArg("15"),
 			maxPageSize: intPtr(10),
 			description: "should cap last argument to maxPageSize when it exceeds limit",
 		},
 		{
 			name:        "field with invalid first argument",
-			field:       createMockFieldWithFirstArg(t, "users", "invalid"),
+			field:       createMockFieldWithFirstArg("invalid"),
 			maxPageSize: intPtr(10),
 			description: "should cap invalid first argument to maxPageSize",
 		},
 		{
 			name:        "field with invalid last argument",
-			field:       createMockFieldWithLastArg(t, "users", "invalid"),
+			field:       createMockFieldWithLastArg("invalid"),
 			maxPageSize: intPtr(10),
 			description: "should cap invalid last argument to maxPageSize",
 		},
@@ -78,7 +78,7 @@ func TestSetDefaultPaginationLimit(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Store original arguments count for comparison
-			originalArgsCount := len(tt.field.Field.Arguments)
+			originalArgsCount := len(tt.field.Arguments)
 
 			// Call the function
 			setDefaultPaginationLimit(tt.field, tt.maxPageSize)
@@ -87,28 +87,29 @@ func TestSetDefaultPaginationLimit(t *testing.T) {
 			assert.NotNil(t, tt.field)
 
 			// Additional assertions based on test case
-			if tt.name == "nil maxPageSize" {
+			switch tt.name {
+			case "nil maxPageSize":
 				// Should not modify the field
-				assert.Equal(t, originalArgsCount, len(tt.field.Field.Arguments))
-			} else if tt.name == "field without pagination support" {
+				assert.Equal(t, originalArgsCount, len(tt.field.Arguments))
+			case "field without pagination support":
 				// Should not modify the field
-				assert.Equal(t, originalArgsCount, len(tt.field.Field.Arguments))
-			} else if tt.name == "field with no existing pagination args" {
+				assert.Equal(t, originalArgsCount, len(tt.field.Arguments))
+			case "field with no existing pagination args":
 				// Should add a first argument
-				assert.Equal(t, originalArgsCount+1, len(tt.field.Field.Arguments))
+				assert.Equal(t, originalArgsCount+1, len(tt.field.Arguments))
 
 				// Check that the added argument is correct
-				firstArg := tt.field.Field.Arguments.ForName(FirstArg)
+				firstArg := tt.field.Arguments.ForName(FirstArg)
 				assert.NotNil(t, firstArg)
 				assert.Equal(t, strconv.Itoa(*tt.maxPageSize), firstArg.Value.Raw)
-			} else if tt.name == "field with first argument exceeding limit" {
+			case "field with first argument exceeding limit":
 				// Should cap the first argument
-				firstArg := tt.field.Field.Arguments.ForName(FirstArg)
+				firstArg := tt.field.Arguments.ForName(FirstArg)
 				assert.NotNil(t, firstArg)
 				assert.Equal(t, strconv.Itoa(*tt.maxPageSize), firstArg.Value.Raw)
-			} else if tt.name == "field with last argument exceeding limit" {
+			case "field with last argument exceeding limit":
 				// Should cap the last argument
-				lastArg := tt.field.Field.Arguments.ForName(LastArg)
+				lastArg := tt.field.Arguments.ForName(LastArg)
 				assert.NotNil(t, lastArg)
 				assert.Equal(t, strconv.Itoa(*tt.maxPageSize), lastArg.Value.Raw)
 			}
@@ -126,50 +127,50 @@ func TestSetDefaultPaginationLimit_EdgeCases(t *testing.T) {
 	})
 
 	t.Run("zero maxPageSize", func(t *testing.T) {
-		field := createMockField(t, "users", true)
+		field := createMockField(true)
 		maxPageSize := 0
 
 		setDefaultPaginationLimit(field, &maxPageSize)
 
 		// Should add first argument with value "0"
-		firstArg := field.Field.Arguments.ForName(FirstArg)
+		firstArg := field.Arguments.ForName(FirstArg)
 		assert.NotNil(t, firstArg)
 		assert.Equal(t, "0", firstArg.Value.Raw)
 	})
 
 	t.Run("negative maxPageSize", func(t *testing.T) {
-		field := createMockField(t, "users", true)
+		field := createMockField(true)
 		maxPageSize := -5
 
 		setDefaultPaginationLimit(field, &maxPageSize)
 
 		// Should add first argument with negative value
-		firstArg := field.Field.Arguments.ForName(FirstArg)
+		firstArg := field.Arguments.ForName(FirstArg)
 		assert.NotNil(t, firstArg)
 		assert.Equal(t, "-5", firstArg.Value.Raw)
 	})
 
 	t.Run("field with both first and last arguments", func(t *testing.T) {
-		field := createMockFieldWithBothArgs(t, "users", "5", "3")
+		field := createMockFieldWithBothArgs("5", "3")
 		maxPageSize := 10
 
-		originalFirstArg := field.Field.Arguments.ForName(FirstArg)
-		originalLastArg := field.Field.Arguments.ForName(LastArg)
+		originalFirstArg := field.Arguments.ForName(FirstArg)
+		originalLastArg := field.Arguments.ForName(LastArg)
 
 		setDefaultPaginationLimit(field, &maxPageSize)
 
 		// Should not modify existing arguments when they are within limit
-		assert.Equal(t, originalFirstArg.Value.Raw, field.Field.Arguments.ForName(FirstArg).Value.Raw)
-		assert.Equal(t, originalLastArg.Value.Raw, field.Field.Arguments.ForName(LastArg).Value.Raw)
+		assert.Equal(t, originalFirstArg.Value.Raw, field.Arguments.ForName(FirstArg).Value.Raw)
+		assert.Equal(t, originalLastArg.Value.Raw, field.Arguments.ForName(LastArg).Value.Raw)
 	})
 }
 
 // Helper functions to create mock fields for testing
 
-func createMockField(t *testing.T, name string, supportsPagination bool) *graphql.CollectedField {
+func createMockField(supportsPagination bool) *graphql.CollectedField {
 	field := &graphql.CollectedField{
 		Field: &ast.Field{
-			Name:      name,
+			Name:      "users",
 			Arguments: ast.ArgumentList{},
 		},
 	}
@@ -196,9 +197,9 @@ func createMockField(t *testing.T, name string, supportsPagination bool) *graphq
 	return field
 }
 
-func createMockFieldWithFirstArg(t *testing.T, name, value string) *graphql.CollectedField {
-	field := createMockField(t, name, true)
-	field.Field.Arguments = ast.ArgumentList{
+func createMockFieldWithFirstArg(value string) *graphql.CollectedField {
+	field := createMockField(true)
+	field.Arguments = ast.ArgumentList{
 		&ast.Argument{
 			Name: FirstArg,
 			Value: &ast.Value{
@@ -207,12 +208,13 @@ func createMockFieldWithFirstArg(t *testing.T, name, value string) *graphql.Coll
 			},
 		},
 	}
+
 	return field
 }
 
-func createMockFieldWithLastArg(t *testing.T, name, value string) *graphql.CollectedField {
-	field := createMockField(t, name, true)
-	field.Field.Arguments = ast.ArgumentList{
+func createMockFieldWithLastArg(value string) *graphql.CollectedField {
+	field := createMockField(true)
+	field.Arguments = ast.ArgumentList{
 		&ast.Argument{
 			Name: LastArg,
 			Value: &ast.Value{
@@ -221,12 +223,13 @@ func createMockFieldWithLastArg(t *testing.T, name, value string) *graphql.Colle
 			},
 		},
 	}
+
 	return field
 }
 
-func createMockFieldWithBothArgs(t *testing.T, name, firstValue, lastValue string) *graphql.CollectedField {
-	field := createMockField(t, name, true)
-	field.Field.Arguments = ast.ArgumentList{
+func createMockFieldWithBothArgs(firstValue, lastValue string) *graphql.CollectedField {
+	field := createMockField(true)
+	field.Arguments = ast.ArgumentList{
 		&ast.Argument{
 			Name: FirstArg,
 			Value: &ast.Value{
@@ -242,6 +245,7 @@ func createMockFieldWithBothArgs(t *testing.T, name, firstValue, lastValue strin
 			},
 		},
 	}
+
 	return field
 }
 

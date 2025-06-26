@@ -54,6 +54,7 @@ func setDefaultPaginationLimit(field *graphql.CollectedField, maxPageSize *int) 
 			Name:  FirstArg,
 			Value: defaultFirstValue,
 		})
+
 		return
 	}
 
@@ -63,6 +64,7 @@ func setDefaultPaginationLimit(field *graphql.CollectedField, maxPageSize *int) 
 		if err != nil || setValue > *maxPageSize {
 			firstArg.Value = defaultFirstValue
 		}
+
 		return
 	}
 
@@ -72,6 +74,7 @@ func setDefaultPaginationLimit(field *graphql.CollectedField, maxPageSize *int) 
 		if err != nil || setValue > *maxPageSize {
 			lastArg.Value = defaultFirstValue
 		}
+
 		return
 	}
 }

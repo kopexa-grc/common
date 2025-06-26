@@ -57,9 +57,19 @@
 package blob
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/kopexa-grc/common/blob/azurestore"
+)
+
+// Fehler-Variablen
+var (
+	ErrNilConfig       = errors.New("blob: config cannot be nil")
+	ErrMissingAccount  = errors.New("blob: Azure account name is required")
+	ErrMissingKey      = errors.New("blob: Azure account key is required")
+	ErrMissingEndpoint = errors.New("blob: Azure endpoint is required")
+	ErrMissingSpaceID  = errors.New("blob: spaceID cannot be empty")
 )
 
 // Config represents the configuration for blob storage operations.
@@ -138,19 +148,19 @@ type BucketProvider struct {
 //	}
 func New(config *Config) (*BucketProvider, error) {
 	if config == nil {
-		return nil, fmt.Errorf("blob: config cannot be nil")
+		return nil, fmt.Errorf("%w", ErrNilConfig)
 	}
 
 	if config.Azure.AccountName == "" {
-		return nil, fmt.Errorf("blob: Azure account name is required")
+		return nil, fmt.Errorf("%w", ErrMissingAccount)
 	}
 
 	if config.Azure.AccountKey == "" {
-		return nil, fmt.Errorf("blob: Azure account key is required")
+		return nil, fmt.Errorf("%w", ErrMissingKey)
 	}
 
 	if config.Azure.Endpoint == "" {
-		return nil, fmt.Errorf("blob: Azure endpoint is required")
+		return nil, fmt.Errorf("%w", ErrMissingEndpoint)
 	}
 
 	return &BucketProvider{config: config}, nil
@@ -235,7 +245,7 @@ func (p *BucketProvider) Public() (*Bucket, error) {
 //	err = spaceBucket.Upload(ctx, "documents/report.pdf", file, nil)
 func (p *BucketProvider) Space(spaceID string) (*Bucket, error) {
 	if spaceID == "" {
-		return nil, fmt.Errorf("blob: spaceID cannot be empty")
+		return nil, fmt.Errorf("%w", ErrMissingSpaceID)
 	}
 
 	azConfig := &azurestore.AzConfig{
