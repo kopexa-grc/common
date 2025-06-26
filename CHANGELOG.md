@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.45.0](https://github.com/kopexa-grc/common/compare/v1.44.1...v1.45.0) (2025-06-26)
+
+
+### Features
+
+* add LLM summarization package with multi-provider support ([848b7c3](https://github.com/kopexa-grc/common/commit/848b7c35c4359aaf50da922f7227ece7615cf3cd))
+
 ## [1.44.1](https://github.com/kopexa-grc/common/compare/v1.44.0...v1.44.1) (2025-06-25)
 
 
