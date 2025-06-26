@@ -1,3 +1,6 @@
+// Copyright (c) Kopexa GmbH
+// SPDX-License-Identifier: BUSL-1.1
+
 // Package summarizer provides configuration management for text summarization services.
 //
 // This package implements the Options Pattern for flexible and type-safe configuration
