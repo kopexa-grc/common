@@ -16,6 +16,7 @@ func TestParse(t *testing.T) {
 	type args struct {
 		d string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -86,6 +87,7 @@ func TestParse(t *testing.T) {
 				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Parse() got = %v, want %v", got, tt.want)
 			}
@@ -182,6 +184,7 @@ func TestDuration_ToTimeDuration(t *testing.T) {
 		Seconds  float64
 		Negative bool
 	}
+
 	tests := []struct {
 		name   string
 		fields fields
@@ -299,6 +302,7 @@ func TestDuration_MarshalJSON(t *testing.T) {
 	if err != nil {
 		t.Errorf("did not expect error: %s", err.Error())
 	}
+
 	if string(jsonVal) != `{"d":"P3Y6M4DT12H30M5.5S"}` {
 		t.Errorf("expected: %s, got: %s", `{"d":"P3Y6M4DT12H30M5.5S"}`, string(jsonVal))
 	}
@@ -309,6 +313,7 @@ func TestDuration_MarshalJSON(t *testing.T) {
 	if err != nil {
 		t.Errorf("did not expect error: %s", err.Error())
 	}
+
 	if string(jsonVal) != `{"d":"P3Y6M4DT12H30M5.5S"}` {
 		t.Errorf("expected: %s, got: %s", `{"d":"P3Y6M4DT12H30M5.5S"}`, string(jsonVal))
 	}
@@ -320,6 +325,7 @@ func TestDuration_UnmarshalJSON(t *testing.T) {
 			"d": "P3Y6M4DT12H30M5.5S"
 		}
 	`
+
 	expected, err := Parse("P3Y6M4DT12H30M5.5S")
 	if err != nil {
 		t.Fatal(err)
@@ -328,10 +334,12 @@ func TestDuration_UnmarshalJSON(t *testing.T) {
 	var durStructPtr struct {
 		Dur *Duration `json:"d"`
 	}
+
 	err = json.Unmarshal([]byte(jsonStr), &durStructPtr)
 	if err != nil {
 		t.Errorf("did not expect error: %s", err.Error())
 	}
+
 	if !reflect.DeepEqual(durStructPtr.Dur, expected) {
 		t.Errorf("JSON Unmarshal ptr got = %s, want %s", durStructPtr.Dur, expected)
 	}
@@ -339,10 +347,12 @@ func TestDuration_UnmarshalJSON(t *testing.T) {
 	var durStruct struct {
 		Dur Duration `json:"d"`
 	}
+
 	err = json.Unmarshal([]byte(jsonStr), &durStruct)
 	if err != nil {
 		t.Errorf("did not expect error: %s", err.Error())
 	}
+
 	if !reflect.DeepEqual(durStruct.Dur, *expected) {
 		t.Errorf("JSON Unmarshal ptr got = %s, want %s", &(durStruct.Dur), expected)
 	}

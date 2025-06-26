@@ -57,6 +57,7 @@ func Parse(d string) (*Duration, error) {
 	state := parsingPeriod
 	duration := &Duration{}
 	num := ""
+
 	var err error
 
 	switch {
@@ -85,19 +86,23 @@ func Parse(d string) (*Duration, error) {
 			if err != nil {
 				return nil, err
 			}
+
 			num = ""
 		case 'M':
-			if state == parsingPeriod {
+			switch state {
+			case parsingPeriod:
 				duration.Months, err = strconv.ParseFloat(num, 64)
 				if err != nil {
 					return nil, err
 				}
+
 				num = ""
-			} else if state == parsingTime {
+			case parsingTime:
 				duration.Minutes, err = strconv.ParseFloat(num, 64)
 				if err != nil {
 					return nil, err
 				}
+
 				num = ""
 			}
 		case 'W':
@@ -109,6 +114,7 @@ func Parse(d string) (*Duration, error) {
 			if err != nil {
 				return nil, err
 			}
+
 			num = ""
 		case 'D':
 			if state != parsingPeriod {
@@ -119,6 +125,7 @@ func Parse(d string) (*Duration, error) {
 			if err != nil {
 				return nil, err
 			}
+
 			num = ""
 		case 'H':
 			if state != parsingTime {
@@ -129,6 +136,7 @@ func Parse(d string) (*Duration, error) {
 			if err != nil {
 				return nil, err
 			}
+
 			num = ""
 		case 'S':
 			if state != parsingTime {
@@ -139,6 +147,7 @@ func Parse(d string) (*Duration, error) {
 			if err != nil {
 				return nil, err
 			}
+
 			num = ""
 		default:
 			if unicode.IsNumber(char) || char == '.' {
@@ -171,26 +180,32 @@ func FromTimeDuration(d time.Duration) *Duration {
 		duration.Years = math.Floor(d.Hours() / hoursPerYear)
 		d -= time.Duration(duration.Years) * nsPerYear
 	}
+
 	if d.Hours() >= hoursPerMonth {
 		duration.Months = math.Floor(d.Hours() / hoursPerMonth)
 		d -= time.Duration(duration.Months) * nsPerMonth
 	}
+
 	if d.Hours() >= hoursPerWeek {
 		duration.Weeks = math.Floor(d.Hours() / hoursPerWeek)
 		d -= time.Duration(duration.Weeks) * nsPerWeek
 	}
+
 	if d.Hours() >= hoursPerDay {
 		duration.Days = math.Floor(d.Hours() / hoursPerDay)
 		d -= time.Duration(duration.Days) * nsPerDay
 	}
+
 	if d.Hours() >= 1 {
 		duration.Hours = math.Floor(d.Hours())
 		d -= time.Duration(duration.Hours) * nsPerHour
 	}
+
 	if d.Minutes() >= 1 {
 		duration.Minutes = math.Floor(d.Minutes())
 		d -= time.Duration(duration.Minutes) * nsPerMinute
 	}
+
 	duration.Seconds = d.Seconds()
 
 	return duration
@@ -214,24 +229,31 @@ func (duration *Duration) ToTimeDuration() time.Duration {
 	if duration.Years != 0 {
 		timeDuration += time.Duration(math.Round(duration.Years * nsPerYear))
 	}
+
 	if duration.Months != 0 {
 		timeDuration += time.Duration(math.Round(duration.Months * nsPerMonth))
 	}
+
 	if duration.Weeks != 0 {
 		timeDuration += time.Duration(math.Round(duration.Weeks * nsPerWeek))
 	}
+
 	if duration.Days != 0 {
 		timeDuration += time.Duration(math.Round(duration.Days * nsPerDay))
 	}
+
 	if duration.Hours != 0 {
 		timeDuration += time.Duration(math.Round(duration.Hours * nsPerHour))
 	}
+
 	if duration.Minutes != 0 {
 		timeDuration += time.Duration(math.Round(duration.Minutes * nsPerMinute))
 	}
+
 	if duration.Seconds != 0 {
 		timeDuration += time.Duration(math.Round(duration.Seconds * nsPerSecond))
 	}
+
 	if duration.Negative {
 		timeDuration = -timeDuration
 	}
@@ -301,6 +323,7 @@ func (duration Duration) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON satisfies the Unmarshaler interface by return a valid JSON string representation of the duration
 func (duration *Duration) UnmarshalJSON(source []byte) error {
 	durationString := ""
+
 	err := json.Unmarshal(source, &durationString)
 	if err != nil {
 		return err
@@ -312,5 +335,6 @@ func (duration *Duration) UnmarshalJSON(source []byte) error {
 	}
 
 	*duration = *parsed
+
 	return nil
 }
