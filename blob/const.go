@@ -23,3 +23,7 @@ const (
 	blobAccessType      = "blob"
 	privateAccessType   = "private"
 )
+
+const (
+	PublicContainer = "public"
+)
