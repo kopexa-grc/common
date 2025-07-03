@@ -6,6 +6,7 @@ package summarizer
 import (
 	"context"
 
+	"github.com/kopexa-grc/common/llm"
 	"github.com/microcosm-cc/bluemonday"
 )
 
@@ -24,6 +25,15 @@ type summarizer interface {
 type Client struct {
 	impl      summarizer
 	sanitizer *bluemonday.Policy
+}
+
+func NewFromLLM(llm *llm.Client) (*Client, error) {
+	summarizer := NewLLMSummarizer(llm)
+
+	return &Client{
+		impl:      summarizer,
+		sanitizer: bluemonday.StrictPolicy(),
+	}, nil
 }
 
 // New creates a new summarizer client with the given config
