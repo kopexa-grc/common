@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.47.0](https://github.com/kopexa-grc/common/compare/v1.46.0...v1.47.0) (2025-07-03)
+
+
+### Features
+
+* **summarizer:** add NewFromLLM function for LLM integration ([18d8573](https://github.com/kopexa-grc/common/commit/18d857394adff3917cd07b027fc4fbf47404adfc))
+
 ## [1.46.0](https://github.com/kopexa-grc/common/compare/v1.45.1...v1.46.0) (2025-06-26)
 
 
