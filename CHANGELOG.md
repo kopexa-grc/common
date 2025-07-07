@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.48.0](https://github.com/kopexa-grc/common/compare/v1.47.0...v1.48.0) (2025-07-07)
+
+
+### Features
+
+* **validation:** add comprehensive URL and domain validation tests ([e2e7e10](https://github.com/kopexa-grc/common/commit/e2e7e1085df9bf2b28be3c7b47ba2d01d289648a))
+
 ## [1.47.0](https://github.com/kopexa-grc/common/compare/v1.46.0...v1.47.0) (2025-07-03)
 
 
