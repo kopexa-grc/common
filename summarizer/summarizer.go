@@ -82,5 +82,5 @@ func (s *Client) Summarize(ctx context.Context, sentence string) (string, error)
 		return "", err
 	}
 
-	return s.sanitizer.Sanitize(summary), nil
+	return summary, nil
 }
