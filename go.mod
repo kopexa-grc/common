@@ -5,6 +5,7 @@ go 1.24.0
 require (
 	entgo.io/contrib v0.6.0
 	entgo.io/ent v0.14.4
+	github.com/99designs/gqlgen v0.17.48
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.18.0
 	github.com/Azure/azure-sdk-for-go/sdk/storage/azblob v1.6.1
 	github.com/abadojack/whatlanggo v1.0.1
@@ -29,6 +30,7 @@ require (
 	github.com/testcontainers/testcontainers-go v0.37.0
 	github.com/testcontainers/testcontainers-go/modules/postgres v0.37.0
 	github.com/tmc/langchaingo v0.1.13
+	github.com/vektah/gqlparser/v2 v2.5.15
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zyedidia/generic v1.2.1
 	go.opentelemetry.io/otel/metric v1.35.0
@@ -52,7 +54,6 @@ require (
 	cloud.google.com/go/vertexai v0.12.0 // indirect
 	dario.cat/mergo v1.0.1 // indirect
 	github.com/4meepo/tagalign v1.4.2 // indirect
-	github.com/99designs/gqlgen v0.17.48 // indirect
 	github.com/Abirdcfly/dupword v0.1.3 // indirect
 	github.com/Antonboom/errname v1.1.0 // indirect
 	github.com/Antonboom/nilnil v1.1.0 // indirect
@@ -285,7 +286,6 @@ require (
 	github.com/ultraware/whitespace v0.2.0 // indirect
 	github.com/uudashr/gocognit v1.2.0 // indirect
 	github.com/uudashr/iface v1.3.1 // indirect
-	github.com/vektah/gqlparser/v2 v2.5.15 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xen0n/gosmopolitan v1.3.0 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
