@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.49.0](https://github.com/kopexa-grc/common/compare/v1.48.0...v1.49.0) (2025-07-11)
+
+
+### Features
+
+* **mixins:** add TagMixin with comprehensive documentation and tests ([765904b](https://github.com/kopexa-grc/common/commit/765904b3ed9082b15bc3912799c5404da726dc90))
+
 ## [1.48.0](https://github.com/kopexa-grc/common/compare/v1.47.0...v1.48.0) (2025-07-07)
 
 
