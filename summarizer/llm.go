@@ -13,8 +13,17 @@ import (
 )
 
 const (
-	promptEN = `Summarize the following text in English. Be brief, concise and precise.\n\n%s\n`
-	promptDE = `Fasse den folgenden Text auf Deutsch zusammen. Sei kurz, prägnant und präzise.\n\n%s\n`
+	promptEN = `Summarize the following text in English. Be brief, concise and precise.
+
+If the input is empty, meaningless, or too short to summarize, return an empty string. Do not explain. Do not generate anything.
+
+%s`
+
+	promptDE = `Fasse den folgenden Text auf Deutsch zusammen. Sei kurz, prägnant und präzise.
+
+Wenn der Text leer, inhaltslos oder zu kurz für eine sinnvolle Zusammenfassung ist, gib einen leeren String zurück. Keine Erklärungen. Keine Ausgabe generieren.
+
+%s`
 )
 
 // LLMClient interface for LLM-based text generation
