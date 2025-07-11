@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.50.0](https://github.com/kopexa-grc/common/compare/v1.49.0...v1.50.0) (2025-07-11)
+
+
+### Features
+
+* **ent:** add JSON scalar support and related utilities ([318c8f2](https://github.com/kopexa-grc/common/commit/318c8f2eb28cab746b758d7e0fce8df90611db56))
+
+
+### Bug Fixes
+
+* prompting ([78d1292](https://github.com/kopexa-grc/common/commit/78d12923e7ed02aca0702540d185fa07166e8bb3))
+* remove truncate ([dfab4a0](https://github.com/kopexa-grc/common/commit/dfab4a051f09af25a5e5d5f53ea40b2e39b5804f))
+
 ## [1.49.0](https://github.com/kopexa-grc/common/compare/v1.48.0...v1.49.0) (2025-07-11)
 
 
