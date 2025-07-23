@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.51.0](https://github.com/kopexa-grc/common/compare/v1.50.0...v1.51.0) (2025-07-23)
+
+
+### Features
+
+* **tokens:** add verification token creation and validation with email checks ([0d8035f](https://github.com/kopexa-grc/common/commit/0d8035f1742275c396ace9b39b810d7d6323c098))
+
 ## [1.50.0](https://github.com/kopexa-grc/common/compare/v1.49.0...v1.50.0) (2025-07-11)
 
 
