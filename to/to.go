@@ -17,9 +17,25 @@ func Bool(v bool) *bool {
 	return &v
 }
 
+// BoolValue returns the bool value from a pointer, or false if the pointer is nil.
+func BoolValue(v *bool) bool {
+	if v == nil {
+		return false
+	}
+	return *v
+}
+
 // String returns a pointer to the given string value.
 func String(v string) *string {
 	return &v
+}
+
+// StringValue returns the string value from a pointer, or an empty string if the pointer is nil.
+func StringValue(v *string) string {
+	if v == nil {
+		return ""
+	}
+	return *v
 }
 
 // Int returns a pointer to the given int value.
@@ -105,6 +121,14 @@ func Rune(v rune) *rune {
 // Time returns a pointer to the given time.Time value.
 func Time(v time.Time) *time.Time {
 	return &v
+}
+
+// TimeValue returns the time.Time value from a pointer, or the zero value if the pointer is nil.
+func TimeValue(v *time.Time) time.Time {
+	if v == nil {
+		return time.Time{}
+	}
+	return *v
 }
 
 // Duration returns a pointer to the given time.Duration value.
