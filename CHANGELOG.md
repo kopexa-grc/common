@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.52.0](https://github.com/kopexa-grc/common/compare/v1.51.0...v1.52.0) (2025-08-05)
+
+
+### Features
+
+* **to:** add BoolValue, StringValue, and TimeValue utility functions ([8ba6b1c](https://github.com/kopexa-grc/common/commit/8ba6b1c8d6cb5abb9fe355f528fbf834ff7517bc))
+
 ## [1.51.0](https://github.com/kopexa-grc/common/compare/v1.50.0...v1.51.0) (2025-07-23)
 
 
