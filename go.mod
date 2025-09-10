@@ -10,7 +10,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/storage/azblob v1.6.1
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/didasy/tldr v0.6.1-0.20240327032308-66fe9230b70e
-	github.com/go-chi/chi/v5 v5.2.1
+	github.com/go-chi/chi/v5 v5.2.2
 	github.com/go-chi/cors v1.2.1
 	github.com/goccy/go-yaml v1.17.1
 	github.com/google/uuid v1.6.0
