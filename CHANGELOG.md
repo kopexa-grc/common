@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.53.0](https://github.com/kopexa-grc/common/compare/v1.52.0...v1.53.0) (2025-09-10)
+
+
+### Features
+
+* **fga:** add logging for listed objects in listObjects function ([d41b275](https://github.com/kopexa-grc/common/commit/d41b2756104a9a7cc0f35985803f6f21558a3e53))
+
 ## [1.52.0](https://github.com/kopexa-grc/common/compare/v1.51.0...v1.52.0) (2025-08-05)
 
 
