@@ -344,5 +344,7 @@ func (c *Client) listObjects(ctx context.Context, req client.ClientListObjectsRe
 		return nil, err
 	}
 
+	log.Info().Int("count", len(list.GetObjects())).Str("function", "listObjects").Str("pkg", "fga").Msg("listed objects")
+
 	return list, nil
 }
