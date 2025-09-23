@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.53.1](https://github.com/kopexa-grc/common/compare/v1.53.0...v1.53.1) (2025-09-23)
+
+
+### Bug Fixes
+
+* **logging:** change log level from Info to Debug in listObjects function ([d24349f](https://github.com/kopexa-grc/common/commit/d24349f397357392b4eecc1198724fefa897e1cd))
+
 ## [1.53.0](https://github.com/kopexa-grc/common/compare/v1.52.0...v1.53.0) (2025-09-10)
 
 
