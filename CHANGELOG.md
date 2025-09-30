@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.54.0](https://github.com/kopexa-grc/common/compare/v1.53.1...v1.54.0) (2025-09-30)
+
+
+### Features
+
+* expose expand api on fga ([ea410fa](https://github.com/kopexa-grc/common/commit/ea410fa5d3f8afb45976aab76d2ae48323201c61))
+* expose expand api on fga ([5b2bb83](https://github.com/kopexa-grc/common/commit/5b2bb83453b4fcbf22638585aa0442972b7e3e47))
+* **fga:** implement ListUsersWithAccess function and add tests ([59db99d](https://github.com/kopexa-grc/common/commit/59db99dce4a94847d39fe4b872502f4da2cedce0))
+
 ## [1.53.1](https://github.com/kopexa-grc/common/compare/v1.53.0...v1.53.1) (2025-09-23)
 
 
