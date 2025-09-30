@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.55.0](https://github.com/kopexa-grc/common/compare/v1.54.0...v1.55.0) (2025-09-30)
+
+
+### Features
+
+* ptr package ([fbee33f](https://github.com/kopexa-grc/common/commit/fbee33f3b2e6c8674098bcf63a10fca064e7cfd0))
+
 ## [1.54.0](https://github.com/kopexa-grc/common/compare/v1.53.1...v1.54.0) (2025-09-30)
 
 
