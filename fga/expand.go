@@ -78,28 +78,36 @@ func traverseUserset(root *openfga.Node) []string {
 	if root == nil {
 		return []string{}
 	}
+
 	seen := make(map[string]struct{})
 	out := make([]string, 0, defaultUserCap)
+
 	stack := []*openfga.Node{root}
 	for len(stack) > 0 {
 		n := stack[len(stack)-1]
 		stack = stack[:len(stack)-1]
+
 		if n == nil {
 			continue
 		}
+
 		if collectLeafUsers(n, seen, &out) {
 			continue
 		}
+
 		if pushUnionNodes(n, &stack) {
 			continue
 		}
+
 		if pushIntersectionNodes(n, &stack) {
 			continue
 		}
+
 		if pushDifferenceNodes(n, &stack) {
 			continue
 		}
 	}
+
 	return out
 }
 
@@ -109,28 +117,36 @@ func collectLeafUsers(n *openfga.Node, seen map[string]struct{}, out *[]string) 
 	if !ok || leaf == nil {
 		return false
 	}
+
 	users, oku := leaf.GetUsersOk()
 	if !oku || users == nil {
 		return true
 	}
+
 	list, okl := users.GetUsersOk()
 	if !okl || list == nil {
 		return true
 	}
+
 	for _, subject := range *list {
 		if !strings.HasPrefix(subject, "user:") {
 			continue
 		}
+
 		id := strings.TrimPrefix(subject, "user:")
 		if id == "" {
 			continue
 		}
+
 		if _, dup := seen[id]; dup {
 			continue
 		}
+
 		seen[id] = struct{}{}
+
 		*out = append(*out, id)
 	}
+
 	return true
 }
 
@@ -140,13 +156,16 @@ func pushUnionNodes(n *openfga.Node, stack *[]*openfga.Node) bool {
 	if !ok || union == nil {
 		return false
 	}
+
 	nodes, okn := union.GetNodesOk()
 	if !okn || nodes == nil {
 		return true
 	}
+
 	for i := range *nodes {
 		*stack = append(*stack, &(*nodes)[i])
 	}
+
 	return true
 }
 
@@ -156,13 +175,16 @@ func pushIntersectionNodes(n *openfga.Node, stack *[]*openfga.Node) bool {
 	if !ok || inter == nil {
 		return false
 	}
+
 	nodes, okn := inter.GetNodesOk()
 	if !okn || nodes == nil {
 		return true
 	}
+
 	for i := range *nodes {
 		*stack = append(*stack, &(*nodes)[i])
 	}
+
 	return true
 }
 
@@ -172,11 +194,14 @@ func pushDifferenceNodes(n *openfga.Node, stack *[]*openfga.Node) bool {
 	if !ok || diff == nil {
 		return false
 	}
+
 	if base, okb := diff.GetBaseOk(); okb && base != nil {
 		*stack = append(*stack, base)
 	}
+
 	if sub, oks := diff.GetSubtractOk(); oks && sub != nil {
 		*stack = append(*stack, sub)
 	}
+
 	return true
 }
