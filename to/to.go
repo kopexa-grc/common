@@ -22,6 +22,7 @@ func BoolValue(v *bool) bool {
 	if v == nil {
 		return false
 	}
+
 	return *v
 }
 
@@ -35,6 +36,7 @@ func StringValue(v *string) string {
 	if v == nil {
 		return ""
 	}
+
 	return *v
 }
 
@@ -128,6 +130,7 @@ func TimeValue(v *time.Time) time.Time {
 	if v == nil {
 		return time.Time{}
 	}
+
 	return *v
 }
 
