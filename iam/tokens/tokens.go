@@ -13,6 +13,12 @@ import (
 	"github.com/vmihailenco/msgpack/v5"
 )
 
+// URLToken represents a token that can be signed and verified
+type URLToken interface {
+	Validate() error
+	SetNonce([]byte)
+}
+
 // SigningInfo contains the cryptographic information needed to sign and verify tokens.
 // It includes an expiration time and a nonce for additional security.
 type SigningInfo struct {
@@ -56,6 +62,16 @@ func (d SigningInfo) IsExpired() bool {
 	return d.ExpiresAt.Before(time.Now())
 }
 
+// SignToken marshals and signs any token that embeds SigningInfo
+func (d SigningInfo) SignToken(token any) (string, []byte, error) {
+	data, err := msgpack.Marshal(token)
+	if err != nil {
+		return "", nil, err
+	}
+
+	return d.signData(data)
+}
+
 // signData signs the provided data using HMAC-SHA256 and returns the signature and secret.
 //
 // Parameters:
@@ -81,6 +97,27 @@ func (d SigningInfo) signData(data []byte) (string, []byte, error) {
 	copy(secret[nonceLength:], key)
 
 	return base64.RawURLEncoding.EncodeToString(mac.Sum(nil)), secret, nil
+}
+
+// VerifyToken provides common verification logic for all token types
+func (d SigningInfo) VerifyToken(token URLToken, signature string, secret []byte) error {
+	if d.IsExpired() {
+		return ErrTokenExpired
+	}
+
+	if len(secret) != nonceLength+keyLength {
+		return ErrInvalidSecret
+	}
+
+	// Update the token's nonce from the secret
+	token.SetNonce(secret[0:nonceLength])
+
+	data, err := msgpack.Marshal(token)
+	if err != nil {
+		return err
+	}
+
+	return d.verifyData(data, signature, secret)
 }
 
 // verifyData verifies the signature of the provided data using the secret.
