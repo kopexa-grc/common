@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.56.0](https://github.com/kopexa-grc/common/compare/v1.55.0...v1.56.0) (2025-10-01)
+
+
+### Features
+
+* reset token ([a939050](https://github.com/kopexa-grc/common/commit/a93905027d0bab07478a17bf712fb30b3fc25e34))
+
 ## [1.55.0](https://github.com/kopexa-grc/common/compare/v1.54.0...v1.55.0) (2025-09-30)
 
 
