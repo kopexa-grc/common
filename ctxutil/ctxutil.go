@@ -1,5 +1,5 @@
-// Copyright (c) Kopexa GmbH
-// SPDX-License-Identifier: BUSL-1.1
+// Copyright by the openlane
+// SPDX-License-Identifier: Apache-2.0
 
 // Package ctxutil provides type-safe context value management using generics.
 // It allows storing and retrieving values from a context without type assertions

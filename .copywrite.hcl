@@ -21,5 +21,7 @@ project {
     "**/*.sql",
     "build/reports/test-unit.xml",
     "fga/**",
+    "ctxutil/**",
+    "passwd/**"
   ]
 }

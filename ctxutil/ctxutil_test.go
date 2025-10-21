@@ -1,5 +1,5 @@
-// Copyright (c) Kopexa GmbH
-// SPDX-License-Identifier: BUSL-1.1
+// Copyright by the openlane
+// SPDX-License-Identifier: Apache-2.0
 
 package ctxutil
 
