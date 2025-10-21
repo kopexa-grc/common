@@ -1,5 +1,5 @@
-// Copyright (c) Kopexa GmbH
-// SPDX-License-Identifier: BUSL-1.1
+// Original Licenses under Apache-2.0 by the openlane https://github.com/theopenlane
+// SPDX-License-Identifier: Apache-2.0
 
 // Package fga provides functions for managing Fine-Grained Authorization (FGA) models.
 // It includes methods to load FGA models from files or DSL and register them with the FGA backend.

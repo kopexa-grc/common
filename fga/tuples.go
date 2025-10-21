@@ -1,5 +1,5 @@
-// Copyright (c) Kopexa GmbH
-// SPDX-License-Identifier: BUSL-1.1
+// Original Licenses under Apache-2.0 by the openlane https://github.com/theopenlane
+// SPDX-License-Identifier: Apache-2.0
 
 // Package fga provides a client for interacting with OpenFGA (Fine Grained Authorization).
 // It offers a type-safe and idiomatic Go interface for managing authorization tuples,

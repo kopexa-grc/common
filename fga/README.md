@@ -1,6 +1,14 @@
-# FGA (Fine-Grained Authorization) Package
+# FGA (Fine-Grained Authorization)
 
-The FGA package provides a type-safe and idiomatic Go implementation for interacting with OpenFGA (Fine-Grained Authorization). It implements a fluent interface for managing permissions in a type-safe manner.
+This package provides a thin wrapper around **[OpenFGA](https://openfga.dev)**, offering simplified integration and internal conventions used within the Kopexa platform.
+
+> Certain structural ideas and client abstractions are inspired by [Openlane’s](https://github.com/theopenlane/iam/blob/main/LICENSE) early approach to FGA integration.  
+> All changes and extensions on top are independently developed and maintained by the Kopexa team.
+
+### License
+
+Licensed under **Apache 2.0**.  
+See the [LICENSE](./LICENSE) file for details.
 
 ## Features
 
