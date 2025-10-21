@@ -1,3 +1,5 @@
+This code was stolen from: https://github.com/theopenlane/utils/tree/main/passwd
+
 # Password Package
 
 This package provides password validation and hashing functionality using Argon2id, the winner of the 2015 Password Hashing Competition.
@@ -69,4 +71,4 @@ These parameters follow the recommendations from the Argon2 RFC draft and can be
 
 - [Argon2 RFC Draft](https://datatracker.ietf.org/doc/draft-irtf-cfrg-argon2/)
 - [Password Hashing Competition](https://password-hashing.net/)
-- [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) 
+- [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)

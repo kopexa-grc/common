@@ -1,3 +1,5 @@
+This code was taken from: https://github.com/theopenlane/utils/tree/main/contextx
+
 # ctxutil
 
 The `ctxutil` package provides type-safe context value management using generics.
@@ -52,7 +54,7 @@ value := ctxutil.FromOrFunc(ctx, func() string {
    ```go
    // Good
    value := ctxutil.From[string](ctx)
-   
+
    // Bad
    value := ctx.Value("key").(string)
    ```
@@ -70,7 +72,7 @@ value := ctxutil.FromOrFunc(ctx, func() string {
    ```go
    // Static default value
    value := ctxutil.FromOr(ctx, "default")
-   
+
    // Dynamic default value
    value := ctxutil.FromOrFunc(ctx, func() string {
        return time.Now().Format(time.RFC3339)
@@ -93,4 +95,4 @@ The package is optimized for high performance:
 
 ## License
 
-BUSL-1.1 
+BUSL-1.1

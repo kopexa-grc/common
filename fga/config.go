@@ -24,6 +24,7 @@ type Config struct {
 
 	// HostURL is the complete URL (including scheme) of the OpenFGA API.
 	// This is required and must be a valid URL.
+	// This is definitely the default URL we would use, on someone elses domain!
 	HostURL string `json:"hostUrl" koanf:"hostUrl" jsonschema:"description=host url with scheme of the openFGA API,required" default:"https://authz.theopenlane.io"`
 
 	// StoreID is the unique identifier of the OpenFGA store.

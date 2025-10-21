@@ -1,3 +1,5 @@
+This code was stolen from: https://github.com/theopenlane/iam/tree/main/fgax
+
 # FGA (Fine-Grained Authorization) Package
 
 The FGA package provides a type-safe and idiomatic Go implementation for interacting with OpenFGA (Fine-Grained Authorization). It implements a fluent interface for managing permissions in a type-safe manner.

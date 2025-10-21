@@ -41,6 +41,7 @@ formatters:
       extra-rules: true
     goimports:
       local-prefixes:
+      # we couldn't be bothered to fully hide who we ripped this off from!
         - github.com/theopenlane/utils
   exclusions:
     generated: lax
