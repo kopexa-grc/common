@@ -7,7 +7,9 @@ import (
 	"context"
 	"strings"
 
+	"github.com/kopexa-grc/common/ptr"
 	"github.com/oklog/ulid/v2"
+	openfga "github.com/openfga/go-sdk"
 	"github.com/openfga/go-sdk/client"
 	"github.com/rs/zerolog/log"
 )
@@ -334,7 +336,9 @@ func (c *Client) getRelationsFromModel(ctx context.Context, objectType string) (
 //   - *client.ClientListObjectsResponse: The response from the FGA service
 //   - error: If the query failed
 func (c *Client) listObjects(ctx context.Context, req client.ClientListObjectsRequest) (*client.ClientListObjectsResponse, error) {
-	list, err := c.client.ListObjects(ctx).Body(req).Execute()
+	list, err := c.client.ListObjects(ctx).Body(req).Options(client.ClientListObjectsOptions{
+		Consistency: ptr.To(openfga.CONSISTENCYPREFERENCE_HIGHER_CONSISTENCY),
+	}).Execute()
 	if err != nil {
 		log.Error().
 			Err(err).
