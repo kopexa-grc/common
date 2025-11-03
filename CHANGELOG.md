@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.56.1](https://github.com/kopexa-grc/common/compare/v1.56.0...v1.56.1) (2025-11-03)
+
+
+### Bug Fixes
+
+* CONSISTENCYPREFERENCE_HIGHER_CONSISTENCY to fga ListObjects ([3117d5d](https://github.com/kopexa-grc/common/commit/3117d5d067e211e1ef515432d9024bfbd98667e0))
+* fga list tests ([f83f79d](https://github.com/kopexa-grc/common/commit/f83f79d0589cb6afa48b5a37e54cfc71646d3d3a))
+
 ## [1.56.0](https://github.com/kopexa-grc/common/compare/v1.55.0...v1.56.0) (2025-10-01)
 
 
