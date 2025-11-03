@@ -82,10 +82,12 @@ func TestClient_ListObjectIDsWithAccess(t *testing.T) {
 			if tt.mockErr == nil {
 				mockSdk.EXPECT().ListObjects(gomock.Any()).Return(mockList).Times(1)
 				mockList.EXPECT().Body(gomock.Any()).Return(mockList).Times(1)
+				mockList.EXPECT().Options(gomock.Any()).Return(mockList).Times(1)
 				mockList.EXPECT().Execute().Return(tt.mockResp, nil).Times(1)
 			} else {
 				mockSdk.EXPECT().ListObjects(gomock.Any()).Return(mockList).Times(1)
 				mockList.EXPECT().Body(gomock.Any()).Return(mockList).Times(1)
+				mockList.EXPECT().Options(gomock.Any()).Return(mockList).Times(1)
 				mockList.EXPECT().Execute().Return(nil, tt.mockErr).Times(1)
 			}
 
