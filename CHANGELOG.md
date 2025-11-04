@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.57.0](https://github.com/kopexa-grc/common/compare/v1.56.1...v1.57.0) (2025-11-04)
+
+
+### Features
+
+* add ContextualTuples to AccessCheck and ListRequest for enhanced context handling ([1356cf2](https://github.com/kopexa-grc/common/commit/1356cf246e37d45db30c2639a8767f1255197ad4))
+
 ## [1.56.1](https://github.com/kopexa-grc/common/compare/v1.56.0...v1.56.1) (2025-11-03)
 
 
