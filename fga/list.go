@@ -42,8 +42,11 @@ type ListRequest struct {
 
 	// Context is the context of the request used for conditional relationships
 	// This is optional and can be nil.
-	Context *map[string]any
+	Context          *map[string]any
+	ContextualTuples []ContextualTupleKey
 }
+
+type ContextualTupleKey = client.ClientContextualTupleKey
 
 // toListObjectsRequest converts the ListRequest to a client.ClientListObjectsRequest.
 // It handles the conversion of subject and object types to the format expected by the FGA service.
@@ -62,9 +65,10 @@ func (lr ListRequest) toListObjectsRequest() client.ClientListObjectsRequest {
 	}
 
 	listReq := client.ClientListObjectsRequest{
-		User:     sub.String(),
-		Relation: lr.Relation,
-		Type:     strings.ToLower(lr.ObjectType),
+		User:             sub.String(),
+		Relation:         lr.Relation,
+		Type:             strings.ToLower(lr.ObjectType),
+		ContextualTuples: lr.ContextualTuples,
 	}
 
 	if lr.Context != nil {
@@ -149,6 +153,8 @@ type ListAccess struct {
 	// Context is the context of the request used for conditional relationships
 	// This is optional and can be nil.
 	Context *map[string]any
+
+	ContextualTuples []ContextualTupleKey
 }
 
 // ListRelations returns a list of relations that the subject has to the specified object.
@@ -204,11 +210,12 @@ func (c *Client) ListRelations(ctx context.Context, ac ListAccess) ([]string, er
 	checks := make([]client.ClientBatchCheckItem, 0, len(relations))
 	for _, rel := range relations {
 		checks = append(checks, client.ClientBatchCheckItem{
-			User:          sub.String(),
-			Relation:      rel,
-			Object:        obj.String(),
-			Context:       ac.Context,
-			CorrelationId: ulid.Make().String(),
+			User:             sub.String(),
+			Relation:         rel,
+			Object:           obj.String(),
+			Context:          ac.Context,
+			CorrelationId:    ulid.Make().String(),
+			ContextualTuples: ac.ContextualTuples,
 		})
 	}
 

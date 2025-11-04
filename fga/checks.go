@@ -33,7 +33,8 @@ type AccessCheck struct {
 	Relation string
 	// Context is the context of the request used for conditional relationships
 	// This is optional and can be nil.
-	Context *map[string]any
+	Context          *map[string]any
+	ContextualTuples []ContextualTupleKey
 }
 
 // validate ensures that all required fields are present in the AccessCheck.
@@ -76,11 +77,12 @@ func (ac AccessCheck) toBatchCheckItem() (*client.ClientBatchCheckItem, error) {
 	}
 
 	return &client.ClientBatchCheckItem{
-		User:          sub.String(),
-		Relation:      ac.Relation,
-		Object:        obj.String(),
-		Context:       ac.Context,
-		CorrelationId: ulid.Make().String(), // generate a new correlation ID for each check
+		User:             sub.String(),
+		Relation:         ac.Relation,
+		Object:           obj.String(),
+		Context:          ac.Context,
+		CorrelationId:    ulid.Make().String(), // generate a new correlation ID for each check
+		ContextualTuples: ac.ContextualTuples,
 	}, nil
 }
 
@@ -107,10 +109,11 @@ func (ac AccessCheck) toCheckRequest() (*client.ClientCheckRequest, error) {
 	}
 
 	return &client.ClientCheckRequest{
-		User:     sub.String(),
-		Relation: ac.Relation,
-		Object:   obj.String(),
-		Context:  ac.Context,
+		User:             sub.String(),
+		Relation:         ac.Relation,
+		Object:           obj.String(),
+		Context:          ac.Context,
+		ContextualTuples: ac.ContextualTuples,
 	}, nil
 }
 
