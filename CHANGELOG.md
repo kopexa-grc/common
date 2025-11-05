@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.58.0](https://github.com/kopexa-grc/common/compare/v1.57.0...v1.58.0) (2025-11-05)
+
+
+### Features
+
+* implement WithIncludeArchived function to manage archived records in context ([37aa182](https://github.com/kopexa-grc/common/commit/37aa182b55114a68ff5d9aa923f250b7ace23cb2))
+
+
+### Bug Fixes
+
+* rename ArchiveSkipKey to SkipKey for consistency in context handling ([a09bdc1](https://github.com/kopexa-grc/common/commit/a09bdc1fd5b01e6a5b58ce54b8036a63fc262fdf))
+
 ## [1.57.0](https://github.com/kopexa-grc/common/compare/v1.56.1...v1.57.0) (2025-11-04)
 
 
