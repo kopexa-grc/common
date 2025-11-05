@@ -5,10 +5,10 @@ package archive
 
 import "context"
 
-// ArchiveSkipKey is a context-key type that indicates the archive filter
+// SkipKey is a context-key type that indicates the archive filter
 // should be skipped for the current operation. The associated value is the
 // boolean true.
-type ArchiveSkipKey struct{}
+type SkipKey struct{}
 
 // IncludeArchived returns a new context marked to skip the archive filter.
 // Use when archived objects should be included in queries or when performing
@@ -19,5 +19,5 @@ type ArchiveSkipKey struct{}
 //	ctx = ent.WithIncludeArchived(ctx)
 //	client.User.Query().All(ctx) // Returns archived users as well
 func WithIncludeArchived(parent context.Context) context.Context {
-	return context.WithValue(parent, ArchiveSkipKey{}, true)
+	return context.WithValue(parent, SkipKey{}, true)
 }
