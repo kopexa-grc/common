@@ -91,7 +91,7 @@ func (store *AzureStore) Delete(ctx context.Context, key string) error {
 	return blob.Delete(ctx)
 }
 
-func (store *AzureStore) Copy(ctx context.Context, dstKey, srcKey string, opts *driver.CopyOptions) error {
+func (store *AzureStore) Copy(ctx context.Context, srcKey, dstKey string, opts *driver.CopyOptions) error {
 	dstBlobClient, err := store.Service.NewBlob(ctx, dstKey)
 	if err != nil {
 		return err

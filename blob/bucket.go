@@ -159,7 +159,7 @@ type CopyOptions struct {
 // kerr.Code will return kerr.NotFound.
 //
 // If the destination blob already exists, it is overwritten.
-func (b *Bucket) Copy(ctx context.Context, dstKey, srcKey string, opts *CopyOptions) (err error) {
+func (b *Bucket) Copy(ctx context.Context, srcKey, dstKey string, opts *CopyOptions) (err error) {
 	if !utf8.ValidString(dstKey) {
 		return kerr.Newf(kerr.InvalidArgument, nil, "blob: Copy dstKey must be a valid UTF-8 string: %q", dstKey)
 	}
@@ -183,7 +183,7 @@ func (b *Bucket) Copy(ctx context.Context, dstKey, srcKey string, opts *CopyOpti
 		return errClosed
 	}
 
-	return b.b.Copy(ctx, dstKey, srcKey, dopts)
+	return b.b.Copy(ctx, srcKey, dstKey, dopts)
 }
 
 // ReaderOptions sets options for NewReader and NewRangeReader.

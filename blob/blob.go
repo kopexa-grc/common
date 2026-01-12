@@ -61,15 +61,23 @@ import (
 	"fmt"
 
 	"github.com/kopexa-grc/common/blob/azurestore"
+	"github.com/kopexa-grc/common/blob/s3store"
 )
 
 // Fehler-Variablen
 var (
 	ErrNilConfig       = errors.New("blob: config cannot be nil")
-	ErrMissingAccount  = errors.New("blob: Azure account name is required")
-	ErrMissingKey      = errors.New("blob: Azure account key is required")
-	ErrMissingEndpoint = errors.New("blob: Azure endpoint is required")
+	ErrMissingAccount  = errors.New("blob: account name is required")
+	ErrMissingKey      = errors.New("blob: account key is required")
+	ErrMissingEndpoint = errors.New("blob: endpoint is required")
 	ErrMissingSpaceID  = errors.New("blob: spaceID cannot be empty")
+)
+
+type Provider string
+
+const (
+	ProviderAzure Provider = "azure"
+	ProviderS3    Provider = "s3"
 )
 
 // Config represents the configuration for blob storage operations.
@@ -84,6 +92,9 @@ type Config struct {
 	// Azure contains the configuration for Azure Blob Storage.
 	// This is the primary supported storage backend.
 	Azure AzureConfig
+
+	// S3 contains the configuration for AWS / OVH S3 storage.
+	S3 s3store.S3Config
 }
 
 // AzureConfig contains the configuration parameters for Azure Blob Storage.
@@ -163,7 +174,50 @@ func New(config *Config) (*BucketProvider, error) {
 		return nil, fmt.Errorf("%w", ErrMissingEndpoint)
 	}
 
+	if config.S3.AccessKeyID == "" {
+		return nil, fmt.Errorf("%w", ErrMissingAccount)
+	}
+
+	if config.S3.SecretAccessKey == "" {
+		return nil, fmt.Errorf("%w", ErrMissingKey)
+	}
+
+	if config.S3.Region == "" {
+		config.S3.Region = s3store.S3_DEFAULT_REGION
+	}
+
+	if config.S3.Endpoint == "" {
+		return nil, fmt.Errorf("%w", ErrMissingEndpoint)
+	}
+
+	if config.S3.ContainerName == "" {
+		return nil, fmt.Errorf("%w", ErrMissingEndpoint)
+	}
+
 	return &BucketProvider{config: config}, nil
+}
+
+func (p *BucketProvider) s3Config(prefix string) *s3store.S3Config {
+	return &s3store.S3Config{
+		AccessKeyID:     p.config.S3.AccessKeyID,
+		SecretAccessKey: p.config.S3.SecretAccessKey,
+		Region:          p.config.S3.Region,
+		Endpoint:        p.config.S3.Endpoint,
+		BucketPrefix:    prefix,
+		ContainerName:   p.config.S3.ContainerName,
+		UsePathStyle:    p.config.S3.UsePathStyle,
+	}
+}
+
+func (p *BucketProvider) azureConfig(containerName string, accessType string) *azurestore.AzConfig {
+	return &azurestore.AzConfig{
+		AccountName:         p.config.Azure.AccountName,
+		AccountKey:          p.config.Azure.AccountKey,
+		Endpoint:            p.config.Azure.Endpoint,
+		ContainerName:       containerName,
+		ContainerAccessType: accessType,
+		BlobAccessTier:      hotAccessTier,
+	}
 }
 
 // Public returns a bucket for public blob storage.
@@ -190,17 +244,19 @@ func New(config *Config) (*BucketProvider, error) {
 //	file, _ := os.Open("public-image.jpg")
 //	defer file.Close()
 //	err = publicBucket.Upload(ctx, "images/logo.jpg", file, nil)
-func (p *BucketProvider) Public() (*Bucket, error) {
-	azConfig := &azurestore.AzConfig{
-		AccountName:         p.config.Azure.AccountName,
-		AccountKey:          p.config.Azure.AccountKey,
-		Endpoint:            p.config.Azure.Endpoint,
-		ContainerName:       PublicContainer,
-		ContainerAccessType: blobAccessType,
-		BlobAccessTier:      hotAccessTier,
+func (p *BucketProvider) Public(provider Provider) (*Bucket, error) {
+	if provider == ProviderS3 {
+		s3Service, err := s3store.NewS3Service(p.s3Config("public/"))
+		if err != nil {
+			return nil, fmt.Errorf("blob: failed to create S3 service: %w", err)
+		}
+
+		store := s3store.New(s3Service)
+
+		return &Bucket{b: store}, nil
 	}
 
-	azService, err := azurestore.NewAzureService(azConfig)
+	azService, err := azurestore.NewAzureService(p.azureConfig(PublicContainer, blobAccessType))
 	if err != nil {
 		return nil, fmt.Errorf("blob: failed to create Azure service: %w", err)
 	}
@@ -243,21 +299,45 @@ func (p *BucketProvider) Public() (*Bucket, error) {
 //	file, _ := os.Open("private-document.pdf")
 //	defer file.Close()
 //	err = spaceBucket.Upload(ctx, "documents/report.pdf", file, nil)
-func (p *BucketProvider) Space(spaceID string) (*Bucket, error) {
+func (p *BucketProvider) Space(spaceID string, provider Provider) (*Bucket, error) {
 	if spaceID == "" {
 		return nil, fmt.Errorf("%w", ErrMissingSpaceID)
 	}
 
-	azConfig := &azurestore.AzConfig{
-		AccountName:         p.config.Azure.AccountName,
-		AccountKey:          p.config.Azure.AccountKey,
-		Endpoint:            p.config.Azure.Endpoint,
-		ContainerName:       fmt.Sprintf("space-%s", spaceID),
-		ContainerAccessType: privateAccessType,
-		BlobAccessTier:      hotAccessTier,
+	if provider == ProviderS3 {
+		s3Service, err := s3store.NewS3Service(p.s3Config(fmt.Sprintf("spaces/%s/", spaceID)))
+		if err != nil {
+			return nil, fmt.Errorf("blob: failed to create S3 service: %w", err)
+		}
+
+		store := s3store.New(s3Service)
+
+		return &Bucket{b: store}, nil
 	}
 
-	azService, err := azurestore.NewAzureService(azConfig)
+	azService, err := azurestore.NewAzureService(p.azureConfig(fmt.Sprintf("space-%s", spaceID), privateAccessType))
+	if err != nil {
+		return nil, fmt.Errorf("blob: failed to create Azure service: %w", err)
+	}
+
+	store := azurestore.New(azService)
+
+	return &Bucket{b: store}, nil
+}
+
+func (p *BucketProvider) Internal(provider Provider) (*Bucket, error) {
+	if provider == ProviderS3 {
+		s3Service, err := s3store.NewS3Service(p.s3Config("internal/"))
+		if err != nil {
+			return nil, fmt.Errorf("blob: failed to create S3 service: %w", err)
+		}
+
+		store := s3store.New(s3Service)
+
+		return &Bucket{b: store}, nil
+	}
+
+	azService, err := azurestore.NewAzureService(p.azureConfig("internal", privateAccessType))
 	if err != nil {
 		return nil, fmt.Errorf("blob: failed to create Azure service: %w", err)
 	}

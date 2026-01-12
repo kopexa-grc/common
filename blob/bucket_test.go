@@ -6,6 +6,7 @@ package blob
 import (
 	"testing"
 
+	"github.com/kopexa-grc/common/blob/s3store"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,6 +23,12 @@ func TestNew(t *testing.T) {
 					AccountName: "test-account",
 					AccountKey:  "dGVzdC1rZXk=", // base64 encoded "test-key"
 					Endpoint:    "https://test.blob.core.windows.net",
+				},
+				S3: s3store.S3Config{
+					ContainerName:   "test",
+					AccessKeyID:     "test",
+					SecretAccessKey: "test",
+					Endpoint:        "test",
 				},
 			},
 			wantErr: false,
