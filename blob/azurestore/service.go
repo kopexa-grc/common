@@ -40,6 +40,9 @@ type BlockBlob struct {
 	BlobClient     *blockblob.Client
 	Indexes        []int
 	BlobAccessTier *blob.AccessTier
+	credential     *azblob.SharedKeyCredential // unexported for security
+	containerName  string                      // unexported for security
+	blobName       string                      // unexported for security
 }
 
 type AzService interface {
@@ -50,6 +53,7 @@ type azService struct {
 	ContainerClient *container.Client
 	ContainerName   string
 	BlobAccessTier  *blob.AccessTier
+	credential      *azblob.SharedKeyCredential // unexported for security
 }
 
 type AzConfig struct {
@@ -126,17 +130,22 @@ func NewAzureService(config *AzConfig) (AzService, error) {
 		ContainerClient: containerClient,
 		ContainerName:   config.ContainerName,
 		BlobAccessTier:  blobAccessTier,
+		credential:      cred,
 	}, nil
 }
 
 // Determine if we return a InfoBlob or BlockBlob, based on the name
 func (service *azService) NewBlob(_ context.Context, name string) (AzBlob, error) {
-	blobClient := service.ContainerClient.NewBlockBlobClient(escapeKey(name, false))
+	escapedName := escapeKey(name, false)
+	blobClient := service.ContainerClient.NewBlockBlobClient(escapedName)
 
 	return &BlockBlob{
 		BlobClient:     blobClient,
 		Indexes:        []int{},
 		BlobAccessTier: service.BlobAccessTier,
+		credential:     service.credential,
+		containerName:  service.ContainerName,
+		blobName:       escapedName,
 	}, nil
 }
 
@@ -172,7 +181,23 @@ func (blockBlob *BlockBlob) SignedURL(_ context.Context, opts *driver.SignedURLO
 	start := time.Now().UTC()
 	expiry := start.Add(opts.Expiry)
 
-	return blockBlob.BlobClient.GetSASURL(perms, expiry, &blob.GetSASURLOptions{StartTime: &start})
+	// Use BlobSignatureValues to support ContentDisposition
+	sasValues := sas.BlobSignatureValues{
+		ContainerName:      blockBlob.containerName,
+		BlobName:           blockBlob.blobName,
+		Version:            sas.Version,
+		Permissions:        perms.String(),
+		StartTime:          start,
+		ExpiryTime:         expiry,
+		ContentDisposition: opts.ContentDisposition,
+	}
+
+	qps, err := sasValues.SignWithSharedKey(blockBlob.credential)
+	if err != nil {
+		return "", err
+	}
+
+	return blockBlob.BlobClient.URL() + "?" + qps.Encode(), nil
 }
 
 // Delete the blockBlob from Azure Blob Storage

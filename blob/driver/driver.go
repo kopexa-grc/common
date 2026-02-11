@@ -90,6 +90,12 @@ type SignedURLOptions struct {
 	// This field will not be set for any non-PUT requests.
 	ContentType string
 
+	// ContentDisposition specifies the Content-Disposition header to be returned
+	// when the signed URL is accessed. Use "inline" to display content in the browser,
+	// or "attachment" to force download.
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition
+	ContentDisposition string
+
 	// BeforeSign is a callback that will be called before each call to the
 	// the underlying service's sign functionality.
 	// asFunc converts its argument to driver-specific types.
