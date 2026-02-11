@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.59.0](https://github.com/kopexa-grc/common/compare/v1.58.0...v1.59.0) (2026-02-11)
+
+
+### Features
+
+* **blob:** add ContentDisposition support for signed URLs ([a07331f](https://github.com/kopexa-grc/common/commit/a07331f60506ad3c85d1bc1ab46c46be8043c553))
+
 ## [1.58.0](https://github.com/kopexa-grc/common/compare/v1.57.0...v1.58.0) (2025-11-05)
 
 
