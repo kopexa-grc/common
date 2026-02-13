@@ -174,6 +174,13 @@ func (c *Client) handleWrite(resp *client.ClientWriteResponse, err error) (*clie
 			continue
 		}
 
+		// Skip "tuple not found" errors on delete operations for idempotency
+		// See: https://github.com/openfga/openfga/blob/main/pkg/storage/errors.go
+		if entry.Operation == OpDelete && strings.Contains(msg, ErrTupleNotFound) {
+			ll.Debug().Msg("tuple does not exist, skipping delete")
+			continue
+		}
+
 		ll.Error().Msg("error writing tuple")
 
 		return nil, &WriteError{

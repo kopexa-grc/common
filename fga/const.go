@@ -15,6 +15,10 @@ const (
 	// This is a common error that occurs when trying to create duplicate permissions.
 	ErrDuplicateKey = "write a tuple which already exists"
 
+	// ErrTupleNotFound is returned when attempting to delete a tuple that does not exist in the FGA store.
+	// This error is typically ignored during delete operations for idempotency.
+	ErrTupleNotFound = "cannot delete a tuple which does not exist"
+
 	// Operation types for FGA tuple operations.
 	// These constants define the basic operations that can be performed on FGA tuples.
 	OpWrite  = "write"  // Used for creating or updating tuples
