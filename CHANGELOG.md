@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.61.0](https://github.com/kopexa-grc/common/compare/v1.60.0...v1.61.0) (2026-02-28)
+
+
+### Features
+
+* **types:** add CSV marshaling support for RiskRating ([bfb0bfb](https://github.com/kopexa-grc/common/commit/bfb0bfb2173643b25f33688f81317a9db10da277))
+
 ## [1.60.0](https://github.com/kopexa-grc/common/compare/v1.59.0...v1.60.0) (2026-02-28)
 
 
