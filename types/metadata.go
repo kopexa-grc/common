@@ -4,6 +4,7 @@
 package types
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -67,4 +68,32 @@ func (m Metadata) MarshalGQL(w io.Writer) {
 //   - error: If unmarshaling fails
 func (m *Metadata) UnmarshalGQL(v interface{}) error {
 	return unmarshalGQLJSON(v, m)
+}
+
+// MarshalCSV implements the csvutil.Marshaler interface for Metadata.
+// It serializes the metadata as a JSON string for CSV export.
+//
+// Returns:
+//   - []byte: JSON representation of the metadata
+//   - error: If marshaling fails
+func (m Metadata) MarshalCSV() ([]byte, error) {
+	if m == nil {
+		return []byte(""), nil
+	}
+	return json.Marshal(m)
+}
+
+// UnmarshalCSV implements the csvutil.Unmarshaler interface for Metadata.
+// It deserializes a JSON string from CSV import into metadata.
+//
+// Parameters:
+//   - data: The CSV field data (JSON string)
+//
+// Returns:
+//   - error: If unmarshaling fails
+func (m *Metadata) UnmarshalCSV(data []byte) error {
+	if len(data) == 0 {
+		return nil
+	}
+	return json.Unmarshal(data, m)
 }

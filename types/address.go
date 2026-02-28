@@ -5,6 +5,7 @@
 package types
 
 import (
+	"encoding/json"
 	"errors"
 	"io"
 	"strings"
@@ -133,4 +134,32 @@ func (a Address) MarshalGQL(w io.Writer) {
 //   - error: If unmarshaling fails
 func (a *Address) UnmarshalGQL(v interface{}) error {
 	return unmarshalGQLJSON(v, a)
+}
+
+// MarshalCSV implements the csvutil.Marshaler interface for Address.
+// It serializes the address as a JSON string for CSV export.
+//
+// Returns:
+//   - []byte: JSON representation of the address
+//   - error: If marshaling fails
+func (a Address) MarshalCSV() ([]byte, error) {
+	if a == (Address{}) {
+		return []byte(""), nil
+	}
+	return json.Marshal(a)
+}
+
+// UnmarshalCSV implements the csvutil.Unmarshaler interface for Address.
+// It deserializes a JSON string from CSV import into an address.
+//
+// Parameters:
+//   - data: The CSV field data (JSON string)
+//
+// Returns:
+//   - error: If unmarshaling fails
+func (a *Address) UnmarshalCSV(data []byte) error {
+	if len(data) == 0 {
+		return nil
+	}
+	return json.Unmarshal(data, a)
 }
