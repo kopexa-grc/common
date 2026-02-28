@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.60.0](https://github.com/kopexa-grc/common/compare/v1.59.0...v1.60.0) (2026-02-28)
+
+
+### Features
+
+* ignore tuple not found errors on delete operations for idempotency ([b5b43d0](https://github.com/kopexa-grc/common/commit/b5b43d00b3ec5a8968f341061aacbe1a31a59f69))
+* **types:** add CSV marshaling support for Address, Metadata, and JSONContent ([090d400](https://github.com/kopexa-grc/common/commit/090d400a21e5c783877c620bb2fba531a59bc4cb))
+
 ## [1.59.0](https://github.com/kopexa-grc/common/compare/v1.58.0...v1.59.0) (2026-02-11)
 
 
