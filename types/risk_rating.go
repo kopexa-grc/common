@@ -4,6 +4,7 @@
 package types
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -105,4 +106,32 @@ func (r RiskRating) MarshalGQL(w io.Writer) {
 //   - error: If unmarshaling fails
 func (r *RiskRating) UnmarshalGQL(v interface{}) error {
 	return unmarshalGQLJSON(v, r)
+}
+
+// MarshalCSV implements the csvutil.Marshaler interface for RiskRating.
+// It serializes the risk rating as a JSON string for CSV export.
+//
+// Returns:
+//   - []byte: JSON representation of the risk rating
+//   - error: If marshaling fails
+func (r RiskRating) MarshalCSV() ([]byte, error) {
+	if r.IsZero() {
+		return []byte(""), nil
+	}
+	return json.Marshal(r)
+}
+
+// UnmarshalCSV implements the csvutil.Unmarshaler interface for RiskRating.
+// It deserializes a JSON string from CSV import into a risk rating.
+//
+// Parameters:
+//   - data: The CSV field data (JSON string)
+//
+// Returns:
+//   - error: If unmarshaling fails
+func (r *RiskRating) UnmarshalCSV(data []byte) error {
+	if len(data) == 0 {
+		return nil
+	}
+	return json.Unmarshal(data, r)
 }
