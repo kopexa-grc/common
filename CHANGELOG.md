@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.62.1](https://github.com/kopexa-grc/common/compare/v1.62.0...v1.62.1) (2026-03-04)
+
+
+### Bug Fixes
+
+* **ent:** improve AuditMixin behavior ([33db0af](https://github.com/kopexa-grc/common/commit/33db0afdda5bda9c0da47afa10559c4c5298f677))
+
 ## [1.62.0](https://github.com/kopexa-grc/common/compare/v1.61.0...v1.62.0) (2026-03-04)
 
 
