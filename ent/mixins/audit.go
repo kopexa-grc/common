@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
+	cent "github.com/kopexa-grc/common/ent"
 	"github.com/kopexa-grc/common/iam/auth"
 )
 
@@ -76,6 +77,9 @@ func (AuditMixin) Hooks() []ent.Hook {
 
 // AuditHook sets and returns the created_at, updated_at, etc., fields.
 // It automatically populates these fields based on the mutation operation and the actor from the context.
+//
+// To skip the audit hook (e.g., during migrations where you want to preserve original timestamps),
+// use cent.SkipAudit(ctx) before calling the mutation.
 func AuditHook(next ent.Mutator) ent.Mutator {
 	type AuditLogger interface {
 		SetCreatedAt(time.Time)
@@ -89,6 +93,11 @@ func AuditHook(next ent.Mutator) ent.Mutator {
 	}
 
 	return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+		// Skip audit if context indicates so (useful for migrations)
+		if cent.CheckSkipAudit(ctx) {
+			return next.Mutate(ctx, m)
+		}
+
 		ml, ok := m.(AuditLogger)
 		if !ok {
 			return nil, fmt.Errorf("%w: %T", ErrUnexpectedMutationType, m)
