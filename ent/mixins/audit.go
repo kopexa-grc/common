@@ -48,9 +48,8 @@ func (AuditMixin) Fields() []ent.Field {
 				),
 			),
 		field.Time("updated_at").
-			Default(time.Now).
 			Optional().
-			UpdateDefault(time.Now).
+			Nillable().
 			Annotations(
 				entgql.Skip(
 					entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput,
@@ -105,18 +104,23 @@ func AuditHook(next ent.Mutator) ent.Mutator {
 
 		actor := auth.ActorFromContext(ctx)
 
+		actorID := actor.ID
+		if actorID == "" {
+			actorID = "system"
+		}
+
 		switch op := m.Op(); {
 		case op.Is(ent.OpCreate):
 			ml.SetCreatedAt(time.Now())
 
 			if _, exists := ml.CreatedBy(); !exists {
-				ml.SetCreatedBy(actor.ID)
+				ml.SetCreatedBy(actorID)
 			}
 		case op.Is(ent.OpUpdateOne | ent.OpUpdate):
 			ml.SetUpdatedAt(time.Now())
 
 			if _, exists := ml.UpdatedBy(); !exists {
-				ml.SetUpdatedBy(actor.ID)
+				ml.SetUpdatedBy(actorID)
 			}
 		}
 
