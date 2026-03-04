@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.62.0](https://github.com/kopexa-grc/common/compare/v1.61.0...v1.62.0) (2026-03-04)
+
+
+### Features
+
+* **ent:** add SkipAudit context helper for migrations ([d5fb9a5](https://github.com/kopexa-grc/common/commit/d5fb9a55a98c2bc9ea8802da990917cc28491623))
+
 ## [1.61.0](https://github.com/kopexa-grc/common/compare/v1.60.0...v1.61.0) (2026-02-28)
 
 
