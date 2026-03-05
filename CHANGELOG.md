@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.62.2](https://github.com/kopexa-grc/common/compare/v1.62.1...v1.62.2) (2026-03-05)
+
+
+### Bug Fixes
+
+* **audit:** always set updated_at to fix cursor pagination ([ba4de41](https://github.com/kopexa-grc/common/commit/ba4de41e1e8d8b6868e5f0a36ae3dbe9cf293b96))
+
 ## [1.62.1](https://github.com/kopexa-grc/common/compare/v1.62.0...v1.62.1) (2026-03-04)
 
 
