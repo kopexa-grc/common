@@ -47,9 +47,11 @@ func (AuditMixin) Fields() []ent.Field {
 					entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput,
 				),
 			),
+		// updated_at is always set (even on create) to ensure cursor-based pagination
+		// works correctly when ordering by this field. NULL values break cursor comparisons.
 		field.Time("updated_at").
-			Optional().
-			Nillable().
+			Default(time.Now).
+			UpdateDefault(time.Now).
 			Annotations(
 				entgql.Skip(
 					entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput,
@@ -111,14 +113,14 @@ func AuditHook(next ent.Mutator) ent.Mutator {
 
 		switch op := m.Op(); {
 		case op.Is(ent.OpCreate):
-			ml.SetCreatedAt(time.Now())
-
 			if _, exists := ml.CreatedBy(); !exists {
 				ml.SetCreatedBy(actorID)
 			}
-		case op.Is(ent.OpUpdateOne | ent.OpUpdate):
-			ml.SetUpdatedAt(time.Now())
 
+			if _, exists := ml.UpdatedBy(); !exists {
+				ml.SetUpdatedBy(actorID)
+			}
+		case op.Is(ent.OpUpdateOne | ent.OpUpdate):
 			if _, exists := ml.UpdatedBy(); !exists {
 				ml.SetUpdatedBy(actorID)
 			}
