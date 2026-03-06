@@ -76,10 +76,6 @@ func (i IDMixin) Fields() []ent.Field {
 			).
 			Immutable()
 
-		if i.SingleFieldIndex {
-			displayField.Unique()
-		}
-
 		fields = append(fields, displayField)
 	}
 
@@ -89,8 +85,8 @@ func (i IDMixin) Fields() []ent.Field {
 // Indexes returns the schema indexes for the IDMixin.
 // It ensures:
 // - The 'id' field is globally unique
-// - The 'display_id' field is unique if SingleFieldIndex is true
-// - Space-scoped uniqueness for both 'id' and 'display_id' if SpaceAware is true
+// - The 'display_id' field is unique (globally or space-scoped based on SpaceAware)
+// - Space-scoped uniqueness for 'id' if SpaceAware is true
 func (i IDMixin) Indexes() []ent.Index {
 	idx := []ent.Index{
 		index.Fields("id").
@@ -107,6 +103,10 @@ func (i IDMixin) Indexes() []ent.Index {
 			idx = append(idx, index.Fields(spaceIDFieldName, humanIDFieldName).
 				Unique())
 		}
+	} else if i.HumanIdentifierPrefix != "" && i.SingleFieldIndex {
+		// Add global unique index for display_id (non-space-aware entities)
+		idx = append(idx, index.Fields(humanIDFieldName).
+			Unique())
 	}
 
 	return idx
