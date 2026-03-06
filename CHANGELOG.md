@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.62.3](https://github.com/kopexa-grc/common/compare/v1.62.2...v1.62.3) (2026-03-06)
+
+
+### Bug Fixes
+
+* **ent:** scope display_id uniqueness to space when SpaceAware is true ([bda69a0](https://github.com/kopexa-grc/common/commit/bda69a0de75103abdfa853e54f7f1d1801e1b57e))
+
 ## [1.62.2](https://github.com/kopexa-grc/common/compare/v1.62.1...v1.62.2) (2026-03-05)
 
 
