@@ -6,11 +6,13 @@
 package fga
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"os"
 
 	"github.com/kopexa-grc/common/errors"
+	openfga "github.com/openfga/go-sdk"
 	"github.com/openfga/go-sdk/client"
 	"github.com/openfga/language/pkg/go/transformer"
 	"github.com/rs/zerolog/log"
@@ -19,8 +21,8 @@ import (
 
 // CreateModelFromFile loads an FGA model from a file and registers it with the FGA backend.
 //
-// If forceCreate is false and a model already exists, the existing model's ID is returned.
-// Otherwise, the model is loaded from the file and created anew.
+// If forceCreate is false and the latest model matches the file content, the existing model's
+// ID is returned. Otherwise, a new model is created.
 //
 // Parameters:
 //   - ctx: Context for the request
@@ -31,33 +33,24 @@ import (
 //   - string: The model ID
 //   - error: Any error that occurred
 func (c *Client) CreateModelFromFile(ctx context.Context, fn string, forceCreate bool) (string, error) {
-	options := client.ClientReadAuthorizationModelsOptions{}
-
-	models, err := c.client.ReadAuthorizationModels(context.Background()).Options(options).Execute()
-	if err != nil {
-		return "", err
-	}
-
-	// Only create a new model if one does not exist and creation is not forced
-	if !forceCreate {
-		if len(models.AuthorizationModels) > 0 {
-			modelID := models.GetAuthorizationModels()[0].Id
-			log.Info().Str("model_id", modelID).Msg("fga model exists")
-
-			return modelID, nil
-		}
-	}
-
 	// Load model from file
 	dsl, err := os.ReadFile(fn)
 	if err != nil {
 		return "", err
 	}
 
+	if forceCreate {
+		return c.createModelFromDSL(ctx, dsl)
+	}
+
 	return c.CreateModelFromDSL(ctx, dsl)
 }
 
-// CreateModelFromDSL creates a new FGA model from a DSL definition ([]byte or string).
+// CreateModelFromDSL creates or reuses an FGA model from a DSL definition.
+//
+// It first checks if the latest model in the store is identical to the provided DSL.
+// If so, it returns the existing model's ID without writing a new one. This prevents
+// unnecessary model proliferation when multiple instances start concurrently.
 //
 // Parameters:
 //   - ctx: Context for the request
@@ -78,7 +71,86 @@ func (c *Client) CreateModelFromDSL(ctx context.Context, dsl []byte) (string, er
 		return "", err
 	}
 
+	// Check if the latest model already matches the new definition
+	if modelID, err := c.findMatchingModel(ctx, body); err == nil && modelID != "" {
+		return modelID, nil
+	}
+
 	return c.CreateModel(ctx, body)
+}
+
+// createModelFromDSL unconditionally creates a new FGA model from a DSL definition,
+// bypassing the duplicate check.
+func (c *Client) createModelFromDSL(ctx context.Context, dsl []byte) (string, error) {
+	dslJSON, err := dslToJSON(dsl)
+	if err != nil {
+		return "", err
+	}
+
+	var body client.ClientWriteAuthorizationModelRequest
+	if err := json.Unmarshal(dslJSON, &body); err != nil {
+		return "", err
+	}
+
+	return c.CreateModel(ctx, body)
+}
+
+// findMatchingModel checks whether the latest authorization model in the store
+// is structurally identical to the given model request. Returns the existing
+// model's ID if it matches, or an empty string if no match is found.
+func (c *Client) findMatchingModel(ctx context.Context, newModel client.ClientWriteAuthorizationModelRequest) (string, error) {
+	options := client.ClientReadAuthorizationModelsOptions{}
+
+	resp, err := c.client.ReadAuthorizationModels(ctx).Options(options).Execute()
+	if err != nil {
+		return "", err
+	}
+
+	models := resp.GetAuthorizationModels()
+	if len(models) == 0 {
+		return "", nil
+	}
+
+	latest := models[0]
+
+	if modelsEqual(latest, newModel) {
+		log.Info().Str("model_id", latest.GetId()).Msg("fga model unchanged, reusing existing")
+		return latest.GetId(), nil
+	}
+
+	return "", nil
+}
+
+// modelsEqual compares the type definitions and conditions of an existing
+// authorization model with a new write request to determine if they are equivalent.
+// It marshals both to JSON and compares the bytes for a structural comparison.
+func modelsEqual(existing openfga.AuthorizationModel, newModel client.ClientWriteAuthorizationModelRequest) bool {
+	existingTypes, err := json.Marshal(existing.GetTypeDefinitions())
+	if err != nil {
+		return false
+	}
+
+	newTypes, err := json.Marshal(newModel.GetTypeDefinitions())
+	if err != nil {
+		return false
+	}
+
+	if !bytes.Equal(existingTypes, newTypes) {
+		return false
+	}
+
+	// Also compare conditions if present
+	existingCond, err := json.Marshal(existing.GetConditions())
+	if err != nil {
+		return false
+	}
+
+	newCond, err := json.Marshal(newModel.GetConditions())
+	if err != nil {
+		return false
+	}
+
+	return bytes.Equal(existingCond, newCond)
 }
 
 // CreateModel registers an FGA model with the backend and returns the model ID.
@@ -101,6 +173,22 @@ func (c *Client) CreateModel(ctx context.Context, model client.ClientWriteAuthor
 	log.Info().Str("model_id", modelID).Msg("fga model created")
 
 	return modelID, nil
+}
+
+// ExportDSLToJSON converts DSL bytes to a WriteAuthorizationModelRequest.
+// This is exported for testing purposes.
+func ExportDSLToJSON(dsl []byte) (client.ClientWriteAuthorizationModelRequest, error) {
+	dslJSON, err := dslToJSON(dsl)
+	if err != nil {
+		return client.ClientWriteAuthorizationModelRequest{}, err
+	}
+
+	var body client.ClientWriteAuthorizationModelRequest
+	if err := json.Unmarshal(dslJSON, &body); err != nil {
+		return client.ClientWriteAuthorizationModelRequest{}, err
+	}
+
+	return body, nil
 }
 
 // dslToJSON converts an FGA model from DSL notation to JSON.
