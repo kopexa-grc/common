@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.63.0](https://github.com/kopexa-grc/common/compare/v1.62.3...v1.63.0) (2026-03-11)
+
+
+### Features
+
+* **fga:** enhance model creation logic to reuse existing models and prevent duplicates ([c42865b](https://github.com/kopexa-grc/common/commit/c42865b4361300f5d9c74b118d4cf9eba18fc76c))
+
 ## [1.62.3](https://github.com/kopexa-grc/common/compare/v1.62.2...v1.62.3) (2026-03-06)
 
 
