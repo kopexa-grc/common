@@ -622,6 +622,35 @@ func (mr *MockSdkClientMockRecorder) SetStoreId(storeId any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetStoreId", reflect.TypeOf((*MockSdkClient)(nil).SetStoreId), storeId)
 }
 
+// StreamedListObjects mocks base method.
+func (m *MockSdkClient) StreamedListObjects(ctx context.Context) client.SdkClientStreamedListObjectsRequestInterface {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StreamedListObjects", ctx)
+	ret0, _ := ret[0].(client.SdkClientStreamedListObjectsRequestInterface)
+	return ret0
+}
+
+// StreamedListObjects indicates an expected call of StreamedListObjects.
+func (mr *MockSdkClientMockRecorder) StreamedListObjects(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StreamedListObjects", reflect.TypeOf((*MockSdkClient)(nil).StreamedListObjects), ctx)
+}
+
+// StreamedListObjectsExecute mocks base method.
+func (m *MockSdkClient) StreamedListObjectsExecute(request client.SdkClientStreamedListObjectsRequestInterface) (*client.ClientStreamedListObjectsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StreamedListObjectsExecute", request)
+	ret0, _ := ret[0].(*client.ClientStreamedListObjectsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StreamedListObjectsExecute indicates an expected call of StreamedListObjectsExecute.
+func (mr *MockSdkClientMockRecorder) StreamedListObjectsExecute(request any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StreamedListObjectsExecute", reflect.TypeOf((*MockSdkClient)(nil).StreamedListObjectsExecute), request)
+}
+
 // Write mocks base method.
 func (m *MockSdkClient) Write(ctx context.Context) client.SdkClientWriteRequestInterface {
 	m.ctrl.T.Helper()
