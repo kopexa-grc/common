@@ -31,6 +31,8 @@ const (
 	ActorTypeUser ActorType = "user"
 	// ActorTypeSystem represents an automated system process.
 	ActorTypeSystem ActorType = "system"
+	// ActorTypeService represents an external service.
+	ActorTypeService ActorType = "service"
 )
 
 // Values returns a list of all possible ActorType values.
@@ -38,6 +40,7 @@ func (ActorType) Values() []string {
 	return []string{
 		string(ActorTypeUser),
 		string(ActorTypeSystem),
+		string(ActorTypeService),
 	}
 }
 
