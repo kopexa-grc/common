@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.64.0](https://github.com/kopexa-grc/common/compare/v1.63.0...v1.64.0) (2026-03-31)
+
+
+### Features
+
+* add service actor ([8b7d683](https://github.com/kopexa-grc/common/commit/8b7d683aa2f969f5c488adf3e6dd04b78c357fe0))
+
 ## [1.63.0](https://github.com/kopexa-grc/common/compare/v1.62.3...v1.63.0) (2026-03-11)
 
 
