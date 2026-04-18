@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.65.0](https://github.com/kopexa-grc/common/compare/v1.64.0...v1.65.0) (2026-04-18)
+
+
+### Features
+
+* **auth:** add ActorTypePeople for Workforce Hub sessions ([a8b1000](https://github.com/kopexa-grc/common/commit/a8b10002155d03c8f2a222713f3332f595163fbd))
+
 ## [1.64.0](https://github.com/kopexa-grc/common/compare/v1.63.0...v1.64.0) (2026-03-31)
 
 
