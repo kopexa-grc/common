@@ -33,6 +33,10 @@ const (
 	ActorTypeSystem ActorType = "system"
 	// ActorTypeService represents an external service.
 	ActorTypeService ActorType = "service"
+	// ActorTypePeople represents a People (HR record) authenticated via the
+	// Workforce Hub. Distinct from ActorTypeUser — a People has no Kopexa
+	// login, only a Workforce Hub session.
+	ActorTypePeople ActorType = "people"
 )
 
 // Values returns a list of all possible ActorType values.
@@ -41,6 +45,7 @@ func (ActorType) Values() []string {
 		string(ActorTypeUser),
 		string(ActorTypeSystem),
 		string(ActorTypeService),
+		string(ActorTypePeople),
 	}
 }
 

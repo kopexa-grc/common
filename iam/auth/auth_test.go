@@ -144,3 +144,13 @@ func TestContextFunctions(t *testing.T) {
 		assert.Equal(t, newSpaceID, retrievedSpaceID)
 	})
 }
+
+func TestActorTypePeople(t *testing.T) {
+	assert.Equal(t, "people", auth.ActorTypePeople.String())
+	assert.Contains(t, auth.ActorType("").Values(), "people")
+
+	// Guard against accidental value collisions with other actor types.
+	assert.NotEqual(t, auth.ActorTypeUser, auth.ActorTypePeople)
+	assert.NotEqual(t, auth.ActorTypeSystem, auth.ActorTypePeople)
+	assert.NotEqual(t, auth.ActorTypeService, auth.ActorTypePeople)
+}
