@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.65.1](https://github.com/kopexa-grc/common/compare/v1.65.0...v1.65.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **blob:** guard nil response metadata and pass io.EOF through unchanged ([5a14cde](https://github.com/kopexa-grc/common/commit/5a14cde382349dee47483cc9aaa96925eaadfa86))
+
 ## [1.65.0](https://github.com/kopexa-grc/common/compare/v1.64.0...v1.65.0) (2026-04-18)
 
 
