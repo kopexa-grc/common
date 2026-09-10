@@ -80,6 +80,14 @@ func (r *Reader) Read(p []byte) (int, error) {
 	r.bytesRead += n
 	r.relativeOffset += int64(n)
 
+	// io.EOF is a sentinel that io.Copy and the rest of the io package compare
+	// against directly. Wrapping it turns a normal end-of-stream into a spurious
+	// read error (the copy succeeds but reports failure), so pass it through
+	// untouched.
+	if err == io.EOF {
+		return n, io.EOF
+	}
+
 	return n, wrapError(r.b, err, r.key)
 }
 
@@ -131,7 +139,12 @@ func (r *Reader) Seek(offset int64, whence int) (int64, error) {
 func (r *Reader) Close() error {
 	r.closed = true
 	err := wrapError(r.b, r.r.Close(), r.key)
-	r.end(err)
+	// end is optional instrumentation (trace/metric finish) and is not set by
+	// every constructor -- NewRangeReader leaves it nil -- so calling it
+	// unconditionally panics on close. Guard it.
+	if r.end != nil {
+		r.end(err)
+	}
 	// Emit only on close to avoid an allocation on each call to Read().
 	// Record bytes read metric with OpenTelemetry
 	if r.bytesReadCounter != nil && r.bytesRead > 0 {

@@ -305,10 +305,30 @@ func (blockBlob *BlockBlob) NewRangeReader(ctx context.Context, offset, length i
 		return nil, err
 	}
 
+	// Azure omits Content-Range on a full (non-range) download, and content
+	// type and last-modified can be absent too, so these response fields are
+	// nil pointers rather than guaranteed. Dereferencing them unconditionally
+	// panics on every whole-file read; guard each one. getSize already treats an
+	// empty content range as "use ContentLength".
+	contentType := ""
+	if blobDownloadResponse.ContentType != nil {
+		contentType = *blobDownloadResponse.ContentType
+	}
+
+	contentRange := ""
+	if blobDownloadResponse.ContentRange != nil {
+		contentRange = *blobDownloadResponse.ContentRange
+	}
+
+	var modTime time.Time
+	if blobDownloadResponse.LastModified != nil {
+		modTime = *blobDownloadResponse.LastModified
+	}
+
 	attrs := driver.ReaderAttributes{
-		ContentType: *blobDownloadResponse.ContentType,
-		Size:        getSize(blobDownloadResponse.ContentLength, *blobDownloadResponse.ContentRange),
-		ModTime:     *blobDownloadResponse.LastModified,
+		ContentType: contentType,
+		Size:        getSize(blobDownloadResponse.ContentLength, contentRange),
+		ModTime:     modTime,
 	}
 
 	var body io.ReadCloser
