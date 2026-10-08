@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.66.0](https://github.com/kopexa-grc/common/compare/v1.65.1...v1.66.0) (2026-10-08)
+
+
+### Features
+
+* **fga:** add a batch check gate to throttle bulk checks ([b06b719](https://github.com/kopexa-grc/common/commit/b06b719dc267aac0f9e074a09149c2c8cff9301a))
+
 ## [1.65.1](https://github.com/kopexa-grc/common/compare/v1.65.0...v1.65.1) (2026-09-10)
 
 
