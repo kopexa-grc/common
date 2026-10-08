@@ -49,6 +49,10 @@ type Client struct {
 	// IgnoreDuplicateKeyError determines whether duplicate key errors should be ignored.
 	// When true, attempts to write duplicate tuples will be silently ignored.
 	IgnoreDuplicateKeyError bool
+
+	// batchCheckGate, when set, is passed before every BatchCheckObjectAccess
+	// call (see WithBatchCheckGate).
+	batchCheckGate BatchCheckGate
 }
 
 // NewClient creates a new FGA client with the given host and options.
@@ -88,6 +92,8 @@ func NewClient(host string, opts ...Option) (*Client, error) {
 }
 
 // CreateClientWithStore creates a new FGA client with a store and model configuration.
+// extra options (e.g. WithBatchCheckGate) are applied on top of the ones the
+// config produces.
 // It handles the complete setup process including:
 // - Creating or using an existing store
 // - Setting up authentication credentials
@@ -113,10 +119,11 @@ func NewClient(host string, opts ...Option) (*Client, error) {
 // Returns:
 //   - *Client: A configured FGA client
 //   - error: If the setup process fails
-func CreateClientWithStore(ctx context.Context, c Config) (*Client, error) {
+func CreateClientWithStore(ctx context.Context, c Config, extra ...Option) (*Client, error) {
 	opts := []Option{
 		WithIgnoreDuplicateKeyError(c.IgnoreDuplicateKeyError),
 	}
+	opts = append(opts, extra...)
 
 	// set credentials if provided
 	if c.Credentials.APIToken != "" {

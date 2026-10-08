@@ -206,11 +206,25 @@ func (c *Client) BatchCheckObjectAccess(ctx context.Context, checks []AccessChec
 		checkRequests = append(checkRequests, *item)
 	}
 
-	results, err := c.client.BatchCheck(ctx).Body(
+	req := c.client.BatchCheck(ctx).Body(
 		client.ClientBatchCheckRequest{
 			Checks: checkRequests,
 		},
-	).Execute()
+	)
+
+	if c.batchCheckGate != nil {
+		release, maxParallel, err := c.batchCheckGate(ctx, checks)
+		if err != nil {
+			return nil, err
+		}
+		defer release()
+
+		if maxParallel > 0 {
+			req = req.Options(client.BatchCheckOptions{MaxParallelRequests: &maxParallel})
+		}
+	}
+
+	results, err := req.Execute()
 	if err != nil {
 		return nil, err
 	}
