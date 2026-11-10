@@ -41,13 +41,13 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: '1.25'
 
       - name: golangci-lint
         if: ${{ needs.detect-changes.outputs.lint == 'true' }}
         uses: golangci/golangci-lint-action@v7
         with:
-          version: v2.0
+          version: v2.12
           github-token: ${{ secrets.GITHUB_TOKEN }}
           only-new-issues: true
 
@@ -61,7 +61,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: '1.25'
     
       - name: Make unit test
         if: ${{ needs.detect-changes.outputs.go == 'true' || needs.detect-changes.outputs.proto == 'true' }}
@@ -97,7 +97,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: '1.25'
 
       - name: Setup Copywrite
         uses: hashicorp/setup-copywrite@v1.1.3
