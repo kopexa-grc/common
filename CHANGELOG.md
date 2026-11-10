@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.66.1](https://github.com/kopexa-grc/common/compare/v1.66.0...v1.66.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* **ci:** grant the code verification workflow the permissions it needs ([112ebcb](https://github.com/kopexa-grc/common/commit/112ebcbf5450ffa8067279ad8086c6af2b799d73))
+* **fga:** update the OpenFGA go-sdk to v0.8.3 ([75cdf3b](https://github.com/kopexa-grc/common/commit/75cdf3b5069d2d23c9c7b724618f81180e014b51))
+
 ## [1.66.0](https://github.com/kopexa-grc/common/compare/v1.65.1...v1.66.0) (2026-10-08)
 
 
