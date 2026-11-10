@@ -10,6 +10,13 @@ jobs:
   code:
     name: Code Verification
     uses: ./.github/workflows/_verify-code.yaml
+    # The called workflow cannot get more than the caller grants, and the
+    # default token is read-only: grant what its jobs ask for.
+    permissions:
+      contents: read
+      actions: read
+      checks: write
+      pull-requests: read
 
   release-please:
     name: Release Please
