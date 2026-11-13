@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.66.2](https://github.com/kopexa-grc/common/compare/v1.66.1...v1.66.2) (2026-11-13)
+
+
+### Bug Fixes
+
+* **deps:** update the dependencies within their major versions ([33f72bf](https://github.com/kopexa-grc/common/commit/33f72bfcf91adaaeeb90bbdb9cf2250fdea00ffd))
+
 ## [1.66.1](https://github.com/kopexa-grc/common/compare/v1.66.0...v1.66.1) (2026-11-10)
 
 
