@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.67.0](https://github.com/kopexa-grc/common/compare/v1.66.2...v1.67.0) (2026-11-15)
+
+
+### Features
+
+* remove the unused llm, summarizer, messaging and logger packages ([c0a7c44](https://github.com/kopexa-grc/common/commit/c0a7c44e2339ef7047451dbd549d50e98f0cc7bf))
+
+
+### Bug Fixes
+
+* **deps:** update golangci-lint, gotestsum and gofumpt ([6b5d13c](https://github.com/kopexa-grc/common/commit/6b5d13cee138df29b759d692e38da91bccee9e16))
+* **tokens:** treat a token as expired at its expiry time ([11b35b4](https://github.com/kopexa-grc/common/commit/11b35b436a5d9c7f2150f3847e0426f5bf2d9e5e))
+
 ## [1.66.2](https://github.com/kopexa-grc/common/compare/v1.66.1...v1.66.2) (2026-11-13)
 
 
