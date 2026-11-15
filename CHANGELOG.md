@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.67.2](https://github.com/kopexa-grc/common/compare/v1.67.1...v1.67.2) (2026-11-15)
+
+
+### Bug Fixes
+
+* **ci:** lint with the golangci-lint version pinned in go.mod ([49fa309](https://github.com/kopexa-grc/common/commit/49fa30943c7c542bba7fb246100f3b4c1ab157b8))
+* format with gofmt instead of gofumpt ([197e947](https://github.com/kopexa-grc/common/commit/197e94783038ea76fd5fe0fb816dcfe7261e7fdc))
+
 ## [1.67.1](https://github.com/kopexa-grc/common/compare/v1.67.0...v1.67.1) (2026-11-15)
 
 
