@@ -1,5 +1,6 @@
 GO_TEST = go tool gotest.tools/gotestsum --format pkgname
-GO_FUMPT = go tool mvdan.cc/gofumpt
+# Hand-written Go files; files with a "DO NOT EDIT" header are left to their generators.
+GO_FILES = git ls-files -z '*.go' | xargs -0 grep -L --null -E '^//.*DO NOT EDIT'
 GO_LINT = go tool github.com/golangci/golangci-lint/v2/cmd/golangci-lint
 
 #   🔨 TOOLS       #
@@ -38,10 +39,10 @@ prep/tools/mockgen:
 ##@ Formatting
 
 fmt:
-	$(GO_FUMPT) -w .
+	@$(GO_FILES) | xargs -0 gofmt -s -w
 
 fmt/check:
-	$(GO_FUMPT) -d .
+	@$(GO_FILES) | xargs -0 gofmt -s -d
 
 #   🔍 Linting     #
 ##@ Linting

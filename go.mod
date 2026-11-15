@@ -330,5 +330,4 @@ require (
 tool (
 	github.com/golangci/golangci-lint/v2/cmd/golangci-lint
 	gotest.tools/gotestsum
-	mvdan.cc/gofumpt
 )
