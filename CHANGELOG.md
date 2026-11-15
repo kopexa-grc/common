@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.67.1](https://github.com/kopexa-grc/common/compare/v1.67.0...v1.67.1) (2026-11-15)
+
+
+### Bug Fixes
+
+* **ci:** run the workflows on the Node 24 versions of their actions ([ddc64d8](https://github.com/kopexa-grc/common/commit/ddc64d8aedd7bdc5b0c4745a824bffa7aa5ed7b7))
+
 ## [1.67.0](https://github.com/kopexa-grc/common/compare/v1.66.2...v1.67.0) (2026-11-15)
 
 
