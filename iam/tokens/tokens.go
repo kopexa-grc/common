@@ -54,12 +54,13 @@ func NewSigningInfo(expires time.Duration) (SigningInfo, error) {
 	return info, nil
 }
 
-// IsExpired checks if the token has passed its expiration time.
+// IsExpired checks if the token has reached its expiration time. A token is
+// expired from the moment it expires, not only afterwards.
 //
 // Returns:
 //   - bool: true if the token is expired, false otherwise
 func (d SigningInfo) IsExpired() bool {
-	return d.ExpiresAt.Before(time.Now())
+	return !d.ExpiresAt.After(time.Now())
 }
 
 // SignToken marshals and signs any token that embeds SigningInfo
